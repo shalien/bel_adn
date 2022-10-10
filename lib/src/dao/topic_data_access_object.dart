@@ -1,15 +1,14 @@
 import 'dart:convert';
 
+import '../data_access_object.dart';
 import '../models/topic.dart';
-import '../utils.dart';
-import 'data_access_object.dart';
 
 class TopicDataAccessObject extends DataAccessObject<Topic> {
-  TopicDataAccessObject() : super('topics');
+  TopicDataAccessObject(String host) : super(host, "topics");
 
   @override
   Future<bool> destroy(Topic t) async {
-    String uri = '$baseUri/$prefix/${t.id}';
+    String uri = '$resourceUrl/${t.id}';
     Uri url = Uri.parse(uri);
 
     var response = await client.delete(url, headers: headers);
@@ -19,7 +18,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
 
   @override
   Future<List<Topic>> getAll() async {
-    String uri = "$baseUri/$prefix";
+    String uri = resourceUrl;
     Uri url = Uri.parse(uri);
 
     List<Topic> topics = <Topic>[];
@@ -39,7 +38,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
 
   @override
   Future<Topic> getById(int id) async {
-    String uri = '$baseUri/$prefix/$id';
+    String uri = '$resourceUrl/$id';
     Uri url = Uri.parse(uri);
 
     var response = await client.get(url, headers: headers);
@@ -50,7 +49,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
 
   @override
   Future<int> store(Topic t) async {
-    String uri = '$baseUri/$prefix';
+    String uri = resourceUrl;
     Uri url = Uri.parse(uri);
 
     var response = await client.post(url, body: t.toJson(), headers: headers);

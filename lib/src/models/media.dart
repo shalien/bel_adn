@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../dao/model.dart';
+import '../model.dart';
 
 class Media extends Model {
   final int? _providerId;
@@ -14,13 +14,22 @@ class Media extends Model {
 
   String? destination;
 
-  Media([this._providerId, this.source, this.media, this.destination, id])
-      : super(id: id);
+  Media(
+      [this._providerId,
+      this.source,
+      this.media,
+      this.destination,
+      id,
+      createdAt,
+      updatedAt])
+      : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
-  factory Media.fromJson(Map json) {
-    return Media(json['provider_id'], json['source'], json['media'],
-        json['destination'], json['id']);
-  }
+  Media.fromJson(Map json)
+      : _providerId = json['provider_id'],
+        source = json['source'],
+        media = json['media'],
+        destination = json['destination'],
+        super.fromJson(json);
 
   @override
   String toJson() {

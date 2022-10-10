@@ -1,16 +1,14 @@
 import 'dart:convert';
 
-import '../utils.dart';
-import 'data_access_object.dart';
-
+import '../data_access_object.dart';
 import '../models/provider.dart';
 
 class ProviderDataAccessObject extends DataAccessObject<Provider> {
-  ProviderDataAccessObject() : super('providers');
+  ProviderDataAccessObject(String host) : super(host, "providers");
 
   @override
   Future<bool> destroy(Provider t) async {
-    String uri = '$baseUri/$prefix/${t.id}';
+    String uri = '$resourceUrl/${t.id}';
     Uri url = Uri.parse(uri);
 
     var response = await client.delete(url, headers: headers);
@@ -20,7 +18,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
 
   @override
   Future<List<Provider>> getAll() async {
-    String uri = "$baseUri/$prefix";
+    String uri = resourceUrl;
     Uri url = Uri.parse(uri);
 
     List<Provider> providers = <Provider>[];
@@ -39,7 +37,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
   }
 
   Future<List<Provider>> getByTopicId(int id) async {
-    String uri = '$baseUri/$prefix/topic/$id';
+    String uri = '$host/api/topic/$id';
     Uri url = Uri.parse(uri);
 
     List<Provider> providers = <Provider>[];
@@ -59,7 +57,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
 
   @override
   Future<Provider> getById(int id) async {
-    String uri = '$baseUri/$prefix/$id';
+    String uri = '$resourceUrl/$id';
     Uri url = Uri.parse(uri);
 
     var response = await client.get(url, headers: headers);
@@ -70,7 +68,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
 
   @override
   Future<int> store(Provider t) async {
-    String uri = '$baseUri/$prefix';
+    String uri = resourceUrl;
     Uri url = Uri.parse(uri);
 
     var response = await client.post(url, body: t.toJson(), headers: headers);

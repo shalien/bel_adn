@@ -1,19 +1,24 @@
-import '../beau_gosse_client.dart';
+import 'bel_adn_client.dart';
 import 'model.dart';
 
 abstract class DataAccessObject<T extends Model> {
-  final String _prefix;
-  final BeauGosseClient _client = BeauGosseClient();
+  final String _resource;
+
+  final String _host;
+  String get host => _host;
+
+  final BelAdnClient _client = BelAdnClient();
 
   final Map<String, String> headers = <String, String>{
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   };
 
-  String get prefix => _prefix;
-  BeauGosseClient get client => _client;
+  String get resourceUrl => "$_host/api/$_resource";
 
-  DataAccessObject(this._prefix);
+  BelAdnClient get client => _client;
+
+  DataAccessObject(this._host, this._resource);
 
   Future<List<T>> getAll();
 

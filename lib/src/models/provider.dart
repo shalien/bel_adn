@@ -1,5 +1,6 @@
 import 'dart:convert';
-import '../dao/model.dart';
+
+import '../model.dart';
 
 class Provider extends Model {
   final int? _topicId;
@@ -13,13 +14,14 @@ class Provider extends Model {
 
   String get link => _link;
 
-  Provider(this._topicId, this._type, this._link, {id}) : super(id: id);
+  Provider(this._topicId, this._type, this._link, {id, createdAt, updatedAt})
+      : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
-  factory Provider.fromJson(Map json) {
-    String link = json['link'];
-
-    return Provider(json['topic_id'], json['type'], link, id: json['id']);
-  }
+  Provider.fromJson(Map json)
+      : _topicId = json['topic_id'],
+        _type = json['type'],
+        _link = json['link'],
+        super.fromJson(json);
 
   @override
   String toJson() {

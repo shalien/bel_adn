@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../dao/model.dart';
+import '../model.dart';
 
 class Topic extends Model {
   final String _name;
@@ -11,11 +11,13 @@ class Topic extends Model {
 
   int get order => _order;
 
-  Topic(this._name, this._order, {id}) : super(id: id);
+  Topic(this._name, this._order, {id, createdAt, updatedAt})
+      : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
-  factory Topic.fromJson(Map json) {
-    return Topic(json['name'], json['order'], id: json['id']);
-  }
+  Topic.fromJson(Map json)
+      : _name = json['name'],
+        _order = json['order'],
+        super.fromJson(json);
 
   @override
   String toJson() {
