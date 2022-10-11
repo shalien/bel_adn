@@ -1,13 +1,11 @@
 name: bel_adn
-description: A starting point for Dart libraries or applications.
-version: 0.0.1
-# homepage: https://www.example.com
+description: bel_adn is the common library for the frontend of the "magnifique couple" project. 
+version: 0.0.2
+homepage: https://github.com/shalien/bel_adn
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
 
-# dependencies:
-#   path: ^1.8.0
 
 dev_dependencies:
   lints: ^2.0.0

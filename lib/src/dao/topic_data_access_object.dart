@@ -3,15 +3,19 @@ import 'dart:convert';
 import '../data_access_object.dart';
 import '../models/topic.dart';
 
+/// Private instance
 TopicDataAccessObject? _topicDataAccessObject;
 
+/// The [DataAccessObject] for the [Topic] class
 class TopicDataAccessObject extends DataAccessObject<Topic> {
   TopicDataAccessObject._(String host) : super(host, "topics");
 
+  /// Factory used to create and a single instance during the program run
   factory TopicDataAccessObject(String host) {
     return _topicDataAccessObject ??= TopicDataAccessObject._(host);
   }
 
+  /// Will destroy the [Topic] from the server
   @override
   Future<bool> destroy(Topic t) async {
     String uri = '$resourceUrl/${t.id}';
@@ -22,6 +26,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
     return response.statusCode == 200;
   }
 
+  /// Will return all the [Topic] from the server
   @override
   Future<List<Topic>> index() async {
     String uri = resourceUrl;
@@ -42,6 +47,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
     return topics;
   }
 
+  /// Will return the [Topic] for the given [id]
   @override
   Future<Topic> show(int id) async {
     String uri = '$resourceUrl/$id';
@@ -53,6 +59,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
     return Topic.fromJson(json.decode(response.body));
   }
 
+  /// Will store the given [Topic]
   @override
   Future<int> store(Topic t) async {
     String uri = resourceUrl;
@@ -66,6 +73,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
     return json.decode(response.body)['id'];
   }
 
+  /// Will update the [Topic]
   @override
   Future<bool> update(Topic t) {
     return Future.value(false);

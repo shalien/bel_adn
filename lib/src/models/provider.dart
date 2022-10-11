@@ -2,7 +2,10 @@ import 'dart:convert';
 
 import '../model.dart';
 
+/// A [Provider] is a source for a [Topic]
+/// Each [Provider] may have it's own resolving method
 class Provider extends Model {
+  /// The [Topic] to which the [Provider] is associated
   final int? _topicId;
   int? get topicId => _topicId;
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:meta/meta.dart';
 
 import 'utils.dart';
 
@@ -27,6 +28,7 @@ Future<Response> delete(Uri url,
     BelAdnClient()
         .delete(url, headers: headers, body: body, encoding: encoding);
 
+@immutable
 class BelAdnClient extends BaseClient {
   final Client _inner = Client();
 

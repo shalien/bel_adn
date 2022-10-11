@@ -3,9 +3,20 @@ import 'dart:convert';
 import '../data_access_object.dart';
 import '../models/media.dart';
 
+/// The singleton instance for the factory
+MediaDataAccessObject? _mediaDataAccessObject;
+
+/// The [DataAccessObject] for the [Media] class
 class MediaDataAccessObject extends DataAccessObject<Media> {
+  /// Private constructor
   MediaDataAccessObject._(String host) : super(host, "medias");
 
+  /// Factory used to create and a single instance during the program run
+  factory MediaDataAccessObject(String host) {
+    return _mediaDataAccessObject ??= MediaDataAccessObject._(host);
+  }
+
+  /// This method will delete a [Media] from the server
   @override
   Future<bool> destroy(Media t) async {
     String uri = '$resourceUrl/${t.id}';
@@ -16,6 +27,7 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
     return response.statusCode == 200;
   }
 
+  /// Will return all the [Media] from the server
   @override
   Future<List<Media>> index() async {
     String uri = resourceUrl;
@@ -36,6 +48,7 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
     return medias;
   }
 
+  /// Will return a [Media] based on the [id]
   @override
   Future<Media> show(int id) async {
     String uri = '$resourceUrl/$id';
@@ -47,6 +60,7 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
     return Media.fromJson(json.decode(response.body));
   }
 
+  /// Will try to save the [Media][t] to the server
   @override
   Future<int> store(Media t) async {
     String uri = resourceUrl;
@@ -60,6 +74,7 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
     return json.decode(response.body)['id'];
   }
 
+  /// Will try to update the [Media][t]
   @override
   Future<bool> update(Media t) {
     return Future.value(false);
