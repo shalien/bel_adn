@@ -4,7 +4,7 @@ import '../data_access_object.dart';
 import '../models/provider.dart';
 
 class ProviderDataAccessObject extends DataAccessObject<Provider> {
-  ProviderDataAccessObject(String host) : super(host, "providers");
+  ProviderDataAccessObject._(String host) : super(host, "providers");
 
   @override
   Future<bool> destroy(Provider t) async {
@@ -17,7 +17,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
   }
 
   @override
-  Future<List<Provider>> getAll() async {
+  Future<List<Provider>> index() async {
     String uri = resourceUrl;
     Uri url = Uri.parse(uri);
 
@@ -56,7 +56,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
   }
 
   @override
-  Future<Provider> getById(int id) async {
+  Future<Provider> show(int id) async {
     String uri = '$resourceUrl/$id';
     Uri url = Uri.parse(uri);
 

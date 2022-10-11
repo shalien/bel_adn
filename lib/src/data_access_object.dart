@@ -1,6 +1,7 @@
-import 'bel_adn_client.dart';
-import 'model.dart';
+import 'package:bel_adn/bel_adn.dart';
+import 'package:meta/meta.dart';
 
+@immutable
 abstract class DataAccessObject<T extends Model> {
   final String _resource;
 
@@ -20,9 +21,9 @@ abstract class DataAccessObject<T extends Model> {
 
   DataAccessObject(this._host, this._resource);
 
-  Future<List<T>> getAll();
+  Future<List<T>> index();
 
-  Future<T> getById(int id);
+  Future<T> show(int id);
 
   Future<bool> update(T t);
 

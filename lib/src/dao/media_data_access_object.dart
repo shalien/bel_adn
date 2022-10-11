@@ -4,7 +4,7 @@ import '../data_access_object.dart';
 import '../models/media.dart';
 
 class MediaDataAccessObject extends DataAccessObject<Media> {
-  MediaDataAccessObject(String host) : super(host, "medias");
+  MediaDataAccessObject._(String host) : super(host, "medias");
 
   @override
   Future<bool> destroy(Media t) async {
@@ -17,7 +17,7 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
   }
 
   @override
-  Future<List<Media>> getAll() async {
+  Future<List<Media>> index() async {
     String uri = resourceUrl;
     Uri url = Uri.parse(uri);
 
@@ -37,7 +37,7 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
   }
 
   @override
-  Future<Media> getById(int id) async {
+  Future<Media> show(int id) async {
     String uri = '$resourceUrl/$id';
     Uri url = Uri.parse(uri);
 

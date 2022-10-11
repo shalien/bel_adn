@@ -3,8 +3,14 @@ import 'dart:convert';
 import '../data_access_object.dart';
 import '../models/topic.dart';
 
+TopicDataAccessObject? _topicDataAccessObject;
+
 class TopicDataAccessObject extends DataAccessObject<Topic> {
-  TopicDataAccessObject(String host) : super(host, "topics");
+  TopicDataAccessObject._(String host) : super(host, "topics");
+
+  factory TopicDataAccessObject(String host) {
+    return _topicDataAccessObject ??= TopicDataAccessObject._(host);
+  }
 
   @override
   Future<bool> destroy(Topic t) async {
@@ -17,7 +23,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
   }
 
   @override
-  Future<List<Topic>> getAll() async {
+  Future<List<Topic>> index() async {
     String uri = resourceUrl;
     Uri url = Uri.parse(uri);
 
@@ -37,7 +43,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
   }
 
   @override
-  Future<Topic> getById(int id) async {
+  Future<Topic> show(int id) async {
     String uri = '$resourceUrl/$id';
     Uri url = Uri.parse(uri);
 
