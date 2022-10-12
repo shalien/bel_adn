@@ -13,3 +13,6 @@
 
 ## 0.0.3
 - Added missing property inside toJson() method on [Model]
+
+## 0.0.4
+- issue when using Isolate, replacing toJson()

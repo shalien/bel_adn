@@ -23,8 +23,8 @@ class Topic extends Model {
   String toJson() {
     return json.encode({
       ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt} : null,
+      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
+      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
       'name': name,
       'order': order
     });
