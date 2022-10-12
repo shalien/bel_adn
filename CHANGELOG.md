@@ -9,3 +9,7 @@
 - Added custom http client
 - Added doc
 - Added some test
+
+
+## 0.0.3
+- Added missing property inside toJson() method on [Model]

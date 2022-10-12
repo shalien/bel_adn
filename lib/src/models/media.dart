@@ -46,6 +46,8 @@ class Media extends Model {
   String toJson() {
     return json.encode({
       ...?id != null ? {'id': id} : null,
+      ...?createdAt != null ? {'created_at': createdAt} : null,
+      ...?updatedAt != null ? {'updated_at': updatedAt} : null,
       ...?_providerId != null ? {'provider_id': _providerId} : null,
       ...?source != null ? {'source': source} : null,
       ...?media != null ? {'media': media} : null,
