@@ -1,6 +1,6 @@
 name: bel_adn
 description: bel_adn is the common library for the frontend of the "magnifique couple" project. 
-version: 0.0.5
+version: 0.0.6
 homepage: https://github.com/shalien/bel_adn
 
 environment:

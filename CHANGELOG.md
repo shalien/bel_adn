@@ -19,3 +19,6 @@
 
 ## 0.0.5
 - Removing typo
+
+## 0.0.6
+- Fixing getByTopic id

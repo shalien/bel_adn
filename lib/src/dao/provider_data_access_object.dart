@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import '../data_access_object.dart';
 import '../models/provider.dart';
@@ -49,7 +50,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
 
   /// Will return all [Provider] linked to the [Topic]'s [id]
   Future<List<Provider>> getByTopicId(int id) async {
-    String uri = '$host/api/topics/$id';
+    String uri = '$resourceUrl/topic/$id';
     Uri url = Uri.parse(uri);
 
     List<Provider> providers = <Provider>[];
