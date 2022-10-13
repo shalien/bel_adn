@@ -22,3 +22,7 @@
 
 ## 0.0.6
 - Fixing getByTopic id
+
+
+## 0.0.7
+- Removed dart:ffi import
