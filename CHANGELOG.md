@@ -16,3 +16,6 @@
 
 ## 0.0.4
 - issue when using Isolate, replacing toJson()
+
+## 0.0.5
+- Removing typo
