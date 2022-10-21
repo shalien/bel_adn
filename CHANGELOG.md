@@ -26,3 +26,7 @@
 
 ## 0.0.7
 - Removed dart:ffi import
+
+
+## 0.0.8
+- Added exception to call 

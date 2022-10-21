@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import '../data_access_object.dart';
 import '../models/media.dart';
+import '../response_exception.dart';
 
 /// The singleton instance for the factory
 MediaDataAccessObject? _mediaDataAccessObject;
@@ -43,6 +43,8 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
       for (dynamic element in decodedResponse) {
         medias.add(Media.fromJson(element));
       }
+    } else {
+      throw ResponseException(response);
     }
 
     return medias;
@@ -56,7 +58,9 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
 
     var response = await client.get(url, headers: headers);
 
-    if (response.statusCode != 200) {}
+    if (response.statusCode != 200) {
+      throw ResponseException(response);
+    }
     return Media.fromJson(json.decode(response.body));
   }
 
@@ -69,7 +73,7 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
     var response = await client.post(url, body: t.toJson(), headers: headers);
 
     if (response.statusCode != 200) {
-      throw Exception(response.body);
+      throw ResponseException(response);
     }
     return json.decode(response.body)['id'];
   }

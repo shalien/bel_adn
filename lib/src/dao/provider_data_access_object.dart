@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../data_access_object.dart';
 import '../models/provider.dart';
+import '../response_exception.dart';
 
 /// Private instance for singleton
 ProviderDataAccessObject? _providerDataAccessObject;
@@ -42,6 +43,8 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
       for (dynamic element in decodedResponse) {
         providers.add(Provider.fromJson(element));
       }
+    } else {
+      throw ResponseException(response);
     }
 
     return providers;
@@ -62,6 +65,8 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
       decodedResponse.forEach((_, value) {
         providers.add(Provider.fromJson(value));
       });
+    } else {
+      throw ResponseException(response);
     }
 
     return providers;
@@ -75,7 +80,9 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
 
     var response = await client.get(url, headers: headers);
 
-    if (response.statusCode != 200) {}
+    if (response.statusCode != 200) {
+      throw ResponseException(response);
+    }
     return Provider.fromJson(json.decode(response.body));
   }
 
@@ -88,7 +95,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
     var response = await client.post(url, body: t.toJson(), headers: headers);
 
     if (response.statusCode != 200) {
-      throw Exception(response.body);
+      throw ResponseException(response);
     }
     return json.decode(response.body)['id'];
   }

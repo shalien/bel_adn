@@ -17,3 +17,6 @@ export 'src/models/provider.dart';
 
 // Client
 export 'src/bel_adn_client.dart';
+
+// Exception
+export 'src/response_exception.dart';

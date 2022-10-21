@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../data_access_object.dart';
 import '../models/topic.dart';
+import '../response_exception.dart';
 
 /// Private instance
 TopicDataAccessObject? _topicDataAccessObject;
@@ -42,6 +43,8 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
       for (dynamic element in decodedResponse) {
         topics.add(Topic.fromJson(element));
       }
+    } else {
+      throw ResponseException(response);
     }
 
     return topics;
@@ -55,7 +58,9 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
 
     var response = await client.get(url, headers: headers);
 
-    if (response.statusCode != 200) {}
+    if (response.statusCode != 200) {
+      throw ResponseException(response);
+    }
     return Topic.fromJson(json.decode(response.body));
   }
 
@@ -68,7 +73,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
     var response = await client.post(url, body: t.toJson(), headers: headers);
 
     if (response.statusCode != 200) {
-      throw Exception(response.body);
+      throw ResponseException(response);
     }
     return json.decode(response.body)['id'];
   }
