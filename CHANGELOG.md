@@ -30,3 +30,6 @@
 
 ## 0.0.8
 - Added exception to call 
+
+## 0.0.9
+- Added property prefix to providers

@@ -17,13 +17,17 @@ class Provider extends Model {
 
   String get link => _link;
 
-  Provider(this._topicId, this._type, this._link, {id, createdAt, updatedAt})
+  final String? prefix;
+
+  Provider(this._topicId, this._type, this._link,
+      {this.prefix, id, createdAt, updatedAt})
       : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
   Provider.fromJson(Map json)
       : _topicId = json['topic_id'],
         _type = json['type'],
         _link = json['link'],
+        prefix = json['prefix'],
         super.fromJson(json);
 
   @override
@@ -33,6 +37,7 @@ class Provider extends Model {
       ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
       ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
       ...?topicId != null ? {'topic_id': topicId} : null,
+      ...?prefix != null ? {'prefix': prefix} : null,
       'type': type,
       'link': link
     });
