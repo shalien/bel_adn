@@ -1,13 +1,14 @@
 import 'dart:convert';
 
-import '../data_access_object.dart';
-import '../models/provider.dart';
-import '../response_exception.dart';
+import 'package:meta/meta.dart';
 
-/// Private instance for singleton
+import '../../models.dart';
+import '../data_access_object.dart';
+
 ProviderDataAccessObject? _providerDataAccessObject;
 
 /// The [DataAccessObject] for the [Provider] class
+@immutable
 class ProviderDataAccessObject extends DataAccessObject<Provider> {
   ProviderDataAccessObject._(String host) : super(host, "providers");
 
@@ -16,42 +17,14 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
     return _providerDataAccessObject ??= ProviderDataAccessObject._(host);
   }
 
-  /// Will destroy the given [Provider]
-  @override
-  Future<bool> destroy(Provider t) async {
-    String uri = '$resourceUrl/${t.id}';
-    Uri url = Uri.parse(uri);
-
-    var response = await client.delete(url, headers: headers);
-
-    return response.statusCode == 200;
-  }
-
-  /// Will return all [Provider] on the server
-  @override
-  Future<List<Provider>> index() async {
-    String uri = resourceUrl;
-    Uri url = Uri.parse(uri);
-
-    List<Provider> providers = <Provider>[];
-
-    var response = await client.get(url, headers: headers);
-
-    if (response.statusCode == 200) {
-      List<dynamic> decodedResponse = json.decode(response.body);
-
-      for (dynamic element in decodedResponse) {
-        providers.add(Provider.fromJson(element));
-      }
-    } else {
-      throw ResponseException(response);
-    }
-
-    return providers;
-  }
-
   /// Will return all [Provider] linked to the [Topic]'s [id]
   Future<List<Provider>> getByTopicId(int id) async {
+    Topic? topic = _topicCache.get(id);
+
+    if (topic != null) {
+      //return topic.providers;
+    }
+
     String uri = '$resourceUrl/topic/$id';
     Uri url = Uri.parse(uri);
 
@@ -62,42 +35,43 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
     if (response.statusCode == 200) {
       Map<dynamic, dynamic> decodedResponse = json.decode(response.body);
 
-      decodedResponse.forEach((_, value) {
-        providers.add(Provider.fromJson(value));
-      });
+      if (decodedResponse['data'].isEmpty) {
+        return providers;
+      }
+
+      for (var element in decodedResponse['data']) {
+        providers.add(Provider.fromJson(element));
+      }
     } else {
-      throw ResponseException(response);
+      throw Exception(response);
     }
 
     return providers;
   }
 
-  /// Return the [Provider] with [id]
-  @override
-  Future<Provider> show(int id) async {
-    String uri = '$resourceUrl/$id';
+  Future<List<Media>> getMedias(int id) async {
+    String uri = '$resourceUrl/$id/medias';
     Uri url = Uri.parse(uri);
+
+    List<Media> medias = <Media>[];
 
     var response = await client.get(url, headers: headers);
 
-    if (response.statusCode != 200) {
-      throw ResponseException(response);
+    if (response.statusCode == 200) {
+      var decodedResponse = json.decode(response.body);
+
+      if (decodedResponse['data'].isEmpty) {
+        return medias;
+      }
+
+      for (var element in decodedResponse['data']) {
+        medias.add(Media.fromJson(element));
+      }
+    } else {
+      throw Exception(response);
     }
-    return Provider.fromJson(json.decode(response.body));
-  }
 
-  /// Will store the [Provider][t]
-  @override
-  Future<int> store(Provider t) async {
-    String uri = resourceUrl;
-    Uri url = Uri.parse(uri);
-
-    var response = await client.post(url, body: t.toJson(), headers: headers);
-
-    if (response.statusCode != 200) {
-      throw ResponseException(response);
-    }
-    return json.decode(response.body)['id'];
+    return medias;
   }
 
   /// Will update the [Provider]
