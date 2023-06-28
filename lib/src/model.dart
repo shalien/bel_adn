@@ -1,4 +1,8 @@
+import 'data_access_object.dart';
+
 abstract class Model {
+  static late DataAccessObject dao;
+
   int? id;
 
   DateTime? createdAt;
@@ -7,11 +11,19 @@ abstract class Model {
 
   Model({this.id, this.createdAt, this.updatedAt});
 
-  Model.fromJson(Map json) {
-    id = json['id'];
-    createdAt = DateTime.parse(json['created_at']);
-    updatedAt = DateTime.parse(json['updated_at']);
-  }
+  Model.fromJson(Map<String, dynamic> json);
 
   String toJson();
+
+  Future<Model> store() {
+    return dao.store(this);
+  }
+
+  Future<Model> update() {
+    return dao.update(this);
+  }
+
+  Future<bool> destroy() {
+    return dao.destroy(this);
+  }
 }
