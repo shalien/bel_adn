@@ -1,19 +1,14 @@
 import 'dart:convert';
 
-import '../cache/cache.dart';
 import '../dao/provider_data_access_object.dart';
 import '../dao/provider_type_data_access_object.dart';
 import '../dao/topic_data_access_object.dart';
-import '../utils.dart';
-import 'media.dart';
-import 'model.dart';
+import '../model.dart';
 import 'provider_type.dart';
 import 'topic.dart';
 
-Cache<Provider> get _cache => Cache();
-
 class Provider extends Model {
-  static ProviderDataAccessObject dao = ProviderDataAccessObject(baseUri);
+  static ProviderDataAccessObject dao = ProviderDataAccessObject();
 
   final int? topicId;
 
@@ -23,14 +18,10 @@ class Provider extends Model {
 
   final String? prefix;
 
-  Future<Topic> get topic async =>
-      await TopicDataAccessObject(baseUri).show(topicId!);
+  Future<Topic> get topic async => await TopicDataAccessObject().show(topicId!);
 
   Future<ProviderType> get providerType async =>
-      await ProviderTypeDataAccessObject(baseUri).show(providerTypeId);
-
-  Future<List<Media>> get medias async =>
-      await ProviderDataAccessObject(baseUri).getMedias(id!);
+      await ProviderTypeDataAccessObject().show(providerTypeId);
 
   Provider(
     this.topicId,
@@ -44,31 +35,19 @@ class Provider extends Model {
 
   @override
   factory Provider.fromJson(Map json) {
-    Provider? provider;
-
-    if (json['id'] != null) {
-      provider = _cache.get(json['id']);
-    }
-
-    if (provider == null) {
-      provider = Provider(
-        json['topic_id'],
-        json['provider_type_id'],
-        json['link'],
-        prefix: json['prefix'],
-        id: json['id'],
-        createdAt: json['created_at'] != null
-            ? DateTime.parse(json['created_at'])
-            : null,
-        updatedAt: json['created_at'] != null
-            ? DateTime.parse(json['created_at'])
-            : null,
-      );
-
-      _cache.add(provider);
-    }
-
-    return provider;
+    return Provider(
+      json['topic_id'],
+      json['provider_type_id'],
+      json['link'],
+      prefix: json['prefix'],
+      id: json['id'],
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      updatedAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+    );
   }
 
   @override

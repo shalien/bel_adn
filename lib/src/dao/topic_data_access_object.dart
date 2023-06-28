@@ -1,24 +1,17 @@
 import 'package:meta/meta.dart';
 
-import 'data_access_object.dart';
-import '../models/topic.dart';
-
-/// Private instance
-TopicDataAccessObject? _topicDataAccessObject;
+import '../data_access_object.dart';
+import '../model/topic.dart';
 
 /// The [DataAccessObject] for the [Topic] class
 @immutable
 class TopicDataAccessObject extends DataAccessObject<Topic> {
-  TopicDataAccessObject._(String host) : super(host, "topics");
+  static TopicDataAccessObject? _topicDataAccessObject;
+
+  TopicDataAccessObject._() : super(resource: "topics");
 
   /// Factory used to create and a single instance during the program run
-  factory TopicDataAccessObject(String host) {
-    return _topicDataAccessObject ??= TopicDataAccessObject._(host);
-  }
-
-  /// Will update the [Topic]
-  @override
-  Future<bool> update(Topic t) {
-    return Future.value(false);
+  factory TopicDataAccessObject() {
+    return _topicDataAccessObject ??= TopicDataAccessObject._();
   }
 }

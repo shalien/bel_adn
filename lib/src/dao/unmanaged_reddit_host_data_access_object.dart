@@ -1,20 +1,16 @@
-import '../models/unmanaged_reddit_host.dart';
-import 'data_access_object.dart';
-
-UnmanagedRedditHostDataAccessObject? _unmanagedRedditHostDataAccessObject;
+import '../data_access_object.dart';
+import '../model/unmanaged_reddit_host.dart';
 
 class UnmanagedRedditHostDataAccessObject
     extends DataAccessObject<UnmanagedRedditHost> {
-  UnmanagedRedditHostDataAccessObject._(String host)
-      : super(host, 'unmanagedreddithosts');
+  static UnmanagedRedditHostDataAccessObject?
+      _unmanagedRedditHostDataAccessObject;
 
-  factory UnmanagedRedditHostDataAccessObject(String host) {
+  UnmanagedRedditHostDataAccessObject._()
+      : super(resource: 'unmanagedreddithosts');
+
+  factory UnmanagedRedditHostDataAccessObject() {
     return _unmanagedRedditHostDataAccessObject ??=
-        UnmanagedRedditHostDataAccessObject._(host);
-  }
-
-  @override
-  Future<bool> update(UnmanagedRedditHost t) {
-    throw UnimplementedError();
+        UnmanagedRedditHostDataAccessObject._();
   }
 }

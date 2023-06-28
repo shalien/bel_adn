@@ -1,10 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:bel_adn/src/client/bel_adn_client.dart';
 import 'package:meta/meta.dart';
 
-import '../models.dart';
+import 'cache/cache.dart';
+import 'client/bel_adn_client.dart';
 import 'model.dart';
+import 'model/destination.dart';
+import 'model/media.dart';
+import 'model/provider.dart';
+import 'model/provider_type.dart';
+import 'model/source.dart';
+import 'model/topic.dart';
+import 'model/unmanaged_reddit_host.dart';
 
 @immutable
 abstract class DataAccessObject<T extends Model> {
@@ -23,7 +31,9 @@ abstract class DataAccessObject<T extends Model> {
 
   String get resourceUrl => "$host/api/$resource";
 
-  DataAccessObject(this.host, this.resource);
+  DataAccessObject({required this.resource})
+      : host = Platform.environment['MAGNIFIQUECOUPLE_HOST'] ??
+            'http://localhost:8080';
 
   Future<List<T>> index() async {
     Uri url = Uri.parse(resourceUrl);
@@ -98,27 +108,87 @@ abstract class DataAccessObject<T extends Model> {
       throw Exception(response);
     }
 
+    T value;
+
     switch (T) {
       case Destination:
-        return Destination.fromJson(jsonDecoded['data']) as T;
+        value = Destination.fromJson(jsonDecoded['data']) as T;
+        break;
       case Media:
-        return Media.fromJson(jsonDecoded['data']) as T;
+        value = Media.fromJson(jsonDecoded['data']) as T;
+        break;
       case ProviderType:
-        return ProviderType.fromJson(jsonDecoded['data']) as T;
+        value = ProviderType.fromJson(jsonDecoded['data']) as T;
+        break;
       case Provider:
-        return Provider.fromJson(jsonDecoded['data']) as T;
+        value = Provider.fromJson(jsonDecoded['data']) as T;
+        break;
       case Source:
-        return Source.fromJson(jsonDecoded['data']) as T;
+        value = Source.fromJson(jsonDecoded['data']) as T;
+        break;
       case Topic:
-        return Topic.fromJson(jsonDecoded['data']) as T;
+        value = Topic.fromJson(jsonDecoded['data']) as T;
+        break;
       case UnmanagedRedditHost:
-        return UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
+        value = UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
+        break;
+      default:
+        throw Exception('Unknown type');
     }
 
-    throw Exception(response);
+    cache.add(value);
+
+    return value;
   }
 
-  Future<bool> update(T t);
+  Future<T> update(T t) async {
+    String uri = '$resourceUrl/${t.id}';
+    Uri url = Uri.parse(uri);
+
+    var response = await client.put(url, body: t.toJson(), headers: headers);
+
+    if (response.statusCode != 200) {
+      throw Exception(response);
+    }
+
+    var jsonDecoded = json.decode(response.body);
+
+    if (jsonDecoded['data'] == null) {
+      throw Exception(response);
+    }
+
+    T value;
+
+    switch (T) {
+      case Destination:
+        value = Destination.fromJson(jsonDecoded['data']) as T;
+        break;
+      case Media:
+        value = Media.fromJson(jsonDecoded['data']) as T;
+        break;
+      case ProviderType:
+        value = ProviderType.fromJson(jsonDecoded['data']) as T;
+        break;
+      case Provider:
+        value = Provider.fromJson(jsonDecoded['data']) as T;
+        break;
+      case Source:
+        value = Source.fromJson(jsonDecoded['data']) as T;
+        break;
+      case Topic:
+        value = Topic.fromJson(jsonDecoded['data']) as T;
+        break;
+      case UnmanagedRedditHost:
+        value = UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
+        break;
+      default:
+        throw Exception('Unknown type');
+    }
+
+    cache.replace(value);
+
+    return value;
+  }
 
   Future<T> store(T t) async {
     String uri = resourceUrl;
@@ -136,24 +206,37 @@ abstract class DataAccessObject<T extends Model> {
       throw Exception(response);
     }
 
+    T value;
+
     switch (T) {
       case Destination:
-        return Destination.fromJson(jsonDecoded['data']) as T;
+        value = Destination.fromJson(jsonDecoded['data']) as T;
+        break;
       case Media:
-        return Media.fromJson(jsonDecoded['data']) as T;
+        value = Media.fromJson(jsonDecoded['data']) as T;
+        break;
       case ProviderType:
-        return ProviderType.fromJson(jsonDecoded['data']) as T;
+        value = ProviderType.fromJson(jsonDecoded['data']) as T;
+        break;
       case Provider:
-        return Provider.fromJson(jsonDecoded['data']) as T;
+        value = Provider.fromJson(jsonDecoded['data']) as T;
+        break;
       case Source:
-        return Source.fromJson(jsonDecoded['data']) as T;
+        value = Source.fromJson(jsonDecoded['data']) as T;
+        break;
       case Topic:
-        return Topic.fromJson(jsonDecoded['data']) as T;
+        value = Topic.fromJson(jsonDecoded['data']) as T;
+        break;
       case UnmanagedRedditHost:
-        return UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
+        value = UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
+        break;
+      default:
+        throw Exception('Unknown type');
     }
 
-    throw Exception('Unknown type');
+    cache.add(value);
+
+    return value;
   }
 
   Future<bool> destroy(T t) async {
@@ -166,6 +249,6 @@ abstract class DataAccessObject<T extends Model> {
 
     var response = await client.delete(url, headers: headers);
 
-    return response.statusCode == 200;
+    return response.statusCode == 200 || response.statusCode == 204;
   }
 }

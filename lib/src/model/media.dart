@@ -1,33 +1,29 @@
 import 'dart:convert';
 
-import '../cache/cache.dart';
 import '../dao/destination_data_access_object.dart';
 import '../dao/media_data_access_object.dart';
 import '../dao/source_data_access_object.dart';
-import '../utils.dart';
+import '../model.dart';
 import 'destination.dart';
-import 'model.dart';
 import 'source.dart';
-
-Cache<Media> get _cache => Cache();
 
 /// Represent a [Media]
 ///
 /// The media will posted on discord
 class Media extends Model {
-  static MediaDataAccessObject dao = MediaDataAccessObject(baseUri);
+  static MediaDataAccessObject dao = MediaDataAccessObject();
 
   final String link;
 
   final int sourceId;
 
   Future<Source> get source async =>
-      await SourceDataAccessObject(baseUri).show(sourceId);
+      await SourceDataAccessObject().show(sourceId);
 
   final int destinationId;
 
   Future<Destination> get destination async =>
-      await DestinationDataAccessObject(baseUri).show(destinationId);
+      await DestinationDataAccessObject().show(destinationId);
 
   /// A [Media] will be composed during all the resolving process
   Media(this.sourceId, this.link, this.destinationId,
@@ -41,14 +37,7 @@ class Media extends Model {
   /// Create [Media] from a json string
   @override
   factory Media.fromJson(Map json) {
-    if (json['id'] != null) {
-      final media = _cache.get(json['id']);
-      if (media != null) {
-        return media;
-      }
-    }
-
-    final media = Media._(
+    return Media._(
       json['link'],
       json['source_id'],
       json['destination_id'],
@@ -60,10 +49,6 @@ class Media extends Model {
           ? DateTime.parse(json['created_at'])
           : null,
     );
-
-    _cache.add(media);
-
-    return media;
   }
 
   /// Convert a media to a json string

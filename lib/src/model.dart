@@ -19,7 +19,7 @@ abstract class Model {
     return dao.store(this);
   }
 
-  Future<bool> update() {
+  Future<Model> update() {
     return dao.update(this);
   }
 

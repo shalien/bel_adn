@@ -1,30 +1,16 @@
 import 'dart:convert';
 
 import '../client/bel_adn_client.dart';
-import '../client/response_exception.dart';
-import '../models/source.dart';
-import 'data_access_object.dart';
-
-SourceDataAccessObject? _sourceAccessObject;
+import '../data_access_object.dart';
+import '../model/source.dart';
 
 class SourceDataAccessObject extends DataAccessObject<Source> {
-  SourceDataAccessObject._(String host) : super(host, "sources");
+  static SourceDataAccessObject? _sourceAccessObject;
 
-  factory SourceDataAccessObject(String host) {
-    if (host.isEmpty) {
-      throw ArgumentError("host cannot be empty");
-    }
-    return _sourceAccessObject ??= SourceDataAccessObject._(host);
-  }
+  SourceDataAccessObject._() : super(resource: "sources");
 
-  @override
-  Future<bool> destroy(Source t) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool> update(Source t) {
-    throw UnimplementedError();
+  factory SourceDataAccessObject() {
+    return _sourceAccessObject ??= SourceDataAccessObject._();
   }
 
   Future<bool> exists(Uri link) async {
@@ -47,7 +33,7 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
       case 404:
         return Future.value(false);
       default:
-        throw ResponseException(response);
+        throw Exception(response);
     }
   }
 
@@ -80,7 +66,7 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
       case 404:
         return Future.value(null);
       default:
-        throw ResponseException(response);
+        throw Exception(response);
     }
   }
 }
