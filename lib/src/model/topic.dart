@@ -4,6 +4,7 @@ import '../dao/provider_data_access_object.dart';
 import '../dao/topic_data_access_object.dart';
 import '../model.dart';
 import 'provider.dart';
+import 'topic_alias.dart';
 
 class Topic extends Model {
   static TopicDataAccessObject dao = TopicDataAccessObject();
@@ -12,19 +13,35 @@ class Topic extends Model {
 
   final int order;
 
+  List<int?> get aliasesId => aliases.map((e) => e.id).toList();
+
+  List<TopicAlias> aliases = [];
+
   Future<List<Provider>> get providers async =>
       await ProviderDataAccessObject().getByTopicId(id!);
 
-  Topic(this.name, this.order,
-      {int? id, DateTime? createdAt, DateTime? updatedAt})
+  Topic(
+      {required this.name,
+      required this.order,
+      required this.aliases,
+      int? id,
+      DateTime? createdAt,
+      DateTime? updatedAt})
       : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
   @override
   factory Topic.fromJson(Map<String, dynamic> json) {
+    List<TopicAlias> aliases = json['topic_aliases'] == null
+        ? []
+        : (json['topic_aliases'] as List)
+            .map((e) => TopicAlias.fromJson(e))
+            .toList();
+
     return Topic(
-      json['name'],
-      json['order'],
+      name: json['name'],
+      order: json['order'],
       id: json['id'],
+      aliases: aliases,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,

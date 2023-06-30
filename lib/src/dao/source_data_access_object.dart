@@ -18,7 +18,7 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
       throw ArgumentError("link cannot be empty");
     }
 
-    if (cache.find((source) => source.link == link.toString()).isNotEmpty) {
+    if (cache.find((source) => source.link == link).isNotEmpty) {
       return Future.value(true);
     }
 
@@ -42,9 +42,8 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    if (cache.find((source) => source.link == link.toString()).isNotEmpty) {
-      return Future.value(
-          cache.find((source) => source.link == link.toString()).first);
+    if (cache.find((source) => source.link == link).isNotEmpty) {
+      return Future.value(cache.find((source) => source.link == link).first);
     }
 
     Uri uri = Uri.parse(

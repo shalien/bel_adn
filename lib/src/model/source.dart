@@ -8,21 +8,26 @@ import 'provider.dart';
 class Source extends Model {
   static SourceDataAccessObject dao = SourceDataAccessObject();
 
-  final String link;
+  final Uri link;
 
   final int providerId;
 
   Future<Provider> get provider async =>
       await ProviderDataAccessObject().show(providerId);
 
-  Source(this.link, this.providerId, {id, createdAt, updatedAt})
+  Source(
+      {required this.link,
+      required this.providerId,
+      int? id,
+      DateTime? createdAt,
+      DateTime? updatedAt})
       : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
   @override
   factory Source.fromJson(Map json) {
     return Source(
-      json['link'],
-      json['provider_id'],
+      link: Uri.parse(json['link']),
+      providerId: json['provider_id'],
       id: json['id'],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
@@ -40,7 +45,7 @@ class Source extends Model {
       ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
       ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
       'provider_id': providerId,
-      'link': link,
+      'link': link.toString(),
     });
   }
 }

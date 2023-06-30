@@ -8,13 +8,17 @@ class Destination extends Model {
 
   final String filename;
 
-  Destination(this.filename, {id, createdAt, updatedAt})
+  Destination(
+      {required this.filename,
+      int? id,
+      DateTime? createdAt,
+      DateTime? updatedAt})
       : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
   @override
   factory Destination.fromJson(Map json) {
     return Destination(
-      json['filename'],
+      filename: json['filename'],
       id: json['id'],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])

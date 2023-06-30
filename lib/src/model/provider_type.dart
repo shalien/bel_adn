@@ -8,13 +8,14 @@ class ProviderType extends Model {
 
   final String name;
 
-  ProviderType(this.name, {id, createdAt, updatedAt})
+  ProviderType(
+      {required this.name, int? id, DateTime? createdAt, DateTime? updatedAt})
       : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
   @override
   factory ProviderType.fromJson(Map<String, dynamic> json) {
     return ProviderType(
-      json['name'],
+      name: json['name'],
       id: json['id'],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
