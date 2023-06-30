@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:bel_adn/src/model/provider_link.dart';
+
 import '../dao/provider_data_access_object.dart';
-import '../dao/provider_type_data_access_object.dart';
 import '../dao/topic_data_access_object.dart';
 import '../model.dart';
-import 'provider_type.dart';
 import 'topic.dart';
 
 class Provider extends Model {
@@ -12,34 +12,41 @@ class Provider extends Model {
 
   final int? topicId;
 
-  final int providerTypeId;
-
-  final String link;
-
   final String? prefix;
+
+  final List<int>? providerLinks;
 
   Future<Topic> get topic async => await TopicDataAccessObject().show(topicId!);
 
-  Future<ProviderType> get providerType async =>
-      await ProviderTypeDataAccessObject().show(providerTypeId);
+  Future<List<ProviderLink>> get providerLinksList async {
+    List<ProviderLink> list = [];
+    for (int id in providerLinks!) {
+      list.add(await ProviderLink.dao.show(id));
+    }
+    return list;
+  }
 
-  Provider(
-    this.topicId,
-    this.providerTypeId,
-    this.link, {
-    this.prefix,
-    id,
-    createdAt,
-    updatedAt,
+  Provider({
+    required this.topicId,
+    required this.prefix,
+    required this.providerLinks,
+    int? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
   @override
   factory Provider.fromJson(Map json) {
+    List<int>? providerLinks = json['provider_links'] == null
+        ? []
+        : (json['provider_links'] as List)
+            .map((e) => ProviderLink.fromJson(e).id!)
+            .toList();
+
     return Provider(
-      json['topic_id'],
-      json['provider_type_id'],
-      json['link'],
+      topicId: json['topic_id'],
       prefix: json['prefix'],
+      providerLinks: providerLinks,
       id: json['id'],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
@@ -58,8 +65,7 @@ class Provider extends Model {
       ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
       ...?topicId != null ? {'topic_id': topicId} : null,
       ...?prefix != null ? {'prefix': prefix} : null,
-      'provider_type_id': providerTypeId,
-      'link': link,
+      ...?providerLinks != null ? {'providerlinks': providerLinks} : null,
     });
   }
 }

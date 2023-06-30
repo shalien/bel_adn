@@ -13,7 +13,7 @@ import 'source.dart';
 class Media extends Model {
   static MediaDataAccessObject dao = MediaDataAccessObject();
 
-  final String link;
+  final Uri link;
 
   final int sourceId;
 
@@ -26,21 +26,22 @@ class Media extends Model {
       await DestinationDataAccessObject().show(destinationId);
 
   /// A [Media] will be composed during all the resolving process
-  Media(this.sourceId, this.link, this.destinationId,
-      {id, createdAt, updatedAt})
-      : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
-
-  Media._(this.link, this.sourceId, this.destinationId,
-      {id, createdAt, updatedAt})
+  Media(
+      {required this.sourceId,
+      required this.link,
+      required this.destinationId,
+      int? id,
+      DateTime? createdAt,
+      DateTime? updatedAt})
       : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
   /// Create [Media] from a json string
   @override
   factory Media.fromJson(Map json) {
-    return Media._(
-      json['link'],
-      json['source_id'],
-      json['destination_id'],
+    return Media(
+      link: Uri.parse(json['link']),
+      sourceId: json['source_id'],
+      destinationId: json['destination_id'],
       id: json['id'],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
@@ -60,7 +61,7 @@ class Media extends Model {
       ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
       'source_id': sourceId,
       'destination_id': destinationId,
-      'link': link,
+      'link': link.toString(),
     });
   }
 }

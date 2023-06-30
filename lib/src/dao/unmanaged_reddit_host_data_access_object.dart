@@ -6,8 +6,7 @@ class UnmanagedRedditHostDataAccessObject
   static UnmanagedRedditHostDataAccessObject?
       _unmanagedRedditHostDataAccessObject;
 
-  UnmanagedRedditHostDataAccessObject._()
-      : super(resource: 'unmanagedreddithosts');
+  UnmanagedRedditHostDataAccessObject._() : super(resource: 'unmanaged_hosts');
 
   factory UnmanagedRedditHostDataAccessObject() {
     return _unmanagedRedditHostDataAccessObject ??=

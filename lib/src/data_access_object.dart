@@ -9,6 +9,7 @@ import 'model.dart';
 import 'model/destination.dart';
 import 'model/media.dart';
 import 'model/provider.dart';
+import 'model/provider_link.dart';
 import 'model/provider_type.dart';
 import 'model/source.dart';
 import 'model/topic.dart';
@@ -33,7 +34,7 @@ abstract class DataAccessObject<T extends Model> {
 
   DataAccessObject({required this.resource})
       : host = Platform.environment['MAGNIFIQUECOUPLE_HOST'] ??
-            'http://localhost:8080';
+            'http://localhost:8000';
 
   Future<List<T>> index() async {
     Uri url = Uri.parse(resourceUrl);
@@ -76,6 +77,9 @@ abstract class DataAccessObject<T extends Model> {
                 break;
               case UnmanagedRedditHost:
                 models.add(UnmanagedRedditHost.fromJson(element) as T);
+                break;
+              case ProviderLink:
+                models.add(ProviderLink.fromJson(element) as T);
                 break;
             }
           }
@@ -132,6 +136,9 @@ abstract class DataAccessObject<T extends Model> {
       case UnmanagedRedditHost:
         value = UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
         break;
+      case ProviderLink:
+        value = ProviderLink.fromJson(jsonDecoded['data']) as T;
+        break;
       default:
         throw Exception('Unknown type');
     }
@@ -181,6 +188,9 @@ abstract class DataAccessObject<T extends Model> {
       case UnmanagedRedditHost:
         value = UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
         break;
+      case ProviderLink:
+        value = ProviderLink.fromJson(jsonDecoded['data']) as T;
+        break;
       default:
         throw Exception('Unknown type');
     }
@@ -229,6 +239,9 @@ abstract class DataAccessObject<T extends Model> {
         break;
       case UnmanagedRedditHost:
         value = UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
+        break;
+      case ProviderLink:
+        value = ProviderLink.fromJson(jsonDecoded['data']) as T;
         break;
       default:
         throw Exception('Unknown type');

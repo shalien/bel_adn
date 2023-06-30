@@ -44,7 +44,7 @@ Future<Response> delete(
     BelAdnClient()
         .delete(url, headers: headers, body: body, encoding: encoding);
 
-class BelAdnClient extends BaseClient {
+final class BelAdnClient extends BaseClient {
   static final Map<String, String> defaultHeaders = {
     'user-agent': 'bel_adn 2.0.0/ u/Shalien93'
   };

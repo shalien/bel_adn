@@ -14,16 +14,4 @@ abstract class Model {
   Model.fromJson(Map<String, dynamic> json);
 
   String toJson();
-
-  Future<Model> store() {
-    return dao.store(this);
-  }
-
-  Future<Model> update() {
-    return dao.update(this);
-  }
-
-  Future<bool> destroy() {
-    return dao.destroy(this);
-  }
 }
