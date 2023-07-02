@@ -15,6 +15,18 @@ void main() async {
       return;
     }
 
-    expect(topic.providers.length, greaterThan(1));
+    expect((await topic.providers).length, greaterThan(1));
+  });
+
+  test('All topic with providers', () async {
+    List<Topic> topics = await Topic.dao.index();
+
+    int sum = 0;
+
+    for (var topic in topics) {
+      sum += (await topic.providers).length;
+    }
+
+    expect(sum, greaterThan(1));
   });
 }
