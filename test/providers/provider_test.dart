@@ -5,8 +5,8 @@ void main() async {
   test('Providers and links', () async {
     Provider one = await Provider.dao.show(3);
 
-    List<ProviderLink> links = await one.providerLinksList;
+    List<ProviderLink> links = one.providerLinks;
 
-    expect(links.length, 1);
+    expect(links.length, greaterThan(1));
   });
 }

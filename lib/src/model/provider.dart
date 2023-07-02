@@ -10,24 +10,14 @@ import 'topic.dart';
 class Provider extends Model {
   static ProviderDataAccessObject dao = ProviderDataAccessObject();
 
-  final int? topicId;
-
   final String? prefix;
 
-  final List<int>? providerLinks;
+  final Topic topic;
 
-  Future<Topic> get topic async => await TopicDataAccessObject().show(topicId!);
-
-  Future<List<ProviderLink>> get providerLinksList async {
-    List<ProviderLink> list = [];
-    for (int id in providerLinks!) {
-      list.add(await ProviderLink.dao.show(id));
-    }
-    return list;
-  }
+  final List<ProviderLink> providerLinks;
 
   Provider({
-    required this.topicId,
+    required this.topic,
     required this.prefix,
     required this.providerLinks,
     int? id,
@@ -37,14 +27,14 @@ class Provider extends Model {
 
   @override
   factory Provider.fromJson(Map json) {
-    List<int>? providerLinks = json['provider_links'] == null
+    List<ProviderLink>? providerLinks = json['provider_links'] == null
         ? []
         : (json['provider_links'] as List)
-            .map((e) => ProviderLink.fromJson(e).id!)
+            .map((e) => ProviderLink.fromJson(e))
             .toList();
 
     return Provider(
-      topicId: json['topic_id'],
+      topic: Topic.fromJson(json['topic']),
       prefix: json['prefix'],
       providerLinks: providerLinks,
       id: json['id'],
@@ -63,9 +53,9 @@ class Provider extends Model {
       ...?id != null ? {'id': id} : null,
       ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
       ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
-      ...?topicId != null ? {'topic_id': topicId} : null,
+      'topic_id': topic.id,
       ...?prefix != null ? {'prefix': prefix} : null,
-      ...?providerLinks != null ? {'providerlinks': providerLinks} : null,
+      'provider_links': providerLinks.map((e) => e.toJson()).toList(),
     });
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import '../dao/provider_data_access_object.dart';
 import '../dao/topic_data_access_object.dart';
 import '../model.dart';
 import 'provider.dart';
@@ -17,13 +16,13 @@ class Topic extends Model {
 
   List<TopicAlias> aliases = [];
 
-  Future<List<Provider>> get providers async =>
-      await ProviderDataAccessObject().getByTopicId(id!);
+  List<Provider> providers = [];
 
   Topic(
       {required this.name,
       required this.order,
       required this.aliases,
+      required this.providers,
       int? id,
       DateTime? createdAt,
       DateTime? updatedAt})
@@ -37,11 +36,16 @@ class Topic extends Model {
             .map((e) => TopicAlias.fromJson(e))
             .toList();
 
+    List<Provider> providers = json['providers'] == null
+        ? []
+        : (json['providers'] as List).map((e) => Provider.fromJson(e)).toList();
+
     return Topic(
       name: json['name'],
       order: json['order'],
       id: json['id'],
       aliases: aliases,
+      providers: providers,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
