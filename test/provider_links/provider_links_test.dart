@@ -5,7 +5,7 @@ void main() async {
   test('Provider links test', () async {
     ProviderLink one = await ProviderLink.dao.show(3);
 
-    List<int> providers = one.providers;
+    List<Provider> providers = await one.providers;
 
     expect(providers.length, 1);
   });
@@ -21,11 +21,11 @@ void main() async {
     List<ProviderLink> subLinks = links.sublist(0, 5);
 
     for (ProviderLink link in subLinks) {
-      link.providers.addAll(subList.map((e) => e.id!).toList());
+      link.providersIds.addAll(subList.map((e) => e.id!).toList());
 
       ProviderLink.dao.update(link);
 
-      expect(link.providers.length, 6);
+      expect((await link.providers).length, 6);
     }
   });
 }

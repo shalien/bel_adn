@@ -3,19 +3,28 @@ import 'dart:convert';
 import '../dao/provider_link_data_access_object.dart';
 import '../model.dart';
 import 'provider.dart';
+import 'provider_type.dart';
 
 final class ProviderLink extends Model {
   static ProviderLinkDataAccessObject dao = ProviderLinkDataAccessObject();
 
-  final List<int> providers;
+  final List<int> providersIds;
+
+  Future<List<Provider>> get providers async => providersIds
+      .map((e) async => await Provider.dao.show(e))
+      .toList()
+      .cast<Provider>();
 
   final int providerTypeId;
+
+  Future<ProviderType> get providerType async =>
+      await ProviderType.dao.show(providerTypeId);
 
   final Uri link;
 
   ProviderLink({
     int? id,
-    required this.providers,
+    required this.providersIds,
     required this.link,
     required this.providerTypeId,
     DateTime? createdAt,
@@ -35,7 +44,7 @@ final class ProviderLink extends Model {
 
     return ProviderLink(
       id: json['id'],
-      providers: providers,
+      providersIds: providers,
       link: Uri.parse(json['link']),
       providerTypeId: json['provider_type_id'],
       createdAt: json['created_at'] != null

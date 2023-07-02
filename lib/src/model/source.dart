@@ -12,8 +12,7 @@ class Source extends Model {
 
   final int providerId;
 
-  Future<Provider> get provider async =>
-      await ProviderDataAccessObject().show(providerId);
+  Future<Provider> get provider async => await Provider.dao.show(providerId);
 
   Source(
       {required this.link,

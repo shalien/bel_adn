@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:bel_adn/src/model/provider_link.dart';
 
 import '../dao/provider_data_access_object.dart';
-import '../dao/topic_data_access_object.dart';
 import '../model.dart';
 import 'topic.dart';
 
@@ -12,14 +11,21 @@ class Provider extends Model {
 
   final String? prefix;
 
-  final Topic topic;
+  final int topicId;
 
-  final List<ProviderLink> providerLinks;
+  Future<Topic> get topic async => await Topic.dao.show(topicId);
+
+  final List<int> providerLinksIds;
+
+  Future<List<ProviderLink>> get providerLinks async => providerLinksIds
+      .map((e) async => await ProviderLink.dao.show(e))
+      .toList()
+      .cast<ProviderLink>();
 
   Provider({
-    required this.topic,
+    required this.topicId,
     required this.prefix,
-    required this.providerLinks,
+    required this.providerLinksIds,
     int? id,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -27,16 +33,16 @@ class Provider extends Model {
 
   @override
   factory Provider.fromJson(Map json) {
-    List<ProviderLink>? providerLinks = json['provider_links'] == null
+    List<int> providerLinks = json['provider_links'] == null
         ? []
         : (json['provider_links'] as List)
-            .map((e) => ProviderLink.fromJson(e))
+            .map((e) => ProviderLink.fromJson(e).id!)
             .toList();
 
     return Provider(
-      topic: Topic.fromJson(json['topic']),
+      topicId: json['topic_id'],
       prefix: json['prefix'],
-      providerLinks: providerLinks,
+      providerLinksIds: providerLinks,
       id: json['id'],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
@@ -53,9 +59,9 @@ class Provider extends Model {
       ...?id != null ? {'id': id} : null,
       ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
       ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
-      'topic_id': topic.id,
+      'topic_id': topicId,
       ...?prefix != null ? {'prefix': prefix} : null,
-      'provider_links': providerLinks.map((e) => e.toJson()).toList(),
+      'provider_links': providerLinksIds,
     });
   }
 }
