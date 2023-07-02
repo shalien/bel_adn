@@ -15,6 +15,6 @@ void main() async {
       return;
     }
 
-    expect(topic.aliases.length, equals(1));
+    expect(topic.providers.length, greaterThan(1));
   });
 }
