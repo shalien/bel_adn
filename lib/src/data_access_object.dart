@@ -14,6 +14,7 @@ import 'model/provider_link.dart';
 import 'model/provider_type.dart';
 import 'model/source.dart';
 import 'model/topic.dart';
+import 'model/topic_alias.dart';
 import 'model/unmanaged_reddit_host.dart';
 
 @immutable
@@ -93,6 +94,9 @@ abstract class DataAccessObject<T extends Model> {
               case ProviderLink:
                 models.add(ProviderLink.fromJson(element) as T);
                 break;
+              case TopicAlias:
+                models.add(TopicAlias.fromJson(element) as T);
+                break;
             }
           }
         }
@@ -124,36 +128,7 @@ abstract class DataAccessObject<T extends Model> {
       throw Exception(response);
     }
 
-    T value;
-
-    switch (T) {
-      case Destination:
-        value = Destination.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Media:
-        value = Media.fromJson(jsonDecoded['data']) as T;
-        break;
-      case ProviderType:
-        value = ProviderType.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Provider:
-        value = Provider.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Source:
-        value = Source.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Topic:
-        value = Topic.fromJson(jsonDecoded['data']) as T;
-        break;
-      case UnmanagedRedditHost:
-        value = UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
-        break;
-      case ProviderLink:
-        value = ProviderLink.fromJson(jsonDecoded['data']) as T;
-        break;
-      default:
-        throw Exception('Unknown type');
-    }
+    T value = _resolveT(T, jsonDecoded['data']);
 
     cache.add(value);
 
@@ -176,36 +151,7 @@ abstract class DataAccessObject<T extends Model> {
       throw Exception(response);
     }
 
-    T value;
-
-    switch (T) {
-      case Destination:
-        value = Destination.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Media:
-        value = Media.fromJson(jsonDecoded['data']) as T;
-        break;
-      case ProviderType:
-        value = ProviderType.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Provider:
-        value = Provider.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Source:
-        value = Source.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Topic:
-        value = Topic.fromJson(jsonDecoded['data']) as T;
-        break;
-      case UnmanagedRedditHost:
-        value = UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
-        break;
-      case ProviderLink:
-        value = ProviderLink.fromJson(jsonDecoded['data']) as T;
-        break;
-      default:
-        throw Exception('Unknown type');
-    }
+    T value = _resolveT(T, jsonDecoded['data']);
 
     cache.replace(value);
 
@@ -228,36 +174,7 @@ abstract class DataAccessObject<T extends Model> {
       throw Exception(response);
     }
 
-    T value;
-
-    switch (T) {
-      case Destination:
-        value = Destination.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Media:
-        value = Media.fromJson(jsonDecoded['data']) as T;
-        break;
-      case ProviderType:
-        value = ProviderType.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Provider:
-        value = Provider.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Source:
-        value = Source.fromJson(jsonDecoded['data']) as T;
-        break;
-      case Topic:
-        value = Topic.fromJson(jsonDecoded['data']) as T;
-        break;
-      case UnmanagedRedditHost:
-        value = UnmanagedRedditHost.fromJson(jsonDecoded['data']) as T;
-        break;
-      case ProviderLink:
-        value = ProviderLink.fromJson(jsonDecoded['data']) as T;
-        break;
-      default:
-        throw Exception('Unknown type');
-    }
+    T value = _resolveT(T, jsonDecoded['data']);
 
     cache.add(value);
 
@@ -275,5 +192,43 @@ abstract class DataAccessObject<T extends Model> {
     var response = await client.delete(url, headers: headers);
 
     return response.statusCode == 200 || response.statusCode == 204;
+  }
+
+  T _resolveT(Type t, data) {
+    T value;
+
+    switch (t) {
+      case Destination:
+        value = Destination.fromJson(data) as T;
+        break;
+      case Media:
+        value = Media.fromJson(data) as T;
+        break;
+      case ProviderType:
+        value = ProviderType.fromJson(data) as T;
+        break;
+      case Provider:
+        value = Provider.fromJson(data) as T;
+        break;
+      case Source:
+        value = Source.fromJson(data) as T;
+        break;
+      case Topic:
+        value = Topic.fromJson(data) as T;
+        break;
+      case UnmanagedRedditHost:
+        value = UnmanagedRedditHost.fromJson(data) as T;
+        break;
+      case ProviderLink:
+        value = ProviderLink.fromJson(data) as T;
+        break;
+      case TopicAlias:
+        value = TopicAlias.fromJson(data) as T;
+        break;
+      default:
+        throw Exception('Unknown type');
+    }
+
+    return value;
   }
 }
