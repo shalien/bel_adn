@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:meta/meta.dart';
+import 'package:sha_env/sha_env.dart';
 
 import 'cache/cache.dart';
 import 'client/bel_adn_client.dart';
@@ -17,9 +18,22 @@ import 'model/unmanaged_reddit_host.dart';
 
 @immutable
 abstract class DataAccessObject<T extends Model> {
+  static set host(String host) {
+    try {
+      Uri.parse(host);
+    } catch (e) {
+      throw Exception('Invalid host');
+    }
+    _host = host;
+  }
+
+  static String get host => _host;
+
   final String resource;
 
-  final String host;
+  static String _host = Platform.environment['MAGNIFIQUECOUPLE_HOST'] ??
+      fromEnvironmentString('MAGNIFIQUECOUPLE_HOST',
+          defaultValue: 'http://127.0.0.1:8000');
 
   final BelAdnClient client = BelAdnClient();
 
@@ -30,11 +44,9 @@ abstract class DataAccessObject<T extends Model> {
     'Content-Type': 'application/json',
   };
 
-  String get resourceUrl => "$host/api/$resource";
+  String get resourceUrl => "${DataAccessObject._host}/api/$resource";
 
-  DataAccessObject({required this.resource})
-      : host = Platform.environment['MAGNIFIQUECOUPLE_HOST'] ??
-            'http://localhost:8000';
+  DataAccessObject({required this.resource});
 
   Future<List<T>> index() async {
     Uri url = Uri.parse(resourceUrl);

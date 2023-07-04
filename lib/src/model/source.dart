@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import '../dao/provider_data_access_object.dart';
 import '../dao/source_data_access_object.dart';
 import '../model.dart';
 import 'provider.dart';

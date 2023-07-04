@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:bel_adn/bel_adn.dart';
 import 'package:meta/meta.dart';
 
 import '../data_access_object.dart';
+import '../model/provider.dart';
 import '../model/topic.dart';
+import '../model/topic_alias.dart';
 
 /// The [DataAccessObject] for the [Topic] class
 @immutable

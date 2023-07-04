@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:meta/meta.dart';
 
 import '../data_access_object.dart';
 import '../model/provider.dart';
-import '../model/topic.dart';
 
 /// The [DataAccessObject] for the [Provider] class
 @immutable
