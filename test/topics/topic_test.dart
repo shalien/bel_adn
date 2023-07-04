@@ -24,6 +24,12 @@ void main() async {
     int sum = 0;
 
     for (var topic in topics) {
+      int length = (await topic.providers).length;
+
+      if (length <= 0) {
+        print(topic.name);
+      }
+
       sum += (await topic.providers).length;
     }
 
