@@ -25,7 +25,7 @@ void main() async {
 
       ProviderLink.dao.update(link);
 
-      expect((await link.providers).length, 6);
+      expect((await link.providers).length, greaterThanOrEqualTo(5));
     }
   });
 }

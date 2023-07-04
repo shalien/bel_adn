@@ -14,17 +14,21 @@ class Topic extends Model {
 
   final List<int> aliasesIds;
 
-  Future<List<TopicAlias>> get aliases async => aliasesIds
-      .map((e) async => await TopicAlias.dao.show(e))
-      .toList()
-      .cast<TopicAlias>();
+  Future<List<TopicAlias>> get aliases async => aliasesIds.isNotEmpty
+      ? aliasesIds
+          .map((e) async => await TopicAlias.dao.show(e))
+          .toList()
+          .cast<TopicAlias>()
+      : await Topic.dao.showWithAliases(this);
 
   final List<int> providersIds;
 
-  Future<List<Provider>> get providers async => providersIds
-      .map((e) async => await Provider.dao.show(e))
-      .toList()
-      .cast<Provider>();
+  Future<List<Provider>> get providers async => providersIds.isNotEmpty
+      ? providersIds
+          .map((e) async => await Provider.dao.show(e))
+          .toList()
+          .cast<Provider>()
+      : await Topic.dao.showWithProvider(this);
 
   Topic(
       {required this.name,

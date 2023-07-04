@@ -20,7 +20,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
   }
 
   Future<List<Provider>> showWithProvider(Topic topic) async {
-    Uri uri = Uri.parse("${topic.id}/providers");
+    Uri uri = Uri.parse("$resourceUrl/${topic.id}/providers");
 
     var response = await client.get(uri);
 
@@ -36,7 +36,7 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
   }
 
   Future<List<TopicAlias>> showWithAliases(Topic topic) async {
-    Uri uri = Uri.parse("${topic.id}/topic_aliases");
+    Uri uri = Uri.parse("$resourceUrl/${topic.id}/alias");
 
     var response = await client.get(uri);
 

@@ -10,10 +10,7 @@ final class ProviderLink extends Model {
 
   final List<int> providersIds;
 
-  Future<List<Provider>> get providers async => providersIds
-      .map((e) async => await Provider.dao.show(e))
-      .toList()
-      .cast<Provider>();
+  Future<List<Provider>> get providers async => await dao.showProviders(this);
 
   final int providerTypeId;
 
@@ -60,7 +57,7 @@ final class ProviderLink extends Model {
   String toJson() {
     return jsonEncode(
       {
-        'providers': providers,
+        'providers': providersIds,
         'link': link.toString(),
         'provider_type_id': providerTypeId,
         ...?id != null ? {'id': id} : null,

@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import '../dao/destination_data_access_object.dart';
 import '../dao/media_data_access_object.dart';
-import '../dao/source_data_access_object.dart';
 import '../model.dart';
 import 'destination.dart';
 import 'source.dart';
@@ -17,13 +15,12 @@ class Media extends Model {
 
   final int sourceId;
 
-  Future<Source> get source async =>
-      await SourceDataAccessObject().show(sourceId);
+  Future<Source> get source async => await Source.dao.show(sourceId);
 
   final int destinationId;
 
   Future<Destination> get destination async =>
-      await DestinationDataAccessObject().show(destinationId);
+      await Destination.dao.show(destinationId);
 
   /// A [Media] will be composed during all the resolving process
   Media(

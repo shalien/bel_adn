@@ -27,6 +27,22 @@ void main() async {
       sum += (await topic.providers).length;
     }
 
+    print(sum);
+
     expect(sum, greaterThan(1));
+  });
+
+  test('All topics with aliases', () async {
+    List<Topic> topics = await Topic.dao.index();
+
+    int sum = 0;
+
+    for (var topic in topics) {
+      sum += (await topic.aliases).length;
+    }
+
+    print(sum);
+
+    expect(sum, greaterThan(0));
   });
 }
