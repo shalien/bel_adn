@@ -1,7 +1,7 @@
-import 'package:meta/meta.dart';
+import 'dart:convert';
 
-import '../data_access_object.dart';
-import '../model/provider.dart';
+import 'package:bel_adn/bel_adn.dart';
+import 'package:meta/meta.dart';
 
 /// The [DataAccessObject] for the [Provider] class
 @immutable
@@ -13,5 +13,29 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
   /// Factory used to create and a single instance during the program run
   factory ProviderDataAccessObject() {
     return _providerDataAccessObject ??= ProviderDataAccessObject._();
+  }
+
+  Future<List<ProviderLink>> showWithLinks(Provider provider) async {
+    Uri uri = Uri.parse("$resourceUrl/providers/${provider.id}/provider_links");
+
+    var response = await client.get(uri);
+
+    if (response.statusCode != 200) {
+      throw Exception("Unable to fetch provider links");
+    }
+
+    List<ProviderLink> providerLinks = [];
+
+    var decodedResponse = jsonDecode(response.body);
+
+    if (decodedResponse['data'] == null) {
+      return providerLinks;
+    }
+
+    for (var providerLink in decodedResponse['data']) {
+      providerLinks.add(ProviderLink.fromJson(providerLink));
+    }
+
+    return providerLinks;
   }
 }
