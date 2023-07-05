@@ -13,14 +13,23 @@ class Provider extends Model {
 
   final int topicId;
 
-  Future<Topic> get topic async => await Topic.dao.show(topicId);
+  Topic? _topic;
+
+  Future<Topic> get topic async {
+    _topic ??= await Topic.dao.show(topicId);
+    return _topic!;
+  }
 
   final List<int> providerLinksIds;
 
-  Future<List<ProviderLink>> get providerLinks async => providerLinksIds
-      .map((e) async => await ProviderLink.dao.show(e))
-      .toList()
-      .cast<ProviderLink>();
+  List<ProviderLink> _providerLinks = [];
+
+  Future<List<ProviderLink>> get providerLinks async {
+    if (_providerLinks.isEmpty) {
+      _providerLinks = await Provider.dao.showWithLinks(this);
+    }
+    return _providerLinks;
+  }
 
   Provider({
     required this.topicId,

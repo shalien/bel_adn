@@ -15,12 +15,27 @@ class Media extends Model {
 
   final int sourceId;
 
-  Future<Source> get source async => await Source.dao.show(sourceId);
+  late Source _source;
+
+  Future<Source> get source async {
+    if (_source.id == sourceId) {
+      return _source;
+    }
+    _source = await Source.dao.show(sourceId);
+    return _source;
+  }
 
   final int destinationId;
 
-  Future<Destination> get destination async =>
-      await Destination.dao.show(destinationId);
+  late Destination _destination;
+
+  Future<Destination> get destination async {
+    if (_destination.id == destinationId) {
+      return _destination;
+    }
+    _destination = await Destination.dao.show(destinationId);
+    return _destination;
+  }
 
   /// A [Media] will be composed during all the resolving process
   Media(

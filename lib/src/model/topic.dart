@@ -12,25 +12,27 @@ class Topic extends Model {
 
   final int order;
 
-  final List<int> aliasesIds;
+  List<Provider> _providers = [];
 
-  Future<List<TopicAlias>> get aliases async => aliasesIds.isNotEmpty
-      ? aliasesIds
-          .map((e) async => await TopicAlias.dao.show(e))
-          .toList()
-          .cast<TopicAlias>()
-      : await Topic.dao.showWithAliases(this);
+  Future<List<Provider>> get providers async {
+    if (_providers.isEmpty) {
+      _providers = await Topic.dao.showWithProvider(this);
+    }
+    return _providers;
+  }
 
-  final List<int> providersIds;
+  List<TopicAlias> _aliases = [];
 
-  Future<List<Provider>> get providers async =>
-      await Topic.dao.showWithProvider(this);
+  Future<List<TopicAlias>> get aliases async {
+    if (_aliases.isEmpty) {
+      _aliases = await Topic.dao.showWithAliases(this);
+    }
+    return _aliases;
+  }
 
   Topic(
       {required this.name,
       required this.order,
-      required this.aliasesIds,
-      required this.providersIds,
       int? id,
       DateTime? createdAt,
       DateTime? updatedAt})
@@ -38,24 +40,10 @@ class Topic extends Model {
 
   @override
   factory Topic.fromJson(Map<String, dynamic> json) {
-    List<int> aliases = json['topic_aliases'] == null
-        ? []
-        : (json['topic_aliases'] as List)
-            .map((e) => TopicAlias.fromJson(e).id!)
-            .toList();
-
-    List<int> providers = json['providers'] == null
-        ? []
-        : (json['providers'] as List)
-            .map((e) => Provider.fromJson(e).id!)
-            .toList();
-
     return Topic(
       name: json['name'],
       order: json['order'],
       id: json['id'],
-      aliasesIds: aliases,
-      providersIds: providers,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,

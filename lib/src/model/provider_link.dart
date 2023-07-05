@@ -10,12 +10,23 @@ final class ProviderLink extends Model {
 
   final List<int> providersIds;
 
-  Future<List<Provider>> get providers async => await dao.showProviders(this);
+  List<Provider> _providers = [];
+
+  Future<List<Provider>> get providers async {
+    if (_providers.isEmpty) {
+      _providers = await ProviderLink.dao.showProviders(this);
+    }
+    return _providers;
+  }
 
   final int providerTypeId;
 
-  Future<ProviderType> get providerType async =>
-      await ProviderType.dao.show(providerTypeId);
+  ProviderType? _providerType;
+
+  Future<ProviderType> get providerType async {
+    _providerType ??= await ProviderType.dao.show(providerTypeId);
+    return _providerType!;
+  }
 
   final Uri link;
 

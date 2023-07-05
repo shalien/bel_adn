@@ -35,6 +35,16 @@ void main() async {
 
     print(sum);
 
+    for (var topic in topics) {
+      int length = (await topic.providers).length;
+
+      if (length <= 0) {
+        print(topic.name);
+      }
+
+      sum += (await topic.providers).length;
+    }
+
     expect(sum, greaterThan(1));
   });
 
@@ -48,6 +58,10 @@ void main() async {
     }
 
     print(sum);
+
+    for (var topic in topics) {
+      sum += (await topic.aliases).length;
+    }
 
     expect(sum, greaterThan(0));
   });
