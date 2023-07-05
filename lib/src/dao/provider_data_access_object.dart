@@ -16,7 +16,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
   }
 
   Future<List<ProviderLink>> showWithLinks(Provider provider) async {
-    Uri uri = Uri.parse("$resourceUrl/${provider.id}/provider_links");
+    Uri uri = Uri.parse("$resourceUrl/${provider.id}/links");
 
     var response = await client.get(uri);
 
