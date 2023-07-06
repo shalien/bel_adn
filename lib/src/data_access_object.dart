@@ -191,7 +191,11 @@ abstract class DataAccessObject<T extends Model> {
 
     var response = await client.delete(url, headers: headers);
 
-    return response.statusCode == 200 || response.statusCode == 204;
+    if (response.statusCode != 200 && response.statusCode != 204) {
+      throw Exception(response);
+    }
+
+    return true;
   }
 
   T _resolveT(Type t, data) {
