@@ -33,7 +33,7 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
       case 404:
         return Future.value(false);
       default:
-        throw Exception(response);
+        throw response;
     }
   }
 
@@ -65,7 +65,7 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
       case 404:
         return Future.value(null);
       default:
-        throw Exception(response);
+        throw response;
     }
   }
 }

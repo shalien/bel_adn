@@ -20,7 +20,7 @@ final class ProviderLinkDataAccessObject
     final response = await client.get(uri);
 
     if (response.statusCode != 200) {
-      throw Exception(response);
+      throw response;
     }
 
     var decodedResponse = jsonDecode(response.body);
