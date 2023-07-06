@@ -28,4 +28,23 @@ void main() async {
       expect((await link.providers).length, greaterThanOrEqualTo(5));
     }
   });
+
+  test('Create and destroy', () async {
+    List<Provider> providers = await Provider.dao.index();
+    providers.shuffle();
+
+    List<ProviderType> types = await ProviderType.dao.index();
+    types.shuffle();
+
+    ProviderLink pl = ProviderLink(
+        providersIds: providers.sublist(0, 5).map((e) => e.id!).toList(),
+        link: Uri.parse('http://test.com'),
+        providerTypeId: types.first.id!);
+
+    ProviderLink npl = await ProviderLink.dao.store(pl);
+
+    print(npl.id);
+
+    ProviderLink.dao.destroy(npl);
+  });
 }

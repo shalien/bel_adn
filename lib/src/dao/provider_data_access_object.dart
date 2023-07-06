@@ -21,7 +21,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
     var response = await client.get(uri);
 
     if (response.statusCode != 200) {
-      throw Exception("Unable to fetch provider links");
+      throw response;
     }
 
     List<ProviderLink> providerLinks = [];
