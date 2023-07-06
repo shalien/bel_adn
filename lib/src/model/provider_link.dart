@@ -8,7 +8,14 @@ import 'provider_type.dart';
 final class ProviderLink extends Model {
   static ProviderLinkDataAccessObject dao = ProviderLinkDataAccessObject();
 
-  final List<int> providersIds;
+  final int providerTypeId;
+
+  ProviderType? _providerType;
+
+  Future<ProviderType> get providerType async {
+    _providerType ??= await ProviderType.dao.show(providerTypeId);
+    return _providerType!;
+  }
 
   List<Provider> _providers = [];
 
@@ -19,20 +26,10 @@ final class ProviderLink extends Model {
     return _providers;
   }
 
-  final int providerTypeId;
-
-  ProviderType? _providerType;
-
-  Future<ProviderType> get providerType async {
-    _providerType ??= await ProviderType.dao.show(providerTypeId);
-    return _providerType!;
-  }
-
   final Uri link;
 
   ProviderLink({
     int? id,
-    required this.providersIds,
     required this.link,
     required this.providerTypeId,
     DateTime? createdAt,
@@ -44,15 +41,8 @@ final class ProviderLink extends Model {
         );
 
   factory ProviderLink.fromJson(Map json) {
-    List<int> providers = json['providers'] == null
-        ? []
-        : (json['providers'] as List)
-            .map((e) => Provider.fromJson(e).id!)
-            .toList();
-
     return ProviderLink(
       id: json['id'],
-      providersIds: providers,
       link: Uri.parse(json['link']),
       providerTypeId: json['provider_type_id'],
       createdAt: json['created_at'] != null
@@ -68,7 +58,6 @@ final class ProviderLink extends Model {
   String toJson() {
     return jsonEncode(
       {
-        'providers': providersIds,
         'link': link.toString(),
         'provider_type_id': providerTypeId,
         ...?id != null ? {'id': id} : null,

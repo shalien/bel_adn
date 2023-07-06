@@ -20,21 +20,15 @@ class Provider extends Model {
     return _topic!;
   }
 
-  final List<int> providerLinksIds;
+  final int providerLinkId;
 
-  List<ProviderLink> _providerLinks = [];
-
-  Future<List<ProviderLink>> get providerLinks async {
-    if (_providerLinks.isEmpty) {
-      _providerLinks = await Provider.dao.showWithLinks(this);
-    }
-    return _providerLinks;
-  }
+  Future<ProviderLink> get providerLink async =>
+      await ProviderLink.dao.show(providerLinkId);
 
   Provider({
     required this.topicId,
     required this.prefix,
-    required this.providerLinksIds,
+    required this.providerLinkId,
     int? id,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -42,16 +36,10 @@ class Provider extends Model {
 
   @override
   factory Provider.fromJson(Map json) {
-    List<int> providerLinks = json['provider_links'] == null
-        ? []
-        : (json['provider_links'] as List)
-            .map((e) => ProviderLink.fromJson(e).id!)
-            .toList();
-
     return Provider(
       topicId: json['topic_id'],
       prefix: json['prefix'],
-      providerLinksIds: providerLinks,
+      providerLinkId: json['provider_link_id'],
       id: json['id'],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
@@ -70,7 +58,7 @@ class Provider extends Model {
       ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
       'topic_id': topicId,
       ...?prefix != null ? {'prefix': prefix} : null,
-      'provider_links': providerLinksIds,
+      'provider_link_id': providerLinkId,
     });
   }
 }
