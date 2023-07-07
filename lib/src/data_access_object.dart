@@ -142,13 +142,13 @@ abstract class DataAccessObject<T extends Model> {
     var response = await client.put(url, body: t.toJson(), headers: headers);
 
     if (response.statusCode != 200) {
-      throw Exception(response);
+      throw response;
     }
 
     var jsonDecoded = json.decode(response.body);
 
     if (jsonDecoded['data'] == null) {
-      throw Exception(response);
+      throw response;
     }
 
     T value = _resolveT(T, jsonDecoded['data']);
@@ -165,13 +165,13 @@ abstract class DataAccessObject<T extends Model> {
     var response = await client.post(url, body: t.toJson(), headers: headers);
 
     if (response.statusCode != 200 && response.statusCode != 201) {
-      throw Exception(response);
+      throw response;
     }
 
     var jsonDecoded = json.decode(response.body);
 
     if (jsonDecoded['data'] == null) {
-      throw Exception(response);
+      throw response;
     }
 
     T value = _resolveT(T, jsonDecoded['data']);
