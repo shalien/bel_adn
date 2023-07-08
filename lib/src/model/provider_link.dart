@@ -5,7 +5,7 @@ import '../model.dart';
 import 'provider.dart';
 import 'provider_type.dart';
 
-final class ProviderLink extends Model {
+class ProviderLink extends Model {
   static ProviderLinkDataAccessObject dao = ProviderLinkDataAccessObject();
 
   final int providerTypeId;
