@@ -13,29 +13,6 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
     return _sourceAccessObject ??= SourceDataAccessObject._();
   }
 
-  Future<bool> exists(Uri link) async {
-    if (link.toString().isEmpty) {
-      throw ArgumentError("link cannot be empty");
-    }
-
-    if (cache.find((source) => source.link == link).isNotEmpty) {
-      return Future.value(true);
-    }
-
-    Uri uri = Uri.parse(
-        '$resourceUrl/link/${base64Encode(link.toString().codeUnits)}');
-
-    var response = await get(uri);
-
-    switch (response.statusCode) {
-      case 200:
-        return Future.value(true);
-      case 404:
-        return Future.value(false);
-      default:
-        throw response;
-    }
-  }
 
   Future<Source?> showByLink(Uri link) async {
     if (link.toString().isEmpty) {
