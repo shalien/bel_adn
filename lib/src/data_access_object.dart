@@ -32,9 +32,7 @@ abstract class DataAccessObject<T extends Model> {
 
   final String resource;
 
-  static String _host = Platform.environment['MAGNIFIQUECOUPLE_HOST'] ??
-      fromEnvironmentString('MAGNIFIQUECOUPLE_HOST',
-          defaultValue: 'http://127.0.0.1:8000');
+  static String _host = 'https://magnifiquecouple.projetretro.io';
 
   final BelAdnClient client = BelAdnClient();
 
