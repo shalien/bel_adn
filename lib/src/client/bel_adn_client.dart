@@ -46,7 +46,7 @@ Future<Response> delete(
 
 final class BelAdnClient extends BaseClient {
   static final Map<String, String> defaultHeaders = {
-    'user-agent': 'bel_adn 2.0.0/ u/Shalien93'
+    'user-agent': 'bel_adn:cbJKqzlZ8soXvU_tvP5KWw:2.0.0 u/Shalien93'
   };
 
   static final HttpClient _innerHttpClient = HttpClient()
