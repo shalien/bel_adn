@@ -11,13 +11,17 @@ class Provider extends Model {
 
   final String? prefix;
 
-  final int topicId;
+  final int? topicId;
 
   Topic? _topic;
 
-  Future<Topic> get topic async {
-    _topic ??= await Topic.dao.show(topicId);
-    return _topic!;
+  Future<Topic?> get topic async {
+    if (topicId == null) {
+      return null;
+    } else {
+      _topic ??= await Topic.dao.show(topicId!);
+      return _topic!;
+    }
   }
 
   final int providerLinkId;
