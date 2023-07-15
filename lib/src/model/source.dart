@@ -9,9 +9,10 @@ class Source extends Model {
 
   final Uri link;
 
-  final int providerId;
+  final int? providerId;
 
-  Future<Provider> get provider async => await Provider.dao.show(providerId);
+  Future<Provider?> get provider async =>
+      providerId != null ? await Provider.dao.show(providerId!) : null;
 
   Source(
       {required this.link,

@@ -10,7 +10,7 @@ class Topic extends Model {
 
   final String name;
 
-  final int order;
+  int order;
 
   List<Provider> _providers = [];
 
