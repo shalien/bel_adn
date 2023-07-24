@@ -14,7 +14,7 @@ final class ProviderLinkDataAccessObject
     return _providerLinkDataAccessObject ??= ProviderLinkDataAccessObject._();
   }
 
-  Future<List<Provider>> showProviders(ProviderLink providerLink) async {
+  Future<Set<Provider>> showProviders(ProviderLink providerLink) async {
     Uri uri = Uri.parse('$resourceUrl/${providerLink.id}/providers');
 
     final response = await client.get(uri);
@@ -25,7 +25,7 @@ final class ProviderLinkDataAccessObject
 
     var decodedResponse = jsonDecode(response.body);
 
-    var providers = <Provider>[];
+    var providers = <Provider>{};
 
     for (var element in decodedResponse['data']) {
       providers.add(Provider.fromJson(element));

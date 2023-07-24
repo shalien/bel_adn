@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:bel_adn/bel_adn.dart';
 
-
 class ProviderLink extends Model {
   final int providerTypeId;
 
@@ -13,9 +12,9 @@ class ProviderLink extends Model {
     return _providerType!;
   }
 
-  List<Provider> _providers = [];
+  Set<Provider> _providers = {};
 
-  Future<List<Provider>> get providers async {
+  Future<Set<Provider>> get providers async {
     if (_providers.isEmpty) {
       _providers = await ProviderLinkDataAccessObject().showProviders(this);
     }

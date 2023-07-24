@@ -19,9 +19,9 @@ class Topic extends Model {
     return _providers;
   }
 
-  List<TopicAlias> _aliases = [];
+  Set<TopicAlias> _aliases = {};
 
-  Future<List<TopicAlias>> get aliases async {
+  Future<Set<TopicAlias>> get aliases async {
     if (_aliases.isEmpty) {
       _aliases = await TopicDataAccessObject().showWithAliases(this);
     }

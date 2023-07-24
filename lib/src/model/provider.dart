@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:bel_adn/bel_adn.dart';
 
-
 class Provider extends Model {
   final String? prefix;
 
@@ -19,6 +18,9 @@ class Provider extends Model {
 
   Future<ProviderLink> get providerLink async =>
       await ProviderLinkDataAccessObject().show(providerLinkId);
+
+  Future<Set<Source>> get sources async =>
+      await ProviderDataAccessObject().showWithSources(this);
 
   Provider({
     required this.topicId,
