@@ -1,8 +1,4 @@
-import 'data_access_object.dart';
-
 abstract class Model {
-  static late DataAccessObject dao;
-
   int? id;
 
   DateTime? createdAt;
@@ -14,4 +10,10 @@ abstract class Model {
   Model.fromJson(Map<String, dynamic> json);
 
   String toJson();
+
+  @override
+  operator ==(other) => (other is Model && other.id == id);
+
+  @override
+  int get hashCode => id.hashCode;
 }

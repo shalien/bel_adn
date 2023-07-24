@@ -1,14 +1,9 @@
 import 'dart:convert';
 
-import 'package:bel_adn/src/model/provider_link.dart';
+import 'package:bel_adn/bel_adn.dart';
 
-import '../dao/provider_data_access_object.dart';
-import '../model.dart';
-import 'topic.dart';
 
 class Provider extends Model {
-  static ProviderDataAccessObject dao = ProviderDataAccessObject();
-
   final String? prefix;
 
   final int topicId;
@@ -16,14 +11,14 @@ class Provider extends Model {
   Topic? _topic;
 
   Future<Topic> get topic async {
-    _topic ??= await Topic.dao.show(topicId);
+    _topic ??= await TopicDataAccessObject().show(topicId);
     return _topic!;
   }
 
   final int providerLinkId;
 
   Future<ProviderLink> get providerLink async =>
-      await ProviderLink.dao.show(providerLinkId);
+      await ProviderLinkDataAccessObject().show(providerLinkId);
 
   Provider({
     required this.topicId,
