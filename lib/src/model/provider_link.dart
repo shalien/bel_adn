@@ -1,27 +1,22 @@
 import 'dart:convert';
 
-import '../dao/provider_link_data_access_object.dart';
-import '../model.dart';
-import 'provider.dart';
-import 'provider_type.dart';
+import 'package:bel_adn/bel_adn.dart';
 
 class ProviderLink extends Model {
-  static ProviderLinkDataAccessObject dao = ProviderLinkDataAccessObject();
-
   final int providerTypeId;
 
   ProviderType? _providerType;
 
   Future<ProviderType> get providerType async {
-    _providerType ??= await ProviderType.dao.show(providerTypeId);
+    _providerType ??= await ProviderTypeDataAccessObject().show(providerTypeId);
     return _providerType!;
   }
 
-  List<Provider> _providers = [];
+  Set<Provider> _providers = {};
 
-  Future<List<Provider>> get providers async {
+  Future<Set<Provider>> get providers async {
     if (_providers.isEmpty) {
-      _providers = await ProviderLink.dao.showProviders(this);
+      _providers = await ProviderLinkDataAccessObject().showProviders(this);
     }
     return _providers;
   }

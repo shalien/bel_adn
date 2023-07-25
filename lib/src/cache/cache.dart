@@ -38,7 +38,7 @@ final class Cache<T extends Model> {
       ? throw Exception('Cannot cache a model without an id')
       : _cache[t.id!] = t;
 
-  List<T?> find(bool Function(T) test) => _cache.values.where(test).toList();
+  Set<T?> find(bool Function(T) test) => _cache.values.where(test).toSet();
 
   void removeWhere(bool Function(T) test) =>
       _cache.removeWhere((_, t) => test(t));
@@ -47,9 +47,9 @@ final class Cache<T extends Model> {
 
   void clear() => _cache.clear();
 
-  void addAll(List<T> list) => list.forEach(add);
+  void addAll(Set<T> set) => set.forEach(add);
 
   void addIfAbsent(T t) => _cache.putIfAbsent(t.id!, () => t);
 
-  void addAllIfAbsent(List<T> list) => list.forEach(addIfAbsent);
+  void addAllIfAbsent(Set<T> set) => set.forEach(addIfAbsent);
 }

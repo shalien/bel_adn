@@ -15,7 +15,31 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
     return _providerDataAccessObject ??= ProviderDataAccessObject._();
   }
 
-  Future<List<ProviderLink>> showWithLinks(Provider provider) async {
+  Future<Set<Source>> showWithSources(Provider provider) async {
+    Uri uri = Uri.parse("$resourceUrl/${provider.id}/sources");
+
+    var response = await client.get(uri);
+
+    if (response.statusCode != 200) {
+      throw response;
+    }
+
+    Set<Source> sources = {};
+
+    var decodedResponse = jsonDecode(response.body);
+
+    if (decodedResponse['data'] == null) {
+      return sources;
+    }
+
+    for (var source in decodedResponse['data']) {
+      sources.add(Source.fromJson(source));
+    }
+
+    return sources;
+  }
+
+  Future<Set<ProviderLink>> showWithLinks(Provider provider) async {
     Uri uri = Uri.parse("$resourceUrl/${provider.id}/links");
 
     var response = await client.get(uri);
@@ -24,7 +48,7 @@ class ProviderDataAccessObject extends DataAccessObject<Provider> {
       throw response;
     }
 
-    List<ProviderLink> providerLinks = [];
+    Set<ProviderLink> providerLinks = {};
 
     var decodedResponse = jsonDecode(response.body);
 

@@ -1,33 +1,26 @@
 import 'dart:convert';
 
-import 'package:bel_adn/src/model/provider_link.dart';
-
-import '../dao/provider_data_access_object.dart';
-import '../model.dart';
-import 'topic.dart';
+import 'package:bel_adn/bel_adn.dart';
 
 class Provider extends Model {
-  static ProviderDataAccessObject dao = ProviderDataAccessObject();
-
   final String? prefix;
 
   final int? topicId;
 
   Topic? _topic;
 
-  Future<Topic?> get topic async {
-    if (topicId == null) {
-      return null;
-    } else {
-      _topic ??= await Topic.dao.show(topicId!);
-      return _topic!;
-    }
+  Future<Topic> get topic async {
+    _topic ??= await TopicDataAccessObject().show(topicId);
+    return _topic!;
   }
 
   final int providerLinkId;
 
   Future<ProviderLink> get providerLink async =>
-      await ProviderLink.dao.show(providerLinkId);
+      await ProviderLinkDataAccessObject().show(providerLinkId);
+
+  Future<Set<Source>> get sources async =>
+      await ProviderDataAccessObject().showWithSources(this);
 
   Provider({
     required this.topicId,

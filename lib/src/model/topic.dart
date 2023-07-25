@@ -6,8 +6,6 @@ import 'provider.dart';
 import 'topic_alias.dart';
 
 class Topic extends Model {
-  static TopicDataAccessObject dao = TopicDataAccessObject();
-
   final String name;
 
   int order;
@@ -16,16 +14,16 @@ class Topic extends Model {
 
   Future<List<Provider>> get providers async {
     if (_providers.isEmpty) {
-      _providers = await Topic.dao.showWithProvider(this);
+      _providers = await TopicDataAccessObject().showWithProvider(this);
     }
     return _providers;
   }
 
-  List<TopicAlias> _aliases = [];
+  Set<TopicAlias> _aliases = {};
 
-  Future<List<TopicAlias>> get aliases async {
+  Future<Set<TopicAlias>> get aliases async {
     if (_aliases.isEmpty) {
-      _aliases = await Topic.dao.showWithAliases(this);
+      _aliases = await TopicDataAccessObject().showWithAliases(this);
     }
     return _aliases;
   }

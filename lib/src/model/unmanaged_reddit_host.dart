@@ -1,12 +1,8 @@
 import 'dart:convert';
 
-import '../dao/unmanaged_reddit_host_data_access_object.dart';
 import '../model.dart';
 
 class UnmanagedRedditHost extends Model {
-  static UnmanagedRedditHostDataAccessObject dao =
-      UnmanagedRedditHostDataAccessObject();
-
   final String? host;
   final String? url;
 

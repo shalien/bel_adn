@@ -1,16 +1,11 @@
 import 'dart:convert';
 
-import '../dao/media_data_access_object.dart';
-import '../model.dart';
-import 'destination.dart';
-import 'source.dart';
+import 'package:bel_adn/bel_adn.dart';
 
 /// Represent a [Media]
 ///
 /// The media will posted on discord
 class Media extends Model {
-  static MediaDataAccessObject dao = MediaDataAccessObject();
-
   final Uri link;
 
   final int sourceId;
@@ -21,7 +16,7 @@ class Media extends Model {
     if (_source.id == sourceId) {
       return _source;
     }
-    _source = await Source.dao.show(sourceId);
+    _source = await SourceDataAccessObject().show(sourceId);
     return _source;
   }
 
@@ -33,7 +28,7 @@ class Media extends Model {
     if (_destination.id == destinationId) {
       return _destination;
     }
-    _destination = await Destination.dao.show(destinationId);
+    _destination = await DestinationDataAccessObject().show(destinationId);
     return _destination;
   }
 

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:bel_adn/bel_adn.dart';
+
 import '../client/bel_adn_client.dart';
 import '../data_access_object.dart';
 import '../model/source.dart';
@@ -13,6 +15,49 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
     return _sourceAccessObject ??= SourceDataAccessObject._();
   }
 
+  Future<Set<Media>> showWithMedia(Media media) async {
+    Uri uri = Uri.parse('$resourceUrl/${media.id}/medias');
+
+    var response = await client.get(uri);
+
+    if (response.statusCode != 200) {
+      throw response;
+    }
+
+    Set<Media> medias = {};
+
+    var decodedResponse = jsonDecode(response.body);
+
+    if (decodedResponse['data'] == null) {
+      return medias;
+    }
+
+    for (var media in decodedResponse['data']) {
+      medias.add(Media.fromJson(media));
+    }
+
+    return medias;
+  }
+
+  Future<Set<Source>> showByProvider(Provider provider) {
+    Uri uri = Uri.parse('$resourceUrl/provider/${provider.id}');
+
+    return client.get(uri).then((response) {
+      if (response.statusCode != 200) {
+        throw response;
+      }
+
+      var decodedResponse = jsonDecode(response.body);
+
+      var sources = <Source>{};
+
+      for (var element in decodedResponse['data']) {
+        sources.add(Source.fromJson(element));
+      }
+
+      return sources;
+    });
+  }
 
   Future<Source?> showByLink(Uri link) async {
     if (link.toString().isEmpty) {

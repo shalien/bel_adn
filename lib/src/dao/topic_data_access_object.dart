@@ -35,15 +35,15 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
     }
   }
 
-  Future<List<TopicAlias>> showWithAliases(Topic topic) async {
+  Future<Set<TopicAlias>> showWithAliases(Topic topic) async {
     Uri uri = Uri.parse("$resourceUrl/${topic.id}/alias");
 
     var response = await client.get(uri);
 
     if (response.statusCode == 200) {
-      List<TopicAlias> aliases = (jsonDecode(response.body)['data'] as List)
+      Set<TopicAlias> aliases = (jsonDecode(response.body)['data'] as List)
           .map((e) => TopicAlias.fromJson(e))
-          .toList();
+          .toSet();
 
       return aliases;
     } else {
