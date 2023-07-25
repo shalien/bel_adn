@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:meta/meta.dart';
 
 import 'cache/cache.dart';
 import 'client/bel_adn_client.dart';

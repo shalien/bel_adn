@@ -10,9 +10,15 @@ class Source extends Model {
 
   final int? providerId;
 
-  Future<Provider> get provider async =>
-      await ProviderDataAccessObject().show(providerId);
+  Provider? _provider;
 
+  Future<Provider?> get provider async {
+    if (providerId == null) {
+      return null;
+    }
+
+    return _provider ??= await ProviderDataAccessObject().show(providerId!);
+  }
 
   Source(
       {required this.link,
