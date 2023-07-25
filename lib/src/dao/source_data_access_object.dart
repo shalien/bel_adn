@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:bel_adn/bel_adn.dart';
 
-
 class SourceDataAccessObject extends DataAccessObject<Source> {
   static SourceDataAccessObject? _sourceAccessObject;
 
@@ -12,8 +11,8 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
     return _sourceAccessObject ??= SourceDataAccessObject._();
   }
 
-  Future<Set<Media>> showWithMedia(Media media) async {
-    Uri uri = Uri.parse('$resourceUrl/${media.id}/medias');
+  Future<Set<Media>> showWithMedia(Source source) async {
+    Uri uri = Uri.parse('$resourceUrl/${source.id}/medias');
 
     var response = await client.get(uri);
 

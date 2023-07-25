@@ -10,26 +10,19 @@ class Media extends Model {
 
   final int sourceId;
 
-  late Source _source;
+  Source? _source;
 
-  Future<Source> get source async {
-    if (_source.id == sourceId) {
-      return _source;
-    }
-    _source = await SourceDataAccessObject().show(sourceId);
-    return _source;
+  Future<Source?> get source async {
+    return _source ??= await SourceDataAccessObject().show(sourceId);
   }
 
   final int destinationId;
 
-  late Destination _destination;
+  Destination? _destination;
 
-  Future<Destination> get destination async {
-    if (_destination.id == destinationId) {
-      return _destination;
-    }
-    _destination = await DestinationDataAccessObject().show(destinationId);
-    return _destination;
+  Future<Destination?> get destination async {
+    return _destination ??=
+        await DestinationDataAccessObject().show(destinationId);
   }
 
   /// A [Media] will be composed during all the resolving process

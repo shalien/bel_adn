@@ -10,14 +10,8 @@ class Topic extends Model {
 
   int order;
 
-  List<Provider> _providers = [];
-
-  Future<List<Provider>> get providers async {
-    if (_providers.isEmpty) {
-      _providers = await TopicDataAccessObject().showWithProvider(this);
-    }
-    return _providers;
-  }
+  Future<Set<Provider>> get providers async =>
+      await TopicDataAccessObject().showWithProvider(this);
 
   Set<TopicAlias> _aliases = {};
 

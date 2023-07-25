@@ -7,19 +7,13 @@ class ProviderLink extends Model {
 
   ProviderType? _providerType;
 
-  Future<ProviderType> get providerType async {
-    _providerType ??= await ProviderTypeDataAccessObject().show(providerTypeId);
-    return _providerType!;
+  Future<ProviderType?> get providerType async {
+    return _providerType ??=
+        await ProviderTypeDataAccessObject().show(providerTypeId);
   }
 
-  Set<Provider> _providers = {};
-
-  Future<Set<Provider>> get providers async {
-    if (_providers.isEmpty) {
-      _providers = await ProviderLinkDataAccessObject().showProviders(this);
-    }
-    return _providers;
-  }
+  Future<Set<Provider>> get providers async =>
+      await ProviderLinkDataAccessObject().showProviders(this);
 
   final Uri link;
 

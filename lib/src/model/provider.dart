@@ -10,12 +10,7 @@ class Provider extends Model {
   Topic? _topic;
 
   Future<Topic?> get topic async {
-    if (topicId == null) {
-      return null;
-    }
-
-    _topic ??= await TopicDataAccessObject().show(topicId!);
-    return _topic!;
+    return _topic ??= await TopicDataAccessObject().show(topicId!);
   }
 
   final int providerLinkId;

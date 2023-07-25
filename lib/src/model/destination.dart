@@ -5,13 +5,8 @@ import 'package:bel_adn/bel_adn.dart';
 class Destination extends Model {
   final String filename;
 
-  Future<Set<Media>> get medias async {
-    if (id == null) {
-      return Future.value(<Media>{});
-    }
-
-    return await MediaDataAccessObject().showByDestinationId(this);
-  }
+  Future<Set<Media>> get medias async =>
+      await MediaDataAccessObject().showByDestinationId(this);
 
   Destination(
       {required this.filename,

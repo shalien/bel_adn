@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:bel_adn/src/dao/provider_data_access_object.dart';
 
+import '../dao/source_data_access_object.dart';
 import '../model.dart';
+import 'media.dart';
 import 'provider.dart';
 
 class Source extends Model {
@@ -13,12 +15,11 @@ class Source extends Model {
   Provider? _provider;
 
   Future<Provider?> get provider async {
-    if (providerId == null) {
-      return null;
-    }
-
     return _provider ??= await ProviderDataAccessObject().show(providerId!);
   }
+
+  Future<Set<Media>> get medias async =>
+      await SourceDataAccessObject().showWithMedia(this);
 
   Source(
       {required this.link,
