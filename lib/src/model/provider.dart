@@ -5,7 +5,7 @@ import 'package:bel_adn/bel_adn.dart';
 class Provider extends Model {
   final String? prefix;
 
-  final int topicId;
+  final int? topicId;
 
   Topic? _topic;
 

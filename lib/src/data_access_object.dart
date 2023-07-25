@@ -15,7 +15,6 @@ import 'model/topic.dart';
 import 'model/topic_alias.dart';
 import 'model/unmanaged_reddit_host.dart';
 
-@immutable
 abstract class DataAccessObject<T extends Model> {
   static set host(String host) {
     try {

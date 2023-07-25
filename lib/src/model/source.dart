@@ -8,10 +8,11 @@ import 'provider.dart';
 class Source extends Model {
   final Uri link;
 
-  final int providerId;
+  final int? providerId;
 
   Future<Provider> get provider async =>
       await ProviderDataAccessObject().show(providerId);
+
 
   Source(
       {required this.link,
