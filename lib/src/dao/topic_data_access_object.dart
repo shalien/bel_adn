@@ -19,15 +19,15 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
     return _topicDataAccessObject ??= TopicDataAccessObject._();
   }
 
-  Future<List<Provider>> showWithProvider(Topic topic) async {
+  Future<Set<Provider>> showWithProvider(Topic topic) async {
     Uri uri = Uri.parse("$resourceUrl/${topic.id}/providers");
 
     var response = await client.get(uri);
 
     if (response.statusCode == 200) {
-      List<Provider> providers = (jsonDecode(response.body)['data'] as List)
+      Set<Provider> providers = (jsonDecode(response.body)['data'] as List)
           .map((e) => Provider.fromJson(e))
-          .toList();
+          .toSet();
 
       return providers;
     } else {
@@ -35,15 +35,15 @@ class TopicDataAccessObject extends DataAccessObject<Topic> {
     }
   }
 
-  Future<List<TopicAlias>> showWithAliases(Topic topic) async {
+  Future<Set<TopicAlias>> showWithAliases(Topic topic) async {
     Uri uri = Uri.parse("$resourceUrl/${topic.id}/alias");
 
     var response = await client.get(uri);
 
     if (response.statusCode == 200) {
-      List<TopicAlias> aliases = (jsonDecode(response.body)['data'] as List)
+      Set<TopicAlias> aliases = (jsonDecode(response.body)['data'] as List)
           .map((e) => TopicAlias.fromJson(e))
-          .toList();
+          .toSet();
 
       return aliases;
     } else {

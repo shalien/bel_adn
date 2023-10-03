@@ -6,7 +6,7 @@ void main() async {
     Topic? topic;
 
     try {
-      topic = await Topic.dao.show(1);
+      topic = await TopicDataAccessObject().show(1);
     } catch (e) {
       print(e);
     }
@@ -19,7 +19,7 @@ void main() async {
   });
 
   test('All topic with providers', () async {
-    List<Topic> topics = await Topic.dao.index();
+    Set<Topic> topics = await TopicDataAccessObject().index();
 
     int sum = 0;
 
@@ -49,7 +49,7 @@ void main() async {
   });
 
   test('All topics with aliases', () async {
-    List<Topic> topics = await Topic.dao.index();
+    Set<Topic> topics = await TopicDataAccessObject().index();
 
     int sum = 0;
 

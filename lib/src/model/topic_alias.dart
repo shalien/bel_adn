@@ -1,15 +1,11 @@
 import 'dart:convert';
 
-import '../dao/topic_alias_data_access_object.dart';
-import '../model.dart';
-import 'topic.dart';
+import 'package:bel_adn/bel_adn.dart';
 
 final class TopicAlias extends Model {
-  static final TopicAliasDataAccessObject dao = TopicAliasDataAccessObject();
-
   final int topicId;
 
-  Future<Topic> get topic async => await Topic.dao.show(topicId);
+  Future<Topic> get topic async => await TopicDataAccessObject().show(topicId);
 
   final String alias;
 

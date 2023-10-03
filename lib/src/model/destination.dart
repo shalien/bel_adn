@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import '../dao/destination_data_access_object.dart';
-import '../model.dart';
+import 'package:bel_adn/bel_adn.dart';
 
 class Destination extends Model {
-  static DestinationDataAccessObject dao = DestinationDataAccessObject();
-
   final String filename;
+
+  Future<Set<Media>> get medias async =>
+      await MediaDataAccessObject().showByDestinationId(this);
 
   Destination(
       {required this.filename,

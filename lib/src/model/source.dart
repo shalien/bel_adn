@@ -1,18 +1,25 @@
 import 'dart:convert';
 
+import 'package:bel_adn/src/dao/provider_data_access_object.dart';
+
 import '../dao/source_data_access_object.dart';
 import '../model.dart';
+import 'media.dart';
 import 'provider.dart';
 
 class Source extends Model {
-  static SourceDataAccessObject dao = SourceDataAccessObject();
-
   final Uri link;
 
   final int? providerId;
 
-  Future<Provider?> get provider async =>
-      providerId != null ? await Provider.dao.show(providerId!) : null;
+  Provider? _provider;
+
+  Future<Provider?> get provider async {
+    return _provider ??= await ProviderDataAccessObject().show(providerId!);
+  }
+
+  Future<Set<Media>> get medias async =>
+      await SourceDataAccessObject().showWithMedia(this);
 
   Source(
       {required this.link,

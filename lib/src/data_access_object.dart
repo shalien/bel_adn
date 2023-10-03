@@ -43,7 +43,7 @@ abstract class DataAccessObject<T extends Model> {
 
   DataAccessObject({required this.resource});
 
-  Future<List<T>> index() async {
+  Future<Set<T>> index() async {
     Uri url = Uri.parse(resourceUrl);
 
     var response = await client.get(url, headers: headers);
@@ -51,7 +51,7 @@ abstract class DataAccessObject<T extends Model> {
     if (response.statusCode == 200) {
       var decodedResponse = jsonDecode(response.body);
 
-      List<T> models = <T>[];
+      Set<T> models = <T>{};
 
       if (decodedResponse['data'].isEmpty) {
         return models;
