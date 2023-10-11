@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:bel_adn/bel_adn.dart';
 import 'package:http/http.dart';
 
-class SourceDataAccessObject extends DataAccessObject<Source> {
+final class SourceDataAccessObject extends DataAccessObject<Source> {
   static SourceDataAccessObject? _sourceAccessObject;
 
   SourceDataAccessObject._(String host, Client client)

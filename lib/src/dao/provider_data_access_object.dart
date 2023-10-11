@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 
 /// The [DataAccessObject] for the [Provider] class
 @immutable
-class ProviderDataAccessObject extends DataAccessObject<Provider> {
+final class ProviderDataAccessObject extends DataAccessObject<Provider> {
   static ProviderDataAccessObject? _providerDataAccessObject;
 
   ProviderDataAccessObject._(String host, Client client)

@@ -1,4 +1,4 @@
-abstract class Model {
+abstract base class Model {
   int? id;
 
   DateTime? createdAt;

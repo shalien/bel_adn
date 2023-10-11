@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import '../model.dart';
 
-class ProviderType extends Model {
+final class ProviderType extends Model {
   final String name;
 
   ProviderType(

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:bel_adn/src/model/guild.dart';
+import 'package:bel_adn/src/model/user.dart';
 import 'package:http/http.dart';
 
 import 'cache/cache.dart';
@@ -14,7 +16,7 @@ import 'model/topic.dart';
 import 'model/topic_alias.dart';
 import 'model/unmanaged_reddit_host.dart';
 
-abstract class DataAccessObject<T extends Model> {
+abstract base class DataAccessObject<T extends Model> {
   final String resource;
 
   final Cache<T> cache = Cache<T>();
@@ -81,6 +83,12 @@ abstract class DataAccessObject<T extends Model> {
               case TopicAlias:
                 models.add(TopicAlias.fromJson(element) as T);
                 break;
+              case User:
+                models.add(User.fromJson(element) as T);
+              case Guild:
+                models.add(Guild.fromJson(element) as T);
+              default:
+                throw Exception('Unknown type');
             }
           }
         }
@@ -213,6 +221,10 @@ abstract class DataAccessObject<T extends Model> {
       case TopicAlias:
         value = TopicAlias.fromJson(data) as T;
         break;
+      case User:
+        value = User.fromJson(data) as T;
+      case Guild:
+        value = Guild.fromJson(data) as T;
       default:
         throw Exception('Unknown type');
     }

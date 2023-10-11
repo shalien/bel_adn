@@ -8,6 +8,7 @@ export 'package:http/http.dart' show Response;
 export 'src/cache/cache.dart';
 
 export 'src/client/bel_adn_client.dart';
+export 'src/client/magnifique_couple_client.dart';
 
 export 'src/data_access_object.dart';
 export 'src/dao/destination_data_access_object.dart';
@@ -30,3 +31,5 @@ export 'src/model/source.dart';
 export 'src/model/topic.dart';
 export 'src/model/topic_alias.dart';
 export 'src/model/unmanaged_reddit_host.dart';
+export 'src/model/user.dart';
+export 'src/model/guild.dart';

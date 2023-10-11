@@ -2,39 +2,26 @@ import 'dart:convert';
 
 import '../model.dart';
 
-final class User extends Model {
+final class Guild extends Model {
   final int? snowflake;
 
   final String name;
 
-  final String? email;
+  final String? icon;
 
-  final String? password;
-
-  static String generateEmail() =>
-      '${String.fromCharCodes(List.generate(16, (index) => DateTime.now().microsecondsSinceEpoch.toString().codeUnitAt(index)))}@example.null';
-
-  static String generatePassword() => String.fromCharCodes(List.generate(
-      16,
-      (index) =>
-          DateTime.now().microsecondsSinceEpoch.toString().codeUnitAt(index)));
-
-  User({
+  Guild({
     required this.snowflake,
     required this.name,
-    required this.email,
-    this.password,
-    int? id,
+    this.icon,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
+  }) : super(id: snowflake, createdAt: createdAt, updatedAt: updatedAt);
 
-  factory User.fromJson(Map json) {
-    return User(
+  factory Guild.fromJson(Map json) {
+    return Guild(
       snowflake: json['snowflake'],
       name: json['name'],
-      email: json['email'],
-      id: json['id'],
+      icon: json['icon'],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
@@ -49,8 +36,7 @@ final class User extends Model {
     return jsonEncode(
       {
         ...?id != null ? {'id': id} : null,
-        ...?email != null ? {'email': email} : null,
-        ...?password != null ? {'password': password} : null,
+        ...?icon != null ? {'icon': icon} : null,
         ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
         ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
         'snowflake': snowflake,

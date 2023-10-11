@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:bel_adn/bel_adn.dart';
 
-class ProviderLink extends Model {
+final class ProviderLink extends Model {
   final int providerTypeId;
 
   final Uri link;

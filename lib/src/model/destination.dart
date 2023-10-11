@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:bel_adn/bel_adn.dart';
+import '../model.dart';
 
-class Destination extends Model {
+final class Destination extends Model {
   final String filename;
 
   Destination(

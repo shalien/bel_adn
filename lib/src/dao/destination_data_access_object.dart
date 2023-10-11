@@ -3,7 +3,7 @@ import 'package:http/http.dart';
 import '../data_access_object.dart';
 import '../model/destination.dart';
 
-class DestinationDataAccessObject extends DataAccessObject<Destination> {
+final class DestinationDataAccessObject extends DataAccessObject<Destination> {
   static DestinationDataAccessObject? _destinationDataAccessObject;
 
   DestinationDataAccessObject._(String host, Client client)

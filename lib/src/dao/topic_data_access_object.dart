@@ -10,7 +10,7 @@ import '../model/topic_alias.dart';
 
 /// The [DataAccessObject] for the [Topic] class
 @immutable
-class TopicDataAccessObject extends DataAccessObject<Topic> {
+final class TopicDataAccessObject extends DataAccessObject<Topic> {
   static TopicDataAccessObject? _topicDataAccessObject;
 
   TopicDataAccessObject._(String host, Client client)

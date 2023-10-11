@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:bel_adn/bel_adn.dart';
 
-class Provider extends Model {
+final class Provider extends Model {
   final String? prefix;
 
   final int? topicId;

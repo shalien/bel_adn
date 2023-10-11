@@ -1,9 +1,8 @@
 import 'dart:convert';
 
-
 import '../model.dart';
 
-class Source extends Model {
+final class Source extends Model {
   final Uri link;
 
   final int? providerId;

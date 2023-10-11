@@ -45,22 +45,25 @@ Future<Response> delete(
         .delete(url, headers: headers, body: body, encoding: encoding);
 
 final class BelAdnClient extends BaseClient {
-  static final Map<String, String> defaultHeaders = {
-    'user-agent': 'bel_adn:cbJKqzlZ8soXvU_tvP5KWw:2.0.0 u/Shalien93'
-  };
+  set defaultHeaders(Map<String, String> headers) =>
+      _defaultHeaders.addAll(headers);
+
+  final Map<String, String> _defaultHeaders = {};
+
+  Map<String, String> get defaultHeaders => _defaultHeaders;
 
   static final HttpClient _innerHttpClient = HttpClient()
     ..badCertificateCallback = (cert, host, port) =>
         host.toLowerCase().contains('projetretro') ? true : false;
 
-  static final BelAdnClient _instance = BelAdnClient._();
+  static BelAdnClient? _instance;
 
   Client _inner;
 
   BelAdnClient._() : _inner = RetryClient(IOClient(_innerHttpClient));
 
   factory BelAdnClient() {
-    return _instance;
+    return _instance ??= BelAdnClient._();
   }
 
   @override

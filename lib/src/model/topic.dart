@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import '../model.dart';
 
-class Topic extends Model {
+final class Topic extends Model {
   final String name;
 
   int order;

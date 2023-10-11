@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import '../model.dart';
 
-class UnmanagedRedditHost extends Model {
+final class UnmanagedRedditHost extends Model {
   final String? host;
   final String? url;
 

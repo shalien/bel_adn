@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:bel_adn/bel_adn.dart';
 import 'package:test/test.dart';
 
 void main() async {
   test('Destination media', () async {
-    Destination destination = await DestinationDataAccessObject().show(126472);
+    var client = MagnifiqueCoupleClient(
+      accessToken: await File('.env').readAsString(),
+    );
 
-    print((await destination.medias).length);
+    var element = await client.destinations.show(126472);
 
-    expect(await destination.medias, isA<Set<Media>>());
+    print(element.filename);
   });
 }

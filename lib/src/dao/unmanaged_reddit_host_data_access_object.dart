@@ -3,7 +3,7 @@ import 'package:http/http.dart';
 import '../data_access_object.dart';
 import '../model/unmanaged_reddit_host.dart';
 
-class UnmanagedRedditHostDataAccessObject
+final class UnmanagedRedditHostDataAccessObject
     extends DataAccessObject<UnmanagedRedditHost> {
   static UnmanagedRedditHostDataAccessObject?
       _unmanagedRedditHostDataAccessObject;

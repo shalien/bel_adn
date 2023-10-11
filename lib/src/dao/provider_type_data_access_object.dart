@@ -3,7 +3,8 @@ import 'package:http/http.dart';
 import '../data_access_object.dart';
 import '../model/provider_type.dart';
 
-class ProviderTypeDataAccessObject extends DataAccessObject<ProviderType> {
+final class ProviderTypeDataAccessObject
+    extends DataAccessObject<ProviderType> {
   static ProviderTypeDataAccessObject? _providerTypeDataAccessObject;
 
   ProviderTypeDataAccessObject._(String host, Client client)

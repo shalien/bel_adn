@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 
 /// The [DataAccessObject] for the [Media] class
 @immutable
-class MediaDataAccessObject extends DataAccessObject<Media> {
+final class MediaDataAccessObject extends DataAccessObject<Media> {
   /// The singleton instance for the factory
   static MediaDataAccessObject? _mediaDataAccessObject;
 

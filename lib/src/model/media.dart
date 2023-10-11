@@ -5,7 +5,7 @@ import 'package:bel_adn/bel_adn.dart';
 /// Represent a [Media]
 ///
 /// The media will posted on discord
-class Media extends Model {
+final class Media extends Model {
   final Uri link;
 
   final int sourceId;
