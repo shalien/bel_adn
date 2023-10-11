@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bel_adn/bel_adn.dart';
+import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
 /// The [DataAccessObject] for the [Media] class
@@ -10,11 +11,12 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
   static MediaDataAccessObject? _mediaDataAccessObject;
 
   /// Private constructor
-  MediaDataAccessObject._() : super(resource: "medias");
+  MediaDataAccessObject._(String host, Client client)
+      : super(resource: "medias", host: host, client: client);
 
   /// Factory used to create and a single instance during the program run
-  factory MediaDataAccessObject() {
-    return _mediaDataAccessObject ??= MediaDataAccessObject._();
+  factory MediaDataAccessObject(String host, Client client) {
+    return _mediaDataAccessObject ??= MediaDataAccessObject._(host, client);
   }
 
   Future<Set<Media>> showByDestinationId(Destination destination) async {
@@ -24,7 +26,7 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
 
     Uri uri = Uri.parse('$resourceUrl/destination/${destination.id}');
 
-    var response = await get(uri);
+    var response = await client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -55,7 +57,7 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
 
     Uri uri = Uri.parse('$resourceUrl/source/${source.id}');
 
-    var response = await get(uri);
+    var response = await client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -91,7 +93,7 @@ class MediaDataAccessObject extends DataAccessObject<Media> {
     Uri uri = Uri.parse(
         '$resourceUrl/link/${base64Encode(link.toString().codeUnits)}');
 
-    var response = await get(uri);
+    var response = await client.get(uri);
 
     switch (response.statusCode) {
       case 200:

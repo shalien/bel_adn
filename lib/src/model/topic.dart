@@ -1,27 +1,11 @@
 import 'dart:convert';
 
-import '../dao/topic_data_access_object.dart';
 import '../model.dart';
-import 'provider.dart';
-import 'topic_alias.dart';
 
 class Topic extends Model {
   final String name;
 
   int order;
-
-  Future<Set<Provider>> get providers async =>
-      await TopicDataAccessObject().showWithProvider(this);
-
-  Set<TopicAlias> _aliases = {};
-
-  Future<Set<TopicAlias>> get aliases async {
-    if (_aliases.isEmpty) {
-      _aliases = await TopicDataAccessObject().showWithAliases(this);
-    }
-    return _aliases;
-  }
-
   Topic(
       {required this.name,
       required this.order,

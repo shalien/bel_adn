@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
 
 import 'cache/cache.dart';
-import 'client/bel_adn_client.dart';
 import 'model.dart';
 import 'model/destination.dart';
 import 'model/media.dart';
@@ -15,22 +15,7 @@ import 'model/topic_alias.dart';
 import 'model/unmanaged_reddit_host.dart';
 
 abstract class DataAccessObject<T extends Model> {
-  static set host(String host) {
-    try {
-      Uri.parse(host);
-    } catch (e) {
-      throw Exception('Invalid host');
-    }
-    _host = host;
-  }
-
-  static String get host => _host;
-
   final String resource;
-
-  static String _host = 'https://magnifiquecouple.projetretro.io';
-
-  final BelAdnClient client = BelAdnClient();
 
   final Cache<T> cache = Cache<T>();
 
@@ -39,9 +24,14 @@ abstract class DataAccessObject<T extends Model> {
     'Content-Type': 'application/json',
   };
 
-  String get resourceUrl => "${DataAccessObject._host}/api/$resource";
+  final String host;
 
-  DataAccessObject({required this.resource});
+  final Client client;
+
+  String get resourceUrl => "$host/api/$resource";
+
+  DataAccessObject(
+      {required this.resource, required this.host, required this.client});
 
   Future<Set<T>> index() async {
     Uri url = Uri.parse(resourceUrl);

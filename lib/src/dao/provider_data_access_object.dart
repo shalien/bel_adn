@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bel_adn/bel_adn.dart';
+import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
 /// The [DataAccessObject] for the [Provider] class
@@ -8,11 +9,13 @@ import 'package:meta/meta.dart';
 class ProviderDataAccessObject extends DataAccessObject<Provider> {
   static ProviderDataAccessObject? _providerDataAccessObject;
 
-  ProviderDataAccessObject._() : super(resource: "providers");
+  ProviderDataAccessObject._(String host, Client client)
+      : super(resource: "providers", host: host, client: client);
 
   /// Factory used to create and a single instance during the program run
-  factory ProviderDataAccessObject() {
-    return _providerDataAccessObject ??= ProviderDataAccessObject._();
+  factory ProviderDataAccessObject(String host, Client client) {
+    return _providerDataAccessObject ??=
+        ProviderDataAccessObject._(host, client);
   }
 
   Future<Set<Source>> showWithSources(Provider provider) async {

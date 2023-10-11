@@ -1,3 +1,5 @@
+import 'package:http/http.dart';
+
 import '../data_access_object.dart';
 import '../model/unmanaged_reddit_host.dart';
 
@@ -6,10 +8,11 @@ class UnmanagedRedditHostDataAccessObject
   static UnmanagedRedditHostDataAccessObject?
       _unmanagedRedditHostDataAccessObject;
 
-  UnmanagedRedditHostDataAccessObject._() : super(resource: 'unmanaged_hosts');
+  UnmanagedRedditHostDataAccessObject._(String host, Client client)
+      : super(resource: 'unmanaged_hosts', host: host, client: client);
 
-  factory UnmanagedRedditHostDataAccessObject() {
+  factory UnmanagedRedditHostDataAccessObject(String host, Client client) {
     return _unmanagedRedditHostDataAccessObject ??=
-        UnmanagedRedditHostDataAccessObject._();
+        UnmanagedRedditHostDataAccessObject._(host, client);
   }
 }

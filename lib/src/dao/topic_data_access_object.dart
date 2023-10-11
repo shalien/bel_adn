@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
 import '../data_access_object.dart';
@@ -12,11 +13,12 @@ import '../model/topic_alias.dart';
 class TopicDataAccessObject extends DataAccessObject<Topic> {
   static TopicDataAccessObject? _topicDataAccessObject;
 
-  TopicDataAccessObject._() : super(resource: "topics");
+  TopicDataAccessObject._(String host, Client client)
+      : super(resource: "topics", host: host, client: client);
 
   /// Factory used to create and a single instance during the program run
-  factory TopicDataAccessObject() {
-    return _topicDataAccessObject ??= TopicDataAccessObject._();
+  factory TopicDataAccessObject(String host, Client client) {
+    return _topicDataAccessObject ??= TopicDataAccessObject._(host, client);
   }
 
   Future<Set<Provider>> showWithProvider(Topic topic) async {

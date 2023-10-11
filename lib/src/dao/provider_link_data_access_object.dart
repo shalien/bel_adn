@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
+
 import '../data_access_object.dart';
 import '../model/provider.dart';
 import '../model/provider_link.dart';
@@ -8,10 +10,12 @@ final class ProviderLinkDataAccessObject
     extends DataAccessObject<ProviderLink> {
   static ProviderLinkDataAccessObject? _providerLinkDataAccessObject;
 
-  ProviderLinkDataAccessObject._() : super(resource: 'provider_links');
+  ProviderLinkDataAccessObject._(String host, Client client)
+      : super(resource: 'provider_links', host: host, client: client);
 
-  factory ProviderLinkDataAccessObject() {
-    return _providerLinkDataAccessObject ??= ProviderLinkDataAccessObject._();
+  factory ProviderLinkDataAccessObject(String host, Client client) {
+    return _providerLinkDataAccessObject ??=
+        ProviderLinkDataAccessObject._(host, client);
   }
 
   Future<Set<Provider>> showProviders(ProviderLink providerLink) async {

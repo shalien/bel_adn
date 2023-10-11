@@ -1,12 +1,16 @@
+import 'package:http/http.dart';
+
 import '../data_access_object.dart';
 import '../model/destination.dart';
 
 class DestinationDataAccessObject extends DataAccessObject<Destination> {
   static DestinationDataAccessObject? _destinationDataAccessObject;
 
-  DestinationDataAccessObject._() : super(resource: "destinations");
+  DestinationDataAccessObject._(String host, Client client)
+      : super(resource: "destinations", host: host, client: client);
 
-  factory DestinationDataAccessObject() {
-    return _destinationDataAccessObject ??= DestinationDataAccessObject._();
+  factory DestinationDataAccessObject(String host, Client client) {
+    return _destinationDataAccessObject ??=
+        DestinationDataAccessObject._(host, client);
   }
 }

@@ -1,12 +1,16 @@
+import 'package:http/http.dart';
+
 import '../data_access_object.dart';
 import '../model/provider_type.dart';
 
 class ProviderTypeDataAccessObject extends DataAccessObject<ProviderType> {
   static ProviderTypeDataAccessObject? _providerTypeDataAccessObject;
 
-  ProviderTypeDataAccessObject._() : super(resource: "provider_types");
+  ProviderTypeDataAccessObject._(String host, Client client)
+      : super(resource: "provider_types", host: host, client: client);
 
-  factory ProviderTypeDataAccessObject() {
-    return _providerTypeDataAccessObject ??= ProviderTypeDataAccessObject._();
+  factory ProviderTypeDataAccessObject(String host, Client client) {
+    return _providerTypeDataAccessObject ??=
+        ProviderTypeDataAccessObject._(host, client);
   }
 }

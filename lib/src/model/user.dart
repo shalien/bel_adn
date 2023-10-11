@@ -1,29 +1,25 @@
 import 'dart:convert';
 
-import 'package:bel_adn/bel_adn.dart';
+import '../model.dart';
 
-class ProviderLink extends Model {
-  final int providerTypeId;
+final class User extends Model {
+  final int snowflake;
 
-  final Uri link;
+  final String name;
 
-  ProviderLink({
+  User({
+    required this.snowflake,
+    required this.name,
     int? id,
-    required this.link,
-    required this.providerTypeId,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) : super(
-          id: id,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+  }) : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
 
-  factory ProviderLink.fromJson(Map json) {
-    return ProviderLink(
+  factory User.fromJson(Map json) {
+    return User(
+      snowflake: json['snowflake'],
+      name: json['name'],
       id: json['id'],
-      link: Uri.parse(json['link']),
-      providerTypeId: json['provider_type_id'],
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
@@ -37,11 +33,11 @@ class ProviderLink extends Model {
   String toJson() {
     return jsonEncode(
       {
-        'link': link.toString(),
-        'provider_type_id': providerTypeId,
         ...?id != null ? {'id': id} : null,
         ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
         ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+        'snowflake': snowflake,
+        'name': name,
       },
     );
   }

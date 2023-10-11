@@ -1,14 +1,16 @@
 import 'dart:convert';
 
 import 'package:bel_adn/bel_adn.dart';
+import 'package:http/http.dart';
 
 class SourceDataAccessObject extends DataAccessObject<Source> {
   static SourceDataAccessObject? _sourceAccessObject;
 
-  SourceDataAccessObject._() : super(resource: "sources");
+  SourceDataAccessObject._(String host, Client client)
+      : super(resource: "sources", client: client, host: host);
 
-  factory SourceDataAccessObject() {
-    return _sourceAccessObject ??= SourceDataAccessObject._();
+  factory SourceDataAccessObject(String host, Client client) {
+    return _sourceAccessObject ??= SourceDataAccessObject._(host, client);
   }
 
   Future<Set<Media>> showWithMedia(Source source) async {
@@ -67,7 +69,7 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
     Uri uri = Uri.parse(
         '$resourceUrl/link/${base64Encode(link.toString().codeUnits)}');
 
-    var response = await get(uri);
+    var response = await client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -94,7 +96,7 @@ class SourceDataAccessObject extends DataAccessObject<Source> {
 
     Uri uri = Uri.parse('$resourceUrl/destination/$filename');
 
-    var response = await get(uri);
+    var response = await client.get(uri);
 
     switch (response.statusCode) {
       case 200:

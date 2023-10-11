@@ -5,8 +5,6 @@ import 'package:bel_adn/bel_adn.dart';
 final class TopicAlias extends Model {
   final int topicId;
 
-  Future<Topic> get topic async => await TopicDataAccessObject().show(topicId);
-
   final String alias;
 
   TopicAlias({

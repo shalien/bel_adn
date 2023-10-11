@@ -7,19 +7,7 @@ class Provider extends Model {
 
   final int? topicId;
 
-  Topic? _topic;
-
-  Future<Topic?> get topic async {
-    return _topic ??= await TopicDataAccessObject().show(topicId!);
-  }
-
   final int providerLinkId;
-
-  Future<ProviderLink> get providerLink async =>
-      await ProviderLinkDataAccessObject().show(providerLinkId);
-
-  Future<Set<Source>> get sources async =>
-      await ProviderDataAccessObject().showWithSources(this);
 
   Provider({
     required this.topicId,
