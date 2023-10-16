@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bel_adn/bel_adn.dart';
-import 'package:bel_adn/src/model/user.dart';
 import 'package:test/test.dart';
 
 void main() async {

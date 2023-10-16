@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bel_adn/src/model/guild.dart';
+import 'package:bel_adn/src/model/prohibited_domain.dart';
 import 'package:bel_adn/src/model/user.dart';
 import 'package:http/http.dart';
 
@@ -85,8 +86,13 @@ abstract base class DataAccessObject<T extends Model> {
                 break;
               case User:
                 models.add(User.fromJson(element) as T);
+                break;
               case Guild:
                 models.add(Guild.fromJson(element) as T);
+                break;
+              case ProhibitedDomain:
+                models.add(ProhibitedDomain.fromJson(element) as T);
+                break;
               default:
                 throw Exception('Unknown type');
             }
@@ -223,8 +229,13 @@ abstract base class DataAccessObject<T extends Model> {
         break;
       case User:
         value = User.fromJson(data) as T;
+        break;
       case Guild:
         value = Guild.fromJson(data) as T;
+        break;
+      case ProhibitedDomain:
+        value = ProhibitedDomain.fromJson(data) as T;
+        break;
       default:
         throw Exception('Unknown type');
     }

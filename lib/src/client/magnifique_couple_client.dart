@@ -1,5 +1,7 @@
 import 'package:bel_adn/src/dao/guild_data_access_object.dart';
+import 'package:bel_adn/src/dao/prohibited_domain_data_access_object.dart';
 import 'package:bel_adn/src/dao/user_data_access_object.dart';
+import 'package:bel_adn/src/model/prohibited_domain.dart';
 
 import '../../bel_adn.dart';
 
@@ -32,6 +34,8 @@ final class MagnifiqueCoupleClient {
 
   late final GuildDataAccessObject guilds;
 
+  late final ProhibitedDomainDataAccessObject prohibitedDomains;
+
   final Map<String, String> headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
@@ -55,6 +59,7 @@ final class MagnifiqueCoupleClient {
     topicAliases = TopicAliasDataAccessObject(_host, _internal);
     users = UserDataAccessObject(_host, _internal);
     guilds = GuildDataAccessObject(_host, _internal);
+    prohibitedDomains = ProhibitedDomainDataAccessObject(_host, _internal);
 
     if (accessToken.isEmpty) {
       throw ArgumentError.value(accessToken, 'accessToken', 'Cannot be empty');

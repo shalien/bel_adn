@@ -25,4 +25,16 @@ void main() async {
 
     print('${guild.id} ${guild.name} ${guild.snowflake}');
   });
+
+  test('Show guild\'s user', () async {
+    var client = MagnifiqueCoupleClient(
+      accessToken: await File('.env').readAsString(),
+    );
+
+    Set<User> users = await client.guilds.users(1234567890);
+
+    for (var user in users) {
+      print('${user.id} ${user.name} ${user.snowflake}');
+    }
+  });
 }
