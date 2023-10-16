@@ -33,3 +33,4 @@ export 'src/model/topic_alias.dart';
 export 'src/model/unmanaged_reddit_host.dart';
 export 'src/model/user.dart';
 export 'src/model/guild.dart';
+export 'src/model/prohibited_domain.dart';
