@@ -38,17 +38,11 @@ final class MagnifiqueCoupleClient {
 
   final Map<String, String> headers = {
     'Accept': 'application/json',
-    'Content-Type': 'application/json',
     'user-agent': 'bel_adn:cbJKqzlZ8soXvU_tvP5KWw:3.0.1 u/Shalien93',
   };
 
   MagnifiqueCoupleClient._({required this.accessToken})
       : _internal = BelAdnClient() {
-    assert(() {
-      _host = 'http://localhost:8000';
-      return true;
-    }());
-
     destinations = DestinationDataAccessObject(_host, _internal);
     medias = MediaDataAccessObject(_host, _internal);
     providers = ProviderDataAccessObject(_host, _internal);
