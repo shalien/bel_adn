@@ -26,8 +26,6 @@ abstract base class DataAccessObject<T extends Model> {
 
   const DataAccessObject(this.endpoint, this._client);
 
-
-  @internal
   Future<List<T>> index() async {
 
     final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint');
@@ -36,9 +34,9 @@ abstract base class DataAccessObject<T extends Model> {
 
     try {
       response = await _client.get(uri);
-    } on ClientException catch (e) {
+    } on ClientException {
      rethrow;
-    } on Exception catch (e) {
+    } on Exception {
       rethrow;
     }
 
@@ -55,7 +53,7 @@ abstract base class DataAccessObject<T extends Model> {
 
   }
 
-  @internal
+
   Future<T> show(int id) async {
 
     final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/$id');
@@ -64,9 +62,9 @@ abstract base class DataAccessObject<T extends Model> {
 
     try {
       response = await _client.get(uri);
-    } on ClientException catch (e) {
+    } on ClientException {
       rethrow;
-    } on Exception catch (e) {
+    } on Exception {
       rethrow;
     }
 
@@ -83,7 +81,6 @@ abstract base class DataAccessObject<T extends Model> {
 
   }
 
-  @internal
   Future<T> store(T model) async {
 
     final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint');
@@ -92,9 +89,9 @@ abstract base class DataAccessObject<T extends Model> {
 
     try {
       response = await _client.post(uri, body: model.toJson());
-    } on ClientException catch (e) {
+    } on ClientException {
       rethrow;
-    } on Exception catch (e) {
+    } on Exception {
       rethrow;
     }
 
@@ -109,7 +106,6 @@ abstract base class DataAccessObject<T extends Model> {
 
   }
 
-  @internal
   Future<T> update(T model) async {
 
     final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${model.id}');
@@ -118,9 +114,9 @@ abstract base class DataAccessObject<T extends Model> {
 
     try {
       response = await _client.put(uri, body: model.toJson());
-    } on ClientException catch (e) {
+    } on ClientException {
       rethrow;
-    } on Exception catch (e) {
+    } on Exception {
       rethrow;
     }
 
@@ -135,7 +131,7 @@ abstract base class DataAccessObject<T extends Model> {
 
   }
 
-  @internal
+
   Future<void> delete(int id) async {
 
     final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/$id');
@@ -144,9 +140,9 @@ abstract base class DataAccessObject<T extends Model> {
 
     try {
       response = await _client.delete(uri);
-    } on ClientException catch (e) {
+    } on ClientException {
       rethrow;
-    } on Exception catch (e) {
+    } on Exception {
       rethrow;
     }
 

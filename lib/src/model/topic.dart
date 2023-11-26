@@ -7,8 +7,10 @@ final class Topic extends Model {
 
   const Topic(this.name, this.order) : super();
 
-  Topic.fromJson(super.json) :
-        name = json['name'], order = json['order'], super.fromJson();
+  Topic.fromJson(super.json)
+      : name = json['name'],
+        order = json['order'],
+        super.fromJson();
 
   @override
   Model copyWith({String? name, int? order}) {
@@ -28,6 +30,4 @@ final class Topic extends Model {
       'order': order,
     });
   }
-
-
 }

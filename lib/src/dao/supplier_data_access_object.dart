@@ -1,7 +1,6 @@
 part of '../data_access_object.dart';
 
 final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
-
   const SupplierDataAccessObject(MagnifiqueCoupleClient client)
       : super('suppliers', client);
 

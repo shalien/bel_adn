@@ -19,14 +19,16 @@ final class User extends Model {
 
   const User(this.name, this.snowflake, this.email, this.password) : super();
 
-  User.fromJson(super.json) :
-        snowflake = json['snowflake'],
+  User.fromJson(super.json)
+      : snowflake = json['snowflake'],
         name = json['name'],
         email = json['email'],
-        password = json['password'], super.fromJson();
+        password = json['password'],
+        super.fromJson();
 
   @override
-  Model copyWith({int? snowflake, String? name, String? email, String? password}) {
+  Model copyWith(
+      {int? snowflake, String? name, String? email, String? password}) {
     return User(
       name ?? this.name,
       snowflake ?? this.snowflake,

@@ -3,10 +3,11 @@ part of '../model.dart';
 final class ProviderType extends Model {
   final String name;
 
-const ProviderType(this.name) : super();
+  const ProviderType(this.name) : super();
 
-    ProviderType.fromJson(super.json) :
-          name = json['name'], super.fromJson();
+  ProviderType.fromJson(super.json)
+      : name = json['name'],
+        super.fromJson();
 
   @override
   Model copyWith({String? name}) {
@@ -24,7 +25,4 @@ const ProviderType(this.name) : super();
       'name': name,
     });
   }
-
-
-
 }

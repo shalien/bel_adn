@@ -7,9 +7,10 @@ final class Source extends Model {
 
   const Source(this.link, this.pathId) : super();
 
-  Source.fromJson(super.json) :
-        link = Uri.parse(json['link']),
-        pathId = json['path_id'], super.fromJson();
+  Source.fromJson(super.json)
+      : link = Uri.parse(json['link']),
+        pathId = json['path_id'],
+        super.fromJson();
 
   @override
   Model copyWith({Uri? link, int? pathId}) {
@@ -29,6 +30,4 @@ final class Source extends Model {
       ...?pathId != null ? {'path_id': pathId} : null,
     });
   }
-
-
 }

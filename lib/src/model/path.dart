@@ -1,16 +1,13 @@
-
-
 part of '../model.dart';
 
 final class Path extends Model {
-
   final String content;
 
   const Path(this.content) : super();
 
-  Path.fromJson(super.json) :
-        content = json['content'], super.fromJson();
-
+  Path.fromJson(super.json)
+      : content = json['content'],
+        super.fromJson();
 
   @override
   String toJson() {
@@ -28,5 +25,4 @@ final class Path extends Model {
       content ?? this.content,
     );
   }
-
 }

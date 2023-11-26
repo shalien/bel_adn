@@ -1,21 +1,20 @@
 part of '../data_access_object.dart';
 
-
 /// The [DataAccessObject] for the [Media] class
 @immutable
 final class MediaDataAccessObject extends DataAccessObject<Media> {
   /// The singleton instance for the factory
 
-
-  const MediaDataAccessObject(MagnifiqueCoupleClient client) : super('medias', client);
-
+  const MediaDataAccessObject(MagnifiqueCoupleClient client)
+      : super('medias', client);
 
   Future<Set<Media>> showByDestinationId(Destination destination) async {
     if (destination.id == null) {
       throw ArgumentError("destination id cannot be null");
     }
 
-    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/medias/destination/${destination.id}');
+    Uri uri = Uri.parse(
+        '${MagnifiqueCoupleClient.host}/api/medias/destination/${destination.id}');
 
     var response = await _client.get(uri);
 
@@ -35,7 +34,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
 
         return Future.value(medias);
 
-        default:
+      default:
         throw MagnifiqueException(response);
     }
   }
@@ -45,7 +44,8 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("source id cannot be null");
     }
 
-    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/medias/source/${source.id}');
+    Uri uri = Uri.parse(
+        '${MagnifiqueCoupleClient.host}/api/medias/source/${source.id}');
 
     var response = await _client.get(uri);
 
@@ -74,7 +74,8 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/medias/link/${base64Encode(link.toString().codeUnits)}');
+    Uri uri = Uri.parse(
+        '${MagnifiqueCoupleClient.host}/api/medias/link/${base64Encode(link.toString().codeUnits)}');
 
     var response = await _client.get(uri);
 
@@ -93,7 +94,6 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
         throw MagnifiqueException(response);
     }
   }
-
 
   @override
   Media fromJson(Map<String, dynamic> json) {

@@ -1,13 +1,8 @@
-
-
 import 'package:http/http.dart';
-
 
 import '../src/data_access_object.dart';
 
-
 class MagnifiqueCoupleClient extends BaseClient {
-
   final Client _client;
 
   final String accessToken;
@@ -30,13 +25,12 @@ class MagnifiqueCoupleClient extends BaseClient {
 
   late final SupplierDataAccessObject suppliers;
 
-
   final Map<String, String> headers = {
     'Accept': 'application/json',
     'user-agent': 'bel_adn:cbJKqzlZ8soXvU_tvP5KWw:3.0.1 u/Shalien93',
   };
 
-  MagnifiqueCoupleClient(this.accessToken,{ Client? client})
+  MagnifiqueCoupleClient(this.accessToken, {Client? client})
       : _client = client ?? Client() {
     destinations = DestinationDataAccessObject(this);
     medias = MediaDataAccessObject(this);
@@ -47,14 +41,12 @@ class MagnifiqueCoupleClient extends BaseClient {
     suppliers = SupplierDataAccessObject(this);
     users = UserDataAccessObject(this);
 
-
     if (accessToken.isEmpty) {
       throw ArgumentError.value(accessToken, 'accessToken', 'Cannot be empty');
     }
 
     headers.addAll({'Authorization': 'Bearer $accessToken'});
   }
-
 
   @override
   Future<StreamedResponse> send(BaseRequest request) {

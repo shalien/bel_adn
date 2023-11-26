@@ -1,13 +1,12 @@
 part of '../data_access_object.dart';
 
 final class SourceDataAccessObject extends DataAccessObject<Source> {
-
   const SourceDataAccessObject(MagnifiqueCoupleClient client)
       : super('sources', client);
 
-
   Future<Set<Media>> showWithMedia(Source source) async {
-    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/${source.id}/medias');
+    Uri uri =
+        Uri.parse('${MagnifiqueCoupleClient.host}/api/${source.id}/medias');
 
     var response = await _client.get(uri);
 
@@ -29,7 +28,6 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
 
     return medias;
   }
-
 
   Future<Source?> showByLink(Uri link) async {
     if (link.toString().isEmpty) {
@@ -61,7 +59,8 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
       throw ArgumentError("Filename cannot be empty");
     }
 
-    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/destination/$filename');
+    Uri uri =
+        Uri.parse('${MagnifiqueCoupleClient.host}/api/destination/$filename');
 
     var response = await _client.get(uri);
 
@@ -77,7 +76,6 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
         return Future.value(source);
       default:
         throw MagnifiqueException(response);
-
     }
   }
 

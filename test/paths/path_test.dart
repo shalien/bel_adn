@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:bel_adn/bel_adn.dart';
@@ -14,7 +12,6 @@ void main() {
     var paths = await client.paths.index();
 
     var randomPath = paths.last;
-
 
     var suppliers = await client.paths.suppliers(randomPath);
 
@@ -35,7 +32,6 @@ void main() {
 
     expect(topics, isList);
     expect(topics, isNotEmpty);
-
   });
 
   test('Path -> sources', () async {
@@ -51,6 +47,5 @@ void main() {
 
     expect(sources, isList);
     expect(sources, isNotEmpty);
-
   });
 }

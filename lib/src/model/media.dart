@@ -11,13 +11,11 @@ final class Media extends Model {
   final int destinationId;
 
   /// A [Media] will be composed during all the resolving process
-const Media(this.link,
-    this.sourceId,
-    this.destinationId) : super();
+  const Media(this.link, this.sourceId, this.destinationId) : super();
 
   /// Create a [Media] from a json
-  Media.fromJson(super.json) :
-        link = Uri.parse(json['link']),
+  Media.fromJson(super.json)
+      : link = Uri.parse(json['link']),
         sourceId = json['source_id'],
         destinationId = json['destination_id'],
         super.fromJson();
@@ -40,10 +38,10 @@ const Media(this.link,
     Uri? link,
     int? sourceId,
     int? destinationId,
-}) {
+  }) {
     return Media(
       link ?? this.link,
-       sourceId ?? this.sourceId,
+      sourceId ?? this.sourceId,
       destinationId ?? this.destinationId,
     );
   }

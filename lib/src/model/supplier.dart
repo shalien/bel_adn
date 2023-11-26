@@ -1,15 +1,13 @@
-
-
 part of '../model.dart';
 
 final class Supplier extends Model {
-
   final String host;
 
   const Supplier(this.host) : super();
 
-  Supplier.fromJson(super.json) :
-        host = json['host'], super.fromJson();
+  Supplier.fromJson(super.json)
+      : host = json['host'],
+        super.fromJson();
 
   @override
   Supplier copyWith({String? host}) {
@@ -25,5 +23,4 @@ final class Supplier extends Model {
       'host': host,
     });
   }
-
 }

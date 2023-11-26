@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 part 'model/destination.dart';
@@ -21,10 +20,14 @@ abstract base class Model {
 
   const Model() : this._internal(null, null, null);
 
-  Model.fromJson(Map<String, dynamic> json) :
-        id = json['id'],
-        createdAt = json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
-        updatedAt = json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null;
+  Model.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        createdAt = json['created_at'] != null
+            ? DateTime.parse(json['created_at'])
+            : null,
+        updatedAt = json['updated_at'] != null
+            ? DateTime.parse(json['updated_at'])
+            : null;
 
   String toJson();
 

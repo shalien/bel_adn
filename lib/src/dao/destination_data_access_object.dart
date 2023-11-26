@@ -1,9 +1,7 @@
-
 part of '../data_access_object.dart';
 
-
 final class DestinationDataAccessObject extends DataAccessObject<Destination> {
-const DestinationDataAccessObject(MagnifiqueCoupleClient client)
+  const DestinationDataAccessObject(MagnifiqueCoupleClient client)
       : super('destinations', client);
 
   @override
@@ -11,5 +9,3 @@ const DestinationDataAccessObject(MagnifiqueCoupleClient client)
     return Destination.fromJson(json);
   }
 }
-
-
