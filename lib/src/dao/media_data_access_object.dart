@@ -1,32 +1,23 @@
-import 'dart:convert';
+part of '../data_access_object.dart';
 
-import 'package:bel_adn/bel_adn.dart';
-import 'package:http/http.dart';
-import 'package:meta/meta.dart';
 
 /// The [DataAccessObject] for the [Media] class
 @immutable
 final class MediaDataAccessObject extends DataAccessObject<Media> {
   /// The singleton instance for the factory
-  static MediaDataAccessObject? _mediaDataAccessObject;
 
-  /// Private constructor
-  MediaDataAccessObject._(String host, Client client)
-      : super(resource: "medias", host: host, client: client);
 
-  /// Factory used to create and a single instance during the program run
-  factory MediaDataAccessObject(String host, Client client) {
-    return _mediaDataAccessObject ??= MediaDataAccessObject._(host, client);
-  }
+  const MediaDataAccessObject(MagnifiqueCoupleClient client) : super('medias', client);
+
 
   Future<Set<Media>> showByDestinationId(Destination destination) async {
     if (destination.id == null) {
       throw ArgumentError("destination id cannot be null");
     }
 
-    Uri uri = Uri.parse('$resourceUrl/destination/${destination.id}');
+    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/destination/${destination.id}');
 
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -55,9 +46,9 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("source id cannot be null");
     }
 
-    Uri uri = Uri.parse('$resourceUrl/source/${source.id}');
+    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/source/${source.id}');
 
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -86,14 +77,9 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    if (cache.find((source) => source.link == link).isNotEmpty) {
-      return Future.value(cache.find((source) => source.link == link).first);
-    }
+    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/link/${base64Encode(link.toString().codeUnits)}');
 
-    Uri uri = Uri.parse(
-        '$resourceUrl/link/${base64Encode(link.toString().codeUnits)}');
-
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -104,12 +90,17 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
         }
 
         Media source = Media.fromJson(json['data']);
-        cache.add(source);
         return Future.value(source);
       case 404:
         return Future.value(null);
       default:
         throw response;
     }
+  }
+
+
+  @override
+  Media fromJson(Map<String, dynamic> json) {
+    return Media.fromJson(json);
   }
 }

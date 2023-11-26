@@ -1,245 +1,161 @@
 import 'dart:convert';
 
-import 'package:bel_adn/src/model/guild.dart';
-import 'package:bel_adn/src/model/prohibited_domain.dart';
-import 'package:bel_adn/src/model/user.dart';
 import 'package:http/http.dart';
+import 'package:meta/meta.dart';
 
-import 'cache/cache.dart';
+import 'magnifique_couple_client.dart';
 import 'model.dart';
-import 'model/destination.dart';
-import 'model/media.dart';
-import 'model/provider.dart';
-import 'model/provider_link.dart';
-import 'model/provider_type.dart';
-import 'model/source.dart';
-import 'model/topic.dart';
-import 'model/topic_alias.dart';
-import 'model/unmanaged_reddit_host.dart';
 
+part 'dao/destination_data_access_object.dart';
+part 'dao/media_data_access_object.dart';
+part 'dao/provider_type_data_access_object.dart';
+part 'dao/supplier_data_access_object.dart';
+part 'dao/path_data_access_object.dart';
+part 'dao/source_data_access_object.dart';
+part 'dao/topic_data_access_object.dart';
+part 'dao/user_data_access_object.dart';
+
+
+@immutable
 abstract base class DataAccessObject<T extends Model> {
-  final String resource;
 
-  final Cache<T> cache = Cache<T>();
+  final String endpoint;
 
-  final Map<String, String> headers = <String, String>{
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  };
+  final MagnifiqueCoupleClient _client;
 
-  final String host;
+  const DataAccessObject(this.endpoint, this._client);
 
-  final Client client;
 
-  String get resourceUrl => "$host/api/$resource";
+  @internal
+  Future<List<T>> index() async {
 
-  DataAccessObject(
-      {required this.resource, required this.host, required this.client});
+    final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint');
 
-  Future<Set<T>> index() async {
-    Uri url = Uri.parse(resourceUrl);
+    Response response;
 
-    var response = await client.get(url, headers: headers);
+    try {
+      response = await _client.get(uri);
+    } on ClientException catch (e) {
+     rethrow;
+    } on Exception catch (e) {
+      rethrow;
+    }
+
+    List<T> models = [];
 
     if (response.statusCode == 200) {
-      var decodedResponse = jsonDecode(response.body);
-
-      Set<T> models = <T>{};
-
-      if (decodedResponse['data'].isEmpty) {
-        return models;
-      }
-
-      for (var element in decodedResponse['data']) {
-        if (element['id'] != null) {
-          if (cache.get(element['id']) != null) {
-            models.add(cache.get(element['id'])!);
-            continue;
-          } else {
-            switch (T) {
-              case Destination:
-                models.add(Destination.fromJson(element) as T);
-                break;
-              case Media:
-                models.add(Media.fromJson(element) as T);
-                break;
-              case ProviderType:
-                models.add(ProviderType.fromJson(element) as T);
-                break;
-              case Provider:
-                models.add(Provider.fromJson(element) as T);
-                break;
-              case Source:
-                models.add(Source.fromJson(element) as T);
-                break;
-              case Topic:
-                models.add(Topic.fromJson(element) as T);
-                break;
-              case UnmanagedRedditHost:
-                models.add(UnmanagedRedditHost.fromJson(element) as T);
-                break;
-              case ProviderLink:
-                models.add(ProviderLink.fromJson(element) as T);
-                break;
-              case TopicAlias:
-                models.add(TopicAlias.fromJson(element) as T);
-                break;
-              case User:
-                models.add(User.fromJson(element) as T);
-                break;
-              case Guild:
-                models.add(Guild.fromJson(element) as T);
-                break;
-              case ProhibitedDomain:
-                models.add(ProhibitedDomain.fromJson(element) as T);
-                break;
-              default:
-                throw Exception('Unknown type');
-            }
-          }
-        }
-      }
-
-      return models;
-    } else {
-      throw response;
+      final List<dynamic> json = jsonDecode(response.body)['data'];
+      models = json.map((dynamic model) => fromJson(model)).toList();
     }
+
+    return models;
+
   }
 
+  @internal
   Future<T> show(int id) async {
-    if (cache.get(id) != null) {
-      return cache.get(id)!;
+
+    final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/$id');
+
+    Response response;
+
+    try {
+      response = await _client.get(uri);
+    } on ClientException catch (e) {
+      rethrow;
+    } on Exception catch (e) {
+      rethrow;
     }
 
-    String uri = '$resourceUrl/$id';
-    Uri url = Uri.parse(uri);
+    T model;
 
-    var response = await client.get(url, headers: headers);
-
-    if (response.statusCode != 200) {
-      throw response;
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      model = fromJson(json);
+    } else {
+      throw Exception('Failed to load $endpoint $id');
     }
 
-    var jsonDecoded = json.decode(response.body);
+    return model;
 
-    if (jsonDecoded['data'] == null) {
-      throw response;
-    }
-
-    T value = _resolveT(T, jsonDecoded['data']);
-
-    cache.add(value);
-
-    return value;
   }
 
-  Future<T> update(T t) async {
-    String uri = '$resourceUrl/${t.id}';
-    Uri url = Uri.parse(uri);
+  @internal
+  Future<T> store(T model) async {
 
-    var response = await client.put(url, body: t.toJson(), headers: headers);
+    final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint');
 
-    if (response.statusCode != 200) {
-      throw response;
+    Response response;
+
+    try {
+      response = await _client.post(uri, body: model.toJson());
+    } on ClientException catch (e) {
+      rethrow;
+    } on Exception catch (e) {
+      rethrow;
     }
 
-    var jsonDecoded = json.decode(response.body);
-
-    if (jsonDecoded['data'] == null) {
-      throw response;
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      model = fromJson(json);
+    } else {
+      throw Exception('Failed to create $endpoint');
     }
 
-    T value = _resolveT(T, jsonDecoded['data']);
+    return model;
 
-    cache.replace(value);
-
-    return value;
   }
 
-  Future<T> store(T t) async {
-    String uri = resourceUrl;
-    Uri url = Uri.parse(uri);
+  @internal
+  Future<T> update(T model) async {
 
-    var response = await client.post(url, body: t.toJson(), headers: headers);
+    final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${model.id}');
 
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw response;
+    Response response;
+
+    try {
+      response = await _client.put(uri, body: model.toJson());
+    } on ClientException catch (e) {
+      rethrow;
+    } on Exception catch (e) {
+      rethrow;
     }
 
-    var jsonDecoded = json.decode(response.body);
-
-    if (jsonDecoded['data'] == null) {
-      throw response;
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      model = fromJson(json);
+    } else {
+      throw Exception('Failed to update $endpoint ${model.id}');
     }
 
-    T value = _resolveT(T, jsonDecoded['data']);
+    return model;
 
-    cache.add(value);
-
-    return value;
   }
 
-  Future<bool> destroy(T t) async {
-    if (cache.get(t.id!) != null) {
-      cache.remove(t.id!);
+  @internal
+  Future<void> delete(int id) async {
+
+    final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/$id');
+
+    Response response;
+
+    try {
+      response = await _client.delete(uri);
+    } on ClientException catch (e) {
+      rethrow;
+    } on Exception catch (e) {
+      rethrow;
     }
 
-    String uri = '$resourceUrl/${t.id}';
-    Uri url = Uri.parse(uri);
-
-    var response = await client.delete(url, headers: headers);
-
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw response;
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete $endpoint $id');
     }
 
-    return true;
   }
 
-  T _resolveT(Type t, data) {
-    T value;
 
-    switch (t) {
-      case Destination:
-        value = Destination.fromJson(data) as T;
-        break;
-      case Media:
-        value = Media.fromJson(data) as T;
-        break;
-      case ProviderType:
-        value = ProviderType.fromJson(data) as T;
-        break;
-      case Provider:
-        value = Provider.fromJson(data) as T;
-        break;
-      case Source:
-        value = Source.fromJson(data) as T;
-        break;
-      case Topic:
-        value = Topic.fromJson(data) as T;
-        break;
-      case UnmanagedRedditHost:
-        value = UnmanagedRedditHost.fromJson(data) as T;
-        break;
-      case ProviderLink:
-        value = ProviderLink.fromJson(data) as T;
-        break;
-      case TopicAlias:
-        value = TopicAlias.fromJson(data) as T;
-        break;
-      case User:
-        value = User.fromJson(data) as T;
-        break;
-      case Guild:
-        value = Guild.fromJson(data) as T;
-        break;
-      case ProhibitedDomain:
-        value = ProhibitedDomain.fromJson(data) as T;
-        break;
-      default:
-        throw Exception('Unknown type');
-    }
+  @internal
+  @mustBeOverridden
+  T fromJson(Map<String, dynamic> json);
 
-    return value;
-  }
 }

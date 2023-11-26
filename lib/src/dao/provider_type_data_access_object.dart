@@ -1,17 +1,15 @@
-import 'package:http/http.dart';
-
-import '../data_access_object.dart';
-import '../model/provider_type.dart';
+part of '../data_access_object.dart';
 
 final class ProviderTypeDataAccessObject
     extends DataAccessObject<ProviderType> {
-  static ProviderTypeDataAccessObject? _providerTypeDataAccessObject;
 
-  ProviderTypeDataAccessObject._(String host, Client client)
-      : super(resource: "provider_types", host: host, client: client);
+  const ProviderTypeDataAccessObject(MagnifiqueCoupleClient client)
+      : super('provider_types', client);
 
-  factory ProviderTypeDataAccessObject(String host, Client client) {
-    return _providerTypeDataAccessObject ??=
-        ProviderTypeDataAccessObject._(host, client);
+  @override
+  ProviderType fromJson(Map<String, dynamic> json) {
+    return ProviderType.fromJson(json);
   }
+
+
 }

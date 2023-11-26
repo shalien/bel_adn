@@ -1,32 +1,21 @@
-import 'dart:convert';
-
-import '../model.dart';
+part of '../model.dart';
 
 final class Source extends Model {
   final Uri link;
 
-  final int? providerId;
+  final int? pathId;
 
-  Source(
-      {required this.link,
-      required this.providerId,
-      int? id,
-      DateTime? createdAt,
-      DateTime? updatedAt})
-      : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
+  const Source(this.link, this.pathId) : super();
+
+  Source.fromJson(super.json) :
+        link = Uri.parse(json['link']),
+        pathId = json['path_id'], super.fromJson();
 
   @override
-  factory Source.fromJson(Map json) {
+  Model copyWith({Uri? link, int? pathId}) {
     return Source(
-      link: Uri.parse(json['link']),
-      providerId: json['provider_id'],
-      id: json['id'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
+      link ?? this.link,
+      pathId ?? this.pathId,
     );
   }
 
@@ -36,8 +25,10 @@ final class Source extends Model {
       ...?id != null ? {'id': id} : null,
       ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
       ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
-      'provider_id': providerId,
       'link': link.toString(),
+      ...?pathId != null ? {'path_id': pathId} : null,
     });
   }
+
+
 }

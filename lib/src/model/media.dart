@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:bel_adn/bel_adn.dart';
+part of '../model.dart';
 
 /// Represent a [Media]
 ///
@@ -13,31 +11,16 @@ final class Media extends Model {
   final int destinationId;
 
   /// A [Media] will be composed during all the resolving process
-  Media(
-      {required this.sourceId,
-      required this.link,
-      required this.destinationId,
-      int? id,
-      DateTime? createdAt,
-      DateTime? updatedAt})
-      : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
+const Media(this.link,
+    this.sourceId,
+    this.destinationId) : super();
 
-  /// Create [Media] from a json string
-  @override
-  factory Media.fromJson(Map json) {
-    return Media(
-      link: Uri.parse(json['link']),
-      sourceId: json['source_id'],
-      destinationId: json['destination_id'],
-      id: json['id'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-    );
-  }
+  /// Create a [Media] from a json
+  Media.fromJson(super.json) :
+        link = Uri.parse(json['link']),
+        sourceId = json['source_id'],
+        destinationId = json['destination_id'],
+        super.fromJson();
 
   /// Convert a media to a json string
   @override
@@ -50,5 +33,18 @@ final class Media extends Model {
       'destination_id': destinationId,
       'link': link.toString(),
     });
+  }
+
+  @override
+  Model copyWith({
+    Uri? link,
+    int? sourceId,
+    int? destinationId,
+}) {
+    return Media(
+      link ?? this.link,
+       sourceId ?? this.sourceId,
+      destinationId ?? this.destinationId,
+    );
   }
 }
