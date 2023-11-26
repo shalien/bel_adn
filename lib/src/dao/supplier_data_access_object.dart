@@ -26,7 +26,7 @@ final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
     ProviderType model;
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      final json = jsonDecode(response.body)['data'];
       model = ProviderType.fromJson(json);
     } else {
       throw MagnifiqueException(response);
