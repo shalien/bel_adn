@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
+import 'exception/magnifique_exception.dart';
 import 'magnifique_couple_client.dart';
 import 'model.dart';
 
@@ -46,6 +47,8 @@ abstract base class DataAccessObject<T extends Model> {
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
       models = json.map((dynamic model) => fromJson(model)).toList();
+    } else {
+      throw MagnifiqueException(response);
     }
 
     return models;
@@ -73,7 +76,7 @@ abstract base class DataAccessObject<T extends Model> {
       final Map<String, dynamic> json = jsonDecode(response.body)['data'];
       model = fromJson(json);
     } else {
-      throw Exception('Failed to load $endpoint $id');
+      throw MagnifiqueException(response);
     }
 
     return model;
@@ -99,7 +102,7 @@ abstract base class DataAccessObject<T extends Model> {
       final Map<String, dynamic> json = jsonDecode(response.body)['data'];
       model = fromJson(json);
     } else {
-      throw Exception('Failed to create $endpoint');
+      throw MagnifiqueException(response);
     }
 
     return model;
@@ -125,7 +128,7 @@ abstract base class DataAccessObject<T extends Model> {
       final Map<String, dynamic> json = jsonDecode(response.body)['data'];
       model = fromJson(json);
     } else {
-      throw Exception('Failed to update $endpoint ${model.id}');
+      throw MagnifiqueException(response);
     }
 
     return model;
@@ -148,7 +151,7 @@ abstract base class DataAccessObject<T extends Model> {
     }
 
     if (response.statusCode != 204) {
-      throw Exception('Failed to delete $endpoint $id');
+      throw MagnifiqueException(response);
     }
 
   }

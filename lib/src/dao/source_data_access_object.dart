@@ -12,7 +12,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
     var response = await _client.get(uri);
 
     if (response.statusCode != 200) {
-      throw response;
+      throw MagnifiqueException(response);
     }
 
     Set<Media> medias = {};
@@ -51,8 +51,8 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
 
         Source source = Source.fromJson(json['data']);
         return Future.value(source);
-      case 404:
-        return Future.value(null);
+      default:
+        throw MagnifiqueException(response);
     }
   }
 
@@ -75,8 +75,8 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
 
         Source source = Source.fromJson(json['data']);
         return Future.value(source);
-      case 404:
-        return Future.value(null);
+      default:
+        throw MagnifiqueException(response);
 
     }
   }

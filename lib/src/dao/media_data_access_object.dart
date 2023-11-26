@@ -15,7 +15,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("destination id cannot be null");
     }
 
-    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/destination/${destination.id}');
+    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/medias/destination/${destination.id}');
 
     var response = await _client.get(uri);
 
@@ -34,10 +34,9 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
         }
 
         return Future.value(medias);
-      case 404:
-        return Future.value(<Media>{});
-      default:
-        throw response;
+
+        default:
+        throw MagnifiqueException(response);
     }
   }
 
@@ -46,7 +45,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("source id cannot be null");
     }
 
-    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/source/${source.id}');
+    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/medias/source/${source.id}');
 
     var response = await _client.get(uri);
 
@@ -65,10 +64,8 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
         }
 
         return Future.value(medias);
-      case 404:
-        return Future.value(<Media>{});
       default:
-        throw response;
+        throw MagnifiqueException(response);
     }
   }
 
@@ -77,7 +74,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/link/${base64Encode(link.toString().codeUnits)}');
+    Uri uri = Uri.parse('${MagnifiqueCoupleClient.host}/api/medias/link/${base64Encode(link.toString().codeUnits)}');
 
     var response = await _client.get(uri);
 
@@ -91,10 +88,9 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
 
         Media source = Media.fromJson(json['data']);
         return Future.value(source);
-      case 404:
-        return Future.value(null);
+
       default:
-        throw response;
+        throw MagnifiqueException(response);
     }
   }
 
