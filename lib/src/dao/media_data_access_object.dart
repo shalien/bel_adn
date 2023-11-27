@@ -87,6 +87,9 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
         Media source = Media.fromJson(json['data']);
         return Future.value(source);
 
+        case 404:
+        return null;
+
       default:
         throw MagnifiqueException(response);
     }
