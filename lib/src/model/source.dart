@@ -3,7 +3,7 @@ part of '../model.dart';
 final class Source extends Model {
   final Uri link;
 
-  final int? pathId;
+  final int pathId;
 
   const Source(this.link, this.pathId) : super();
 
@@ -27,7 +27,7 @@ final class Source extends Model {
       ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
       ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
       'link': link.toString(),
-      ...?pathId != null ? {'path_id': pathId} : null,
+      'path_id': pathId
     });
   }
 }
