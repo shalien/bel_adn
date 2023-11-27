@@ -11,13 +11,11 @@ void main() {
         await File('.env').readAsString(),
     );
 
-    var paths = await client.suppliers.index();
+    var supplier = await client.suppliers.show(1);
 
-    var randomPath = paths.first;
+    var pt = await client.suppliers.providerType(supplier);
 
-    var providerType = await client.suppliers.providerType(randomPath);
-
-    print(providerType);
+    print(pt);
 
   });
 }

@@ -3,15 +3,18 @@ part of '../model.dart';
 final class Supplier extends Model {
   final String host;
 
-  const Supplier(this.host) : super();
+  final int providerTypeId;
+
+  const Supplier(this.host, this.providerTypeId) : super();
 
   Supplier.fromJson(super.json)
       : host = json['host'],
+        providerTypeId = json['provider_type_id'],
         super.fromJson();
 
   @override
-  Supplier copyWith({String? host}) {
-    return Supplier(host ?? this.host);
+  Supplier copyWith({String? host, int? providerTypeId}) {
+    return Supplier(host ?? this.host,  providerTypeId ?? this.providerTypeId);
   }
 
   @override

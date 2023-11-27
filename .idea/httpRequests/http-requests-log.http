@@ -1,0 +1,22 @@
+GET https://magnifiquecouple.projetretro.io/api/provider_types/1
+Accept: application/json
+Authorization: Bearer 2|3USoGRKoRNqNxV0tYdmxKSoOg2D1VAzeLx4D53vp42c2add6
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-27T104120.200.json
+
+###
+
+GET https://magnifiquecouple.projetretro.io/api/suppliers/1
+Accept: application/json
+Authorization: Bearer 2|3USoGRKoRNqNxV0tYdmxKSoOg2D1VAzeLx4D53vp42c2add6
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-11-27T103931.200.json
+
+###
+

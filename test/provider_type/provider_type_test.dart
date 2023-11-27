@@ -11,11 +11,7 @@ void main() {
         await File('.env').readAsString(),
     );
 
-    var paths = await client.suppliers.index();
-
-    var randomPath = paths.first;
-
-    var providerType = await client.suppliers.providerType(randomPath);
+   var providerType = await client.providerTypes.show(1);
 
     print(providerType);
 

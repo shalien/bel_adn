@@ -10,29 +10,11 @@ final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
   }
 
   Future<ProviderType> providerType(Supplier supplier) async {
-    final Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/suppliers/${supplier.id}/provider_type');
 
-    Response response;
+    var providerType = await _client.providerTypes.show(supplier.providerTypeId);
 
-    try {
-      response = await _client.get(uri);
-    } on ClientException {
-      rethrow;
-    } on Exception {
-      rethrow;
-    }
+    return providerType;
 
-    ProviderType model;
-
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body)['data'];
-      model = ProviderType.fromJson(json);
-    } else {
-      throw MagnifiqueException(response);
-    }
-
-    return model;
   }
 
 }
