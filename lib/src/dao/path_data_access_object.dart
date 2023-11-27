@@ -11,7 +11,7 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
 
   Future<List<Source>> sources(Path path) async {
     final Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/paths/${path.id}/sources');
+        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${path.id}/sources');
 
     Response response;
 
@@ -37,7 +37,7 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
 
   Future<List<Topic>> topics(Path path) async {
     final Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/paths/${path.id}/topics');
+        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${path.id}/topics');
 
     Response response;
 
@@ -63,7 +63,7 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
 
   Future<List<Supplier>> suppliers(Path path) async {
     final Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/paths/${path.id}/suppliers');
+        MagnifiqueCoupleClient.host, '/api/$endpoint/${path.id}/suppliers');
 
     Response response;
 

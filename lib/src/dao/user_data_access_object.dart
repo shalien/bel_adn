@@ -10,7 +10,7 @@ final class UserDataAccessObject extends DataAccessObject<User> {
     }
 
     Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/snowflake/$snowflake');
+        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/snowflake/$snowflake');
 
     var response = await _client.get(uri);
 

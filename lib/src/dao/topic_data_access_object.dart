@@ -13,7 +13,7 @@ final class TopicDataAccessObject extends DataAccessObject<Topic> {
 
   Future<List<Path>> paths(Topic topic) async {
     final Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/topics/${topic.id}/paths');
+        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${topic.id}/paths');
 
     Response response;
 
