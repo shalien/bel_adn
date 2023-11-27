@@ -48,6 +48,8 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
 
         Source source = Source.fromJson(json['data']);
         return Future.value(source);
+        case 404:
+        return null;
       default:
         throw MagnifiqueException(response);
     }
