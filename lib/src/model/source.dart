@@ -3,7 +3,7 @@ part of '../model.dart';
 final class Source extends Model {
   final Uri link;
 
-  final int pathId;
+  final int? pathId;
 
   const Source(this.link, this.pathId) : super();
 
