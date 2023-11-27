@@ -27,6 +27,7 @@ class MagnifiqueCoupleClient extends BaseClient {
 
   final Map<String, String> headers = {
     'Accept': 'application/json',
+    'Content-Type': 'application/json',
     'user-agent': 'bel_adn:cbJKqzlZ8soXvU_tvP5KWw:3.0.1 u/Shalien93',
   };
 
