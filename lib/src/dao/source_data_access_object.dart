@@ -6,7 +6,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
 
   Future<Set<Media>> showWithMedia(Source source) async {
     Uri uri =
-        Uri.parse('${MagnifiqueCoupleClient.host}/api/${source.id}/medias');
+        Uri.https(MagnifiqueCoupleClient.host, '/api/${source.id}/medias');
 
     var response = await _client.get(uri);
 
@@ -34,8 +34,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    Uri uri = Uri.parse(
-        '${MagnifiqueCoupleClient.host}/api/link/${base64Encode(link.toString().codeUnits)}');
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/link/${base64Encode(link.toString().codeUnits)}');
 
     var response = await _client.get(uri);
 
@@ -60,7 +59,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
     }
 
     Uri uri =
-        Uri.parse('${MagnifiqueCoupleClient.host}/api/destination/$filename');
+        Uri.https(MagnifiqueCoupleClient.host,'/api/destination/$filename');
 
     var response = await _client.get(uri);
 

@@ -13,8 +13,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("destination id cannot be null");
     }
 
-    Uri uri = Uri.parse(
-        '${MagnifiqueCoupleClient.host}/api/medias/destination/${destination.id}');
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/medias/destination/${destination.id}');
 
     var response = await _client.get(uri);
 
@@ -44,8 +43,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("source id cannot be null");
     }
 
-    Uri uri = Uri.parse(
-        '${MagnifiqueCoupleClient.host}/api/medias/source/${source.id}');
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/medias/source/${source.id}');
 
     var response = await _client.get(uri);
 
@@ -74,8 +72,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    Uri uri = Uri.parse(
-        '${MagnifiqueCoupleClient.host}/api/medias/link/${base64Encode(link.toString().codeUnits)}');
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/medias/link/${base64Encode(link.toString().codeUnits)}');
 
     var response = await _client.get(uri);
 
