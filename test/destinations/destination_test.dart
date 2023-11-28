@@ -23,4 +23,17 @@ void main() async {
 
     print(element.filename);
   });
+
+  test('Destination', () async {
+    var client = MagnifiqueCoupleClient(
+      await File('.env').readAsString(),
+    );
+
+    var element = await client.destinations.show(102);
+
+    var source = await client.sources.showByDestination(element.filename);
+
+    print(source);
+
+  });
 }
