@@ -61,7 +61,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
     }
 
     Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host,'/api/destination/$filename');
+        Uri.https(MagnifiqueCoupleClient.host,'/api/destination/filename/$filename');
 
     var response = await _client.get(uri);
 
