@@ -16,4 +16,17 @@ void main() {
     print(providerType);
 
   });
+
+  test('Test', () async {
+    var client = MagnifiqueCoupleClient(
+      await File('.env').readAsString(),
+    );
+
+    var providerType = await client.providerTypes.show(1);
+
+    var pt = await client.providerTypes.suppliers(providerType);
+
+    print(pt);
+
+  });
 }

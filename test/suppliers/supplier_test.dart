@@ -18,4 +18,19 @@ void main() {
     print(pt);
 
   });
+
+  test('Test', () async {
+    var client = MagnifiqueCoupleClient(
+      await File('.env').readAsString(),
+    );
+
+    var supplier = await client.suppliers.show(1);
+
+    var pt = await client.suppliers.paths(supplier);
+
+    print(pt);
+
+  });
+
+
 }
