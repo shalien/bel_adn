@@ -23,6 +23,23 @@ final class UserDataAccessObject extends DataAccessObject<User> {
     }
   }
 
+  Future<String> getAccessToken(String username, String password, {String? deviceName}) async {
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/token');
+
+    var response = await _client.post(uri, body: jsonEncode({
+      'email': username,
+      'password': password,
+      ...deviceName != null ? {'device_name': deviceName} : {},
+    }));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['token'];
+    } else {
+      throw MagnifiqueException(response);
+    }
+
+  }
+
   @override
   User fromJson(Map<String, dynamic> json) {
     return User.fromJson(json);

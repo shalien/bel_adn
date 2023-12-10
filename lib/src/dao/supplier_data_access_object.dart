@@ -6,7 +6,7 @@ final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
 
   @override
   Supplier fromJson(Map<String, dynamic> json) {
-    return Supplier.fromJson(json);
+    return Supplier.fromJson(json, client: _client);
   }
 
   Future<ProviderType> providerType(Supplier supplier) async {
@@ -17,9 +17,9 @@ final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
 
   }
 
-  Future<List<Path>> paths(Supplier supplier) async {
+  Future<List<Search>> searches(Supplier supplier) async {
     final Uri uri =
-    Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${supplier.id}/paths');
+    Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${supplier.id}/searches');
 
     Response response;
 
@@ -31,18 +31,15 @@ final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
       rethrow;
     }
 
-    List<Path> models = [];
+    List<Search> models = [];
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json.map((dynamic model) => Path.fromJson(model)).toList();
+      models = json.map((dynamic model) => Search.fromJson(model, client: _client)).toList();
     } else {
       throw MagnifiqueException(response);
     }
 
     return models;
-
-
   }
-
 }

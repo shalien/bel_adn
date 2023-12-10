@@ -4,10 +4,17 @@ import 'package:bel_adn/bel_adn.dart';
 import 'package:test/test.dart';
 
 void main() async {
-  test('Destination media', () async {
-    var client = MagnifiqueCoupleClient(
-      await File('.env').readAsString(),
+
+  late MagnifiqueCoupleClient client;
+
+  setUpAll(() async {
+    client = MagnifiqueCoupleClient(
+     accessToken: await File('.env').readAsString(),
     );
+  });
+
+
+  test('Destination media', () async {
 
     var element = await client.destinations.show(102);
 
@@ -15,9 +22,6 @@ void main() async {
   });
 
   test('Destination media', () async {
-    var client = MagnifiqueCoupleClient(
-      await File('.env').readAsString(),
-    );
 
     var element = await client.destinations.show(102);
 
@@ -25,9 +29,6 @@ void main() async {
   });
 
   test('Destination', () async {
-    var client = MagnifiqueCoupleClient(
-      await File('.env').readAsString(),
-    );
 
     var element = await client.destinations.show(102);
 

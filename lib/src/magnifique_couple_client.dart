@@ -5,7 +5,7 @@ import '../src/data_access_object.dart';
 class MagnifiqueCoupleClient extends BaseClient {
   final Client _client;
 
-  final String accessToken;
+  String? accessToken;
 
   static String host = 'magnifiquecouple.projetretro.io';
 
@@ -25,13 +25,15 @@ class MagnifiqueCoupleClient extends BaseClient {
 
   late final SupplierDataAccessObject suppliers;
 
+  late final SearchDataAccessObject searches;
+
   final Map<String, String> headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
     'user-agent': 'bel_adn:cbJKqzlZ8soXvU_tvP5KWw:3.0.1 u/Shalien93',
   };
 
-  MagnifiqueCoupleClient(this.accessToken, {Client? client})
+  MagnifiqueCoupleClient({this.accessToken, Client? client})
       : _client = client ?? Client() {
     destinations = DestinationDataAccessObject(this);
     medias = MediaDataAccessObject(this);
@@ -41,17 +43,25 @@ class MagnifiqueCoupleClient extends BaseClient {
     paths = PathDataAccessObject(this);
     suppliers = SupplierDataAccessObject(this);
     users = UserDataAccessObject(this);
+    searches = SearchDataAccessObject(this);
 
-    if (accessToken.isEmpty) {
-      throw ArgumentError.value(accessToken, 'accessToken', 'Cannot be empty');
-    }
-
-    headers.addAll({'Authorization': 'Bearer $accessToken'});
   }
+
+  Future<String> getAccessToken(String username, String password, {String? deviceName}) async =>
+      await users.getAccessToken(username, password, deviceName: deviceName);
+
+
 
   @override
   Future<StreamedResponse> send(BaseRequest request) {
     request.headers.addAll(headers);
+
+    if(accessToken != null && accessToken!.isNotEmpty) {
+      request.headers.addAll({
+        'Authorization': 'Bearer $accessToken',
+    });
+      }
+
     return _client.send(request);
   }
 }

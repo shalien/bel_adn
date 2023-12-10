@@ -19,7 +19,7 @@ final class User extends Model {
 
   const User(this.name, this.snowflake, this.email, this.password) : super();
 
-  User.fromJson(super.json)
+  User.fromJson(super.json, {super.client})
       : snowflake = json['snowflake'],
         name = json['name'],
         email = json['email'],

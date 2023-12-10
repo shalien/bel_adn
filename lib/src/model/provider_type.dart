@@ -5,7 +5,7 @@ final class ProviderType extends Model {
 
   const ProviderType(this.name) : super();
 
-  ProviderType.fromJson(super.json)
+  ProviderType.fromJson(super.json, {super.client})
       : name = json['name'],
         super.fromJson();
 

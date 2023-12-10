@@ -11,9 +11,9 @@ final class TopicDataAccessObject extends DataAccessObject<Topic> {
     return Topic.fromJson(json);
   }
 
-  Future<List<Path>> paths(Topic topic) async {
+  Future<List<Search>> searches(Topic topic) async {
     final Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${topic.id}/paths');
+    Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${topic.id}/searches');
 
     Response response;
 
@@ -25,15 +25,16 @@ final class TopicDataAccessObject extends DataAccessObject<Topic> {
       rethrow;
     }
 
-    List<Path> models = [];
+    List<Search> models = [];
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json.map((dynamic model) => Path.fromJson(model)).toList();
+      models = json.map((dynamic model) => Search.fromJson(model, client: _client)).toList();
     } else {
       throw MagnifiqueException(response);
     }
 
     return models;
   }
+
 }

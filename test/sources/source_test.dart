@@ -7,10 +7,15 @@ import 'package:test/test.dart';
 
 void main() async {
 
-  test('Creating a source', () async {
-    var client = MagnifiqueCoupleClient(
-      await File('.env').readAsString(),
+  late MagnifiqueCoupleClient client;
+
+  setUpAll(() async {
+    client = MagnifiqueCoupleClient(
+      accessToken: await File('.env').readAsString(),
     );
+  });
+
+  test('Creating a source', () async {
 
     var paths = await client.paths.index();
 

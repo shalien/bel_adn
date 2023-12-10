@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() async {
   test('Show all users', () async {
     var client = MagnifiqueCoupleClient(
-      await File('.env').readAsString(),
+      accessToken: await File('.env').readAsString(),
     );
 
     var users = await client.users.index();
@@ -18,11 +18,11 @@ void main() async {
 
   test('Insert User', () async {
     var client = MagnifiqueCoupleClient(
-      await File('.env').readAsString(),
+      accessToken: await File('.env').readAsString(),
     );
 
     User newUser =
-        User('Demo', 1234567890, User.generateEmail(), User.generatePassword());
+        User('Demo', DateTime.now().microsecondsSinceEpoch, User.generateEmail(), User.generatePassword());
 
     User user = await client.users.store(newUser);
 
@@ -30,12 +30,21 @@ void main() async {
   });
 
   test('Find by Snowflake', () async {
-    var client = MagnifiqueCoupleClient(
+    var client = MagnifiqueCoupleClient(accessToken:
       await File('.env').readAsString(),
     );
 
     User snowflaked = await client.users.findBySnowflake('1234567890');
 
     print('${snowflaked.id} ${snowflaked.name} ${snowflaked.snowflake}');
+  });
+
+
+  test('Get token', () async {
+    var client = MagnifiqueCoupleClient();
+
+    String token = await client.getAccessToken('shalien@projetretro.io', 'Sombre0sang@', deviceName: 'testbla');
+
+    print(token);
   });
 }

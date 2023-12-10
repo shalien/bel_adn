@@ -8,7 +8,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
   const MediaDataAccessObject(MagnifiqueCoupleClient client)
       : super('medias', client);
 
-  Future<Set<Media>> showByDestinationId(Destination destination) async {
+  Future<List<Media>> showByDestinationId(Destination destination) async {
     if (destination.id == null) {
       throw ArgumentError("destination id cannot be null");
     }
@@ -25,10 +25,10 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
           throw ArgumentError("data cannot be null");
         }
 
-        Set<Media> medias = <Media>{};
+        List<Media> medias = <Media>[];
 
         for (var source in json['data']) {
-          medias.add(Media.fromJson(source));
+          medias.add(Media.fromJson(source, client: _client));
         }
 
         return Future.value(medias);
@@ -38,7 +38,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
     }
   }
 
-  Future<Set<Media>> showBySourceId(Source source) async {
+  Future<List<Media>> showBySourceId(Source source) async {
     if (source.id == null) {
       throw ArgumentError("source id cannot be null");
     }
@@ -55,10 +55,10 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
           throw ArgumentError("data cannot be null");
         }
 
-        Set<Media> medias = <Media>{};
+        List<Media> medias = <Media>[];
 
         for (var source in json['data']) {
-          medias.add(Media.fromJson(source));
+          medias.add(fromJson(source));
         }
 
         return Future.value(medias);
@@ -84,7 +84,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
           throw ArgumentError("data cannot be null");
         }
 
-        Media source = Media.fromJson(json['data']);
+        Media source = fromJson(json['data']);
         return Future.value(source);
 
         case 404:
@@ -97,6 +97,6 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
 
   @override
   Media fromJson(Map<String, dynamic> json) {
-    return Media.fromJson(json);
+    return Media.fromJson(json, client: _client);
   }
 }

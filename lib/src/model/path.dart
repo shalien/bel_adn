@@ -5,7 +5,7 @@ final class Path extends Model {
 
   const Path(this.content) : super();
 
-  Path.fromJson(super.json)
+  Path.fromJson(super.json, {super.client})
       : content = json['content'],
         super.fromJson();
 

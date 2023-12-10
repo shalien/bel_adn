@@ -4,19 +4,25 @@ import 'package:bel_adn/bel_adn.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Topic', () async {
-    var client = MagnifiqueCoupleClient(
-      await File('.env').readAsString(),
+  late MagnifiqueCoupleClient client;
+
+  setUpAll(() async {
+    client = MagnifiqueCoupleClient(
+      accessToken: await File('.env').readAsString(),
     );
+  });
+
+  test('Topic', () async {
+
 
     var topics = await client.topics.index();
 
     var randomTopic = topics[0];
 
-    var paths = await client.topics.paths(randomTopic);
+    var paths = await client.topics.searches(randomTopic);
 
-    for (Path path in paths) {
-      print(path.content);
+    for(var path in paths) {
+      print(path);
     }
   });
 }

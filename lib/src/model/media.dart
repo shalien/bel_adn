@@ -14,7 +14,7 @@ final class Media extends Model {
   const Media(this.link, this.sourceId, this.destinationId) : super();
 
   /// Create a [Media] from a json
-  Media.fromJson(super.json)
+  Media.fromJson(super.json, {super.client})
       : link = Uri.parse(json['link']),
         sourceId = json['source_id'],
         destinationId = json['destination_id'],

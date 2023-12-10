@@ -15,6 +15,7 @@ part 'dao/path_data_access_object.dart';
 part 'dao/source_data_access_object.dart';
 part 'dao/topic_data_access_object.dart';
 part 'dao/user_data_access_object.dart';
+part 'dao/search_data_access_object.dart';
 
 
 @immutable

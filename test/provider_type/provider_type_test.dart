@@ -6,10 +6,16 @@ import 'package:bel_adn/bel_adn.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Test', () async {
-    var client = MagnifiqueCoupleClient(
-        await File('.env').readAsString(),
+
+  late MagnifiqueCoupleClient client;
+
+  setUpAll(() async {
+    client = MagnifiqueCoupleClient(
+      accessToken: await File('.env').readAsString(),
     );
+  });
+
+  test('Test', () async {
 
    var providerType = await client.providerTypes.show(1);
 
@@ -18,9 +24,7 @@ void main() {
   });
 
   test('Test', () async {
-    var client = MagnifiqueCoupleClient(
-      await File('.env').readAsString(),
-    );
+
 
     var providerType = await client.providerTypes.show(1);
 

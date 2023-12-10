@@ -7,7 +7,7 @@ final class Supplier extends Model {
 
   const Supplier(this.host, this.providerTypeId) : super();
 
-  Supplier.fromJson(super.json)
+  Supplier.fromJson(super.json, {super.client})
       : host = json['host'],
         providerTypeId = json['provider_type_id'],
         super.fromJson();

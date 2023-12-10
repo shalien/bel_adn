@@ -7,7 +7,7 @@ final class Topic extends Model {
 
   const Topic(this.name, this.order) : super();
 
-  Topic.fromJson(super.json)
+  Topic.fromJson(super.json, {super.client})
       : name = json['name'],
         order = json['order'],
         super.fromJson();

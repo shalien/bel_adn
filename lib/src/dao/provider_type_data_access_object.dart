@@ -28,12 +28,14 @@ final class ProviderTypeDataAccessObject
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json.map((dynamic model) => Supplier.fromJson(model)).toList();
+      models = json.map((dynamic model) => Supplier.fromJson(model, client: _client)).toList();
     } else {
       throw MagnifiqueException(response);
     }
 
     return models;
   }
+
+
 
 }

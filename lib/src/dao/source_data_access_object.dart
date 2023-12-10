@@ -23,7 +23,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
     }
 
     for (var media in decodedResponse['data']) {
-      medias.add(Media.fromJson(media));
+      medias.add(Media.fromJson(media, client: _client));
     }
 
     return medias;
@@ -46,7 +46,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
           throw ArgumentError("data cannot be null");
         }
 
-        Source source = Source.fromJson(json['data']);
+        Source source = fromJson(json['data']);
         return Future.value(source);
         case 404:
         return null;
@@ -73,7 +73,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
           throw ArgumentError("data cannot be null");
         }
 
-        Source source = Source.fromJson(json['data']);
+        Source source = fromJson(json['data']);
         return Future.value(source);
       default:
         throw MagnifiqueException(response);
@@ -82,6 +82,6 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
 
   @override
   Source fromJson(Map<String, dynamic> json) {
-    return Source.fromJson(json);
+    return Source.fromJson(json, client: _client);
   }
 }

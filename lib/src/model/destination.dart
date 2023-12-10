@@ -5,7 +5,7 @@ final class Destination extends Model {
 
   const Destination(this.filename) : super();
 
-  Destination.fromJson(super.json)
+  Destination.fromJson(super.json, {super.client})
       : filename = json['filename'],
         super.fromJson();
 
@@ -25,4 +25,18 @@ final class Destination extends Model {
       filename ?? this.filename,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Destination &&
+            runtimeType == other.runtimeType &&
+            id == other.id &&
+            createdAt == other.createdAt &&
+            updatedAt == other.updatedAt &&
+            filename == other.filename;
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode ^ filename.hashCode;
 }

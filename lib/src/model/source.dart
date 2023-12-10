@@ -7,7 +7,7 @@ final class Source extends Model {
 
   const Source(this.link, this.pathId) : super();
 
-  Source.fromJson(super.json)
+  Source.fromJson(super.json, {super.client})
       : link = Uri.parse(json['link']),
         pathId = json['path_id'],
         super.fromJson();

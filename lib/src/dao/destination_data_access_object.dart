@@ -6,6 +6,6 @@ final class DestinationDataAccessObject extends DataAccessObject<Destination> {
 
   @override
   Destination fromJson(Map<String, dynamic> json) {
-    return Destination.fromJson(json);
+    return Destination.fromJson(json,client: _client);
   }
 }

@@ -6,12 +6,13 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
 
   @override
   Path fromJson(Map<String, dynamic> json) {
-    return Path.fromJson(json);
+    return Path.fromJson(json, client: _client);
   }
 
-  Future<List<Source>> sources(Path path) async {
+
+  Future<List<Search>> searches(Path path) async {
     final Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${path.id}/sources');
+    Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${path.id}/searches');
 
     Response response;
 
@@ -23,63 +24,11 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
       rethrow;
     }
 
-    List<Source> models = [];
+    List<Search> models = [];
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json.map((dynamic model) => Source.fromJson(model)).toList();
-    } else {
-      throw MagnifiqueException(response);
-    }
-
-    return models;
-  }
-
-  Future<List<Topic>> topics(Path path) async {
-    final Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${path.id}/topics');
-
-    Response response;
-
-    try {
-      response = await _client.get(uri);
-    } on ClientException {
-      rethrow;
-    } on Exception {
-      rethrow;
-    }
-
-    List<Topic> models = [];
-
-    if (response.statusCode == 200) {
-      final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json.map((dynamic model) => Topic.fromJson(model)).toList();
-    } else {
-      throw MagnifiqueException(response);
-    }
-
-    return models;
-  }
-
-  Future<List<Supplier>> suppliers(Path path) async {
-    final Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/$endpoint/${path.id}/suppliers');
-
-    Response response;
-
-    try {
-      response = await _client.get(uri);
-    } on ClientException {
-      rethrow;
-    } on Exception {
-      rethrow;
-    }
-
-    List<Supplier> models = [];
-
-    if (response.statusCode == 200) {
-      final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json.map((dynamic model) => Supplier.fromJson(model)).toList();
+      models = json.map((dynamic model) => Search.fromJson(model, client: _client)).toList();
     } else {
       throw MagnifiqueException(response);
     }
