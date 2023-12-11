@@ -49,4 +49,28 @@ final class User extends Model {
       'password': password,
     });
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is User &&
+            runtimeType == other.runtimeType &&
+            id == other.id &&
+            createdAt == other.createdAt &&
+            updatedAt == other.updatedAt &&
+            snowflake == other.snowflake &&
+            name == other.name &&
+            email == other.email &&
+            password == other.password;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
+      snowflake.hashCode ^
+      name.hashCode ^
+      email.hashCode ^
+      password.hashCode;
 }

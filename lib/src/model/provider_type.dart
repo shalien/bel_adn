@@ -25,4 +25,20 @@ final class ProviderType extends Model {
       'name': name,
     });
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is ProviderType &&
+            runtimeType == other.runtimeType &&
+            id == other.id &&
+            createdAt == other.createdAt &&
+            updatedAt == other.updatedAt &&
+            name == other.name;
+  }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode =>
+      id.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode ^ name.hashCode;
 }

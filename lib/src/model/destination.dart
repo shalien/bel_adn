@@ -1,10 +1,18 @@
 part of '../model.dart';
 
+/// A file created after a search.
 final class Destination extends Model {
+  /// The name of the file.
   final String filename;
 
+  /// The medias associated with this destination.
+  Future<List<Media>?> get medias async =>
+      await _client?.medias.showByDestinationId(this);
+
+  /// The searches associated with this destination.
   const Destination(this.filename) : super();
 
+  /// Creates a destination from a JSON object.
   Destination.fromJson(super.json, {super.client})
       : filename = json['filename'],
         super.fromJson();
@@ -38,5 +46,6 @@ final class Destination extends Model {
   }
 
   @override
-  int get hashCode => id.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode ^ filename.hashCode;
+  int get hashCode =>
+      id.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode ^ filename.hashCode;
 }

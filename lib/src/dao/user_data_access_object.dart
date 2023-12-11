@@ -1,16 +1,15 @@
 part of '../data_access_object.dart';
 
 final class UserDataAccessObject extends DataAccessObject<User> {
-  const UserDataAccessObject(MagnifiqueCoupleClient client)
-      : super('users', client);
+  UserDataAccessObject(MagnifiqueCoupleClient client) : super('users', client);
 
   Future<User> findBySnowflake(String snowflake) async {
     if (snowflake.isEmpty) {
       throw Exception("Snowflake cannot be empty");
     }
 
-    Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/snowflake/$snowflake');
+    Uri uri = Uri.https(
+        MagnifiqueCoupleClient.host, '/api/$endpoint/snowflake/$snowflake');
 
     var response = await _client.get(uri);
 
@@ -23,21 +22,22 @@ final class UserDataAccessObject extends DataAccessObject<User> {
     }
   }
 
-  Future<String> getAccessToken(String username, String password, {String? deviceName}) async {
+  Future<String> getAccessToken(String username, String password,
+      {String? deviceName}) async {
     Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/token');
 
-    var response = await _client.post(uri, body: jsonEncode({
-      'email': username,
-      'password': password,
-      ...deviceName != null ? {'device_name': deviceName} : {},
-    }));
+    var response = await _client.post(uri,
+        body: jsonEncode({
+          'email': username,
+          'password': password,
+          ...deviceName != null ? {'device_name': deviceName} : {},
+        }));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['token'];
     } else {
       throw MagnifiqueException(response);
     }
-
   }
 
   @override

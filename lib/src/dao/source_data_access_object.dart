@@ -1,12 +1,12 @@
 part of '../data_access_object.dart';
 
 final class SourceDataAccessObject extends DataAccessObject<Source> {
-  const SourceDataAccessObject(MagnifiqueCoupleClient client)
+  SourceDataAccessObject(MagnifiqueCoupleClient client)
       : super('sources', client);
 
   Future<Set<Media>> showWithMedia(Source source) async {
-    Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${source.id}/medias');
+    Uri uri = Uri.https(
+        MagnifiqueCoupleClient.host, '/api/$endpoint/${source.id}/medias');
 
     var response = await _client.get(uri);
 
@@ -34,7 +34,8 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/link/${base64Encode(link.toString().codeUnits)}');
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host,
+        '/api/$endpoint/link/${base64Encode(link.toString().codeUnits)}');
 
     var response = await _client.get(uri);
 
@@ -47,8 +48,9 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
         }
 
         Source source = fromJson(json['data']);
+
         return Future.value(source);
-        case 404:
+      case 404:
         return null;
       default:
         throw MagnifiqueException(response);
@@ -60,8 +62,8 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
       throw ArgumentError("Filename cannot be empty");
     }
 
-    Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host,'/api/destinations/filename/$filename');
+    Uri uri = Uri.https(
+        MagnifiqueCoupleClient.host, '/api/destinations/filename/$filename');
 
     var response = await _client.get(uri);
 
@@ -74,6 +76,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
         }
 
         Source source = fromJson(json['data']);
+
         return Future.value(source);
       default:
         throw MagnifiqueException(response);

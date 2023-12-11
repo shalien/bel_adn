@@ -44,23 +44,21 @@ class MagnifiqueCoupleClient extends BaseClient {
     suppliers = SupplierDataAccessObject(this);
     users = UserDataAccessObject(this);
     searches = SearchDataAccessObject(this);
-
   }
 
-  Future<String> getAccessToken(String username, String password, {String? deviceName}) async =>
+  Future<String> getAccessToken(String username, String password,
+          {String? deviceName}) async =>
       await users.getAccessToken(username, password, deviceName: deviceName);
-
-
 
   @override
   Future<StreamedResponse> send(BaseRequest request) {
     request.headers.addAll(headers);
 
-    if(accessToken != null && accessToken!.isNotEmpty) {
+    if (accessToken != null && accessToken!.isNotEmpty) {
       request.headers.addAll({
         'Authorization': 'Bearer $accessToken',
-    });
-      }
+      });
+    }
 
     return _client.send(request);
   }

@@ -5,7 +5,7 @@ part of '../data_access_object.dart';
 final class MediaDataAccessObject extends DataAccessObject<Media> {
   /// The singleton instance for the factory
 
-  const MediaDataAccessObject(MagnifiqueCoupleClient client)
+  MediaDataAccessObject(MagnifiqueCoupleClient client)
       : super('medias', client);
 
   Future<List<Media>> showByDestinationId(Destination destination) async {
@@ -13,7 +13,8 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("destination id cannot be null");
     }
 
-    Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/destination/${destination.id}');
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host,
+        '/api/$endpoint/destination/${destination.id}');
 
     var response = await _client.get(uri);
 
@@ -43,7 +44,8 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("source id cannot be null");
     }
 
-    Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/source/${source.id}');
+    Uri uri = Uri.https(
+        MagnifiqueCoupleClient.host, '/api/$endpoint/source/${source.id}');
 
     var response = await _client.get(uri);
 
@@ -72,7 +74,8 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/link/${base64Encode(link.toString().codeUnits)}');
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host,
+        '/api/$endpoint/link/${base64Encode(link.toString().codeUnits)}');
 
     var response = await _client.get(uri);
 
@@ -85,9 +88,10 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
         }
 
         Media source = fromJson(json['data']);
+
         return Future.value(source);
 
-        case 404:
+      case 404:
         return null;
 
       default:

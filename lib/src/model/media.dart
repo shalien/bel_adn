@@ -4,11 +4,21 @@ part of '../model.dart';
 ///
 /// The media will posted on discord
 final class Media extends Model {
+  /// The link of the media
   final Uri link;
 
+  /// The source of the media
   final int sourceId;
 
+  /// The destination of the media
+  Future<Source?> get source async => await _client?.sources.show(sourceId);
+
+  /// The destination of the media
   final int destinationId;
+
+  /// The destination of the media
+  Future<Destination?> get destination async =>
+      await _client?.destinations.show(destinationId);
 
   /// A [Media] will be composed during all the resolving process
   const Media(this.link, this.sourceId, this.destinationId) : super();
@@ -45,4 +55,26 @@ final class Media extends Model {
       destinationId ?? this.destinationId,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Media &&
+            runtimeType == other.runtimeType &&
+            id == other.id &&
+            createdAt == other.createdAt &&
+            updatedAt == other.updatedAt &&
+            link == other.link &&
+            sourceId == other.sourceId &&
+            destinationId == other.destinationId;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
+      link.hashCode ^
+      sourceId.hashCode ^
+      destinationId.hashCode;
 }

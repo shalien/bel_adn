@@ -1,9 +1,7 @@
-
-
 part of '../data_access_object.dart';
 
-final class SearchDataAccessObject extends DataAccessObject {
-  const SearchDataAccessObject(MagnifiqueCoupleClient client)
+final class SearchDataAccessObject extends DataAccessObject<Search> {
+  SearchDataAccessObject(MagnifiqueCoupleClient client)
       : super('searches', client);
 
   @override

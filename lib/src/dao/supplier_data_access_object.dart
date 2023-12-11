@@ -1,7 +1,7 @@
 part of '../data_access_object.dart';
 
 final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
-  const SupplierDataAccessObject(MagnifiqueCoupleClient client)
+  SupplierDataAccessObject(MagnifiqueCoupleClient client)
       : super('suppliers', client);
 
   @override
@@ -10,16 +10,15 @@ final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
   }
 
   Future<ProviderType> providerType(Supplier supplier) async {
-
-    var providerType = await _client.providerTypes.show(supplier.providerTypeId);
+    var providerType =
+        await _client.providerTypes.show(supplier.providerTypeId);
 
     return providerType;
-
   }
 
   Future<List<Search>> searches(Supplier supplier) async {
-    final Uri uri =
-    Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${supplier.id}/searches');
+    final Uri uri = Uri.https(
+        MagnifiqueCoupleClient.host, '/api/$endpoint/${supplier.id}/searches');
 
     Response response;
 
@@ -35,7 +34,9 @@ final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json.map((dynamic model) => Search.fromJson(model, client: _client)).toList();
+      models = json
+          .map((dynamic model) => Search.fromJson(model, client: _client))
+          .toList();
     } else {
       throw MagnifiqueException(response);
     }

@@ -5,6 +5,9 @@ final class Topic extends Model {
 
   final int order;
 
+  Future<List<Search>?> get searches async =>
+      await _client?.topics.searches(this);
+
   const Topic(this.name, this.order) : super();
 
   Topic.fromJson(super.json, {super.client})
@@ -30,4 +33,24 @@ final class Topic extends Model {
       'order': order,
     });
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Topic &&
+            runtimeType == other.runtimeType &&
+            id == other.id &&
+            createdAt == other.createdAt &&
+            updatedAt == other.updatedAt &&
+            name == other.name &&
+            order == other.order;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
+      name.hashCode ^
+      order.hashCode;
 }

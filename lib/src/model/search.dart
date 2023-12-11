@@ -1,13 +1,18 @@
-
 part of '../model.dart';
 
 final class Search extends Model {
-
   final int? topicId;
+
+  Future<Topic?> get topic async => await _client?.topics.show(topicId!);
 
   final int? pathId;
 
+  Future<Path?> get path async => await _client?.paths.show(pathId!);
+
   final int? supplierId;
+
+  Future<Supplier?> get supplier async =>
+      await _client?.suppliers.show(supplierId!);
 
   const Search(this.topicId, this.pathId, this.supplierId) : super();
 
@@ -38,6 +43,25 @@ final class Search extends Model {
     });
   }
 
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Search &&
+            runtimeType == other.runtimeType &&
+            id == other.id &&
+            createdAt == other.createdAt &&
+            updatedAt == other.updatedAt &&
+            topicId == other.topicId &&
+            pathId == other.pathId &&
+            supplierId == other.supplierId;
+  }
 
-
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
+      topicId.hashCode ^
+      pathId.hashCode ^
+      supplierId.hashCode;
 }
