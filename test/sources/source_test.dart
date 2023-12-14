@@ -17,8 +17,7 @@ void main() async {
 
     var randomPath = paths[0];
 
-    Source newSource = Source(Uri.https('example.com', '/'), randomPath.id!,
-        randomPath.id!, randomPath.id!);
+    Source newSource = Source(Uri.https('example.com', '/'), randomPath.id);
 
     var source = await client.sources.store(newSource);
 

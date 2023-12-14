@@ -3,28 +3,20 @@ part of '../model.dart';
 final class Source extends Model {
   final Uri link;
 
-  final int? topicId;
+  final int? searchId;
 
-  final int? pathId;
-
-  final int? supplierId;
-
-  const Source(this.link, this.topicId, this.pathId, this.supplierId) : super();
+  const Source(this.link, this.searchId) : super();
 
   Source.fromJson(super.json, {super.client})
       : link = Uri.parse(json['link']),
-        pathId = json['path_id'],
-        topicId = json['topic_id'],
-        supplierId = json['supplier_id'],
+        searchId = json['search_id'],
         super.fromJson();
 
   @override
-  Model copyWith({Uri? link, int? pathId, int? topicId, int? supplierId}) {
+  Model copyWith({Uri? link, int? searchId}) {
     return Source(
       link ?? this.link,
-      pathId ?? this.pathId,
-      topicId ?? this.topicId,
-      supplierId ?? this.supplierId,
+      searchId ?? this.searchId,
     );
   }
 
@@ -35,9 +27,7 @@ final class Source extends Model {
       ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
       ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
       'link': link.toString(),
-      'path_id': pathId,
-      'topic_id': topicId,
-      'supplier_id': supplierId
+      'search_id': searchId
     });
   }
 
@@ -50,9 +40,7 @@ final class Source extends Model {
             createdAt == other.createdAt &&
             updatedAt == other.updatedAt &&
             link == other.link &&
-            pathId == other.pathId &&
-            topicId == other.topicId &&
-            supplierId == other.supplierId;
+            searchId == other.searchId;
   }
 
   @override
@@ -61,7 +49,5 @@ final class Source extends Model {
       createdAt.hashCode ^
       updatedAt.hashCode ^
       link.hashCode ^
-      pathId.hashCode ^
-      topicId.hashCode ^
-      supplierId.hashCode;
+      searchId.hashCode;
 }
