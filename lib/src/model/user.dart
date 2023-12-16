@@ -1,5 +1,6 @@
 part of '../model.dart';
 
+@immutable
 final class User extends Model {
   final int? snowflake;
 
@@ -19,7 +20,19 @@ final class User extends Model {
 
   const User(this.name, this.snowflake, this.email, this.password) : super();
 
-  User.fromJson(super.json, {super.client})
+  const User._internal(
+      super.id,
+      super.createdAt,
+      super.updatedAt,
+      super.deletedAt,
+      this.snowflake,
+      this.name,
+      this.email,
+      this.password,
+      super.client)
+      : super._internal();
+
+  User.fromJson(super.json, super.client)
       : snowflake = json['snowflake'],
         name = json['name'],
         email = json['email'],
@@ -27,22 +40,24 @@ final class User extends Model {
         super.fromJson();
 
   @override
-  Model copyWith(
+  User copyWith(
       {int? snowflake, String? name, String? email, String? password}) {
-    return User(
-      name ?? this.name,
-      snowflake ?? this.snowflake,
-      email ?? this.email,
-      password ?? this.password,
-    );
+    return User._internal(
+        id,
+        createdAt,
+        updatedAt,
+        deletedAt,
+        snowflake ?? this.snowflake,
+        name ?? this.name,
+        email ?? this.email,
+        password ?? this.password,
+        _client);
   }
 
   @override
   String toJson() {
     return jsonEncode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+      ...jsonDecode(super.toJson()),
       'snowflake': snowflake,
       'name': name,
       'email': email,
@@ -55,9 +70,7 @@ final class User extends Model {
     return identical(this, other) ||
         other is User &&
             runtimeType == other.runtimeType &&
-            id == other.id &&
-            createdAt == other.createdAt &&
-            updatedAt == other.updatedAt &&
+            super == (other) &&
             snowflake == other.snowflake &&
             name == other.name &&
             email == other.email &&
@@ -66,9 +79,7 @@ final class User extends Model {
 
   @override
   int get hashCode =>
-      id.hashCode ^
-      createdAt.hashCode ^
-      updatedAt.hashCode ^
+      super.hashCode ^
       snowflake.hashCode ^
       name.hashCode ^
       email.hashCode ^

@@ -1,5 +1,6 @@
 part of '../model.dart';
 
+@immutable
 final class Source extends Model {
   final Uri link;
 
@@ -7,25 +8,25 @@ final class Source extends Model {
 
   const Source(this.link, this.searchId) : super();
 
-  Source.fromJson(super.json, {super.client})
+  const Source._internal(super.id, super.createdAt, super.updatedAt,
+      super.deletedAt, this.link, this.searchId, super.client)
+      : super._internal();
+
+  Source.fromJson(super.json, super.client)
       : link = Uri.parse(json['link']),
         searchId = json['search_id'],
         super.fromJson();
 
   @override
-  Model copyWith({Uri? link, int? searchId}) {
-    return Source(
-      link ?? this.link,
-      searchId ?? this.searchId,
-    );
+  Source copyWith({Uri? link, int? searchId}) {
+    return Source._internal(id, createdAt, updatedAt, deletedAt,
+        link ?? this.link, searchId ?? this.searchId, _client);
   }
 
   @override
   String toJson() {
     return jsonEncode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+      ...jsonDecode(super.toJson()),
       'link': link.toString(),
       'search_id': searchId
     });
@@ -36,18 +37,11 @@ final class Source extends Model {
     return identical(this, other) ||
         other is Source &&
             runtimeType == other.runtimeType &&
-            id == other.id &&
-            createdAt == other.createdAt &&
-            updatedAt == other.updatedAt &&
+            super == (other) &&
             link == other.link &&
             searchId == other.searchId;
   }
 
   @override
-  int get hashCode =>
-      id.hashCode ^
-      createdAt.hashCode ^
-      updatedAt.hashCode ^
-      link.hashCode ^
-      searchId.hashCode;
+  int get hashCode => super.hashCode ^ link.hashCode ^ searchId.hashCode;
 }

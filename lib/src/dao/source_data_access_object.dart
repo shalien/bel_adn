@@ -1,7 +1,8 @@
 part of '../data_access_object.dart';
 
+@immutable
 final class SourceDataAccessObject extends DataAccessObject<Source> {
-  SourceDataAccessObject(MagnifiqueCoupleClient client)
+  const SourceDataAccessObject(MagnifiqueCoupleClient client)
       : super('sources', client);
 
   Future<Set<Media>> showWithMedia(Source source) async {
@@ -23,7 +24,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
     }
 
     for (var media in decodedResponse['data']) {
-      medias.add(Media.fromJson(media, client: _client));
+      medias.add(Media.fromJson(media, _client));
     }
 
     return medias;
@@ -85,6 +86,6 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
 
   @override
   Source fromJson(Map<String, dynamic> json) {
-    return Source.fromJson(json, client: _client);
+    return Source.fromJson(json, _client);
   }
 }

@@ -1,6 +1,7 @@
 part of '../model.dart';
 
 /// The query part of the search
+@immutable
 final class Path extends Model {
   /// The content of the path.
   final String content;
@@ -11,25 +12,27 @@ final class Path extends Model {
 
   const Path(this.content) : super();
 
-  Path.fromJson(super.json, {super.client})
+  @override
+  const Path._internal(super.id, super.createdAt, super.updatedAt,
+      super.deletedAt, this.content, super.client)
+      : super._internal();
+
+  Path.fromJson(super.json, super.client)
       : content = json['content'],
         super.fromJson();
 
   @override
   String toJson() {
     return jsonEncode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+      ...jsonDecode(super.toJson()),
       'content': content,
     });
   }
 
   @override
-  Model copyWith({String? content}) {
-    return Path(
-      content ?? this.content,
-    );
+  Path copyWith({String? content}) {
+    return Path._internal(
+        id, createdAt, updatedAt, deletedAt, content ?? this.content, _client);
   }
 
   @override
@@ -37,13 +40,10 @@ final class Path extends Model {
     return identical(this, other) ||
         other is Path &&
             runtimeType == other.runtimeType &&
-            id == other.id &&
-            createdAt == other.createdAt &&
-            updatedAt == other.updatedAt &&
-            content == other.content;
+            content == other.content &&
+            super == (other);
   }
 
   @override
-  int get hashCode =>
-      id.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode ^ content.hashCode;
+  int get hashCode => content.hashCode ^ super.hashCode;
 }

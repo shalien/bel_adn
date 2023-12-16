@@ -1,27 +1,29 @@
 part of '../model.dart';
 
+@immutable
 final class ProviderType extends Model {
   final String name;
 
   const ProviderType(this.name) : super();
 
-  ProviderType.fromJson(super.json, {super.client})
+  const ProviderType._internal(super.id, super.createdAt, super.updatedAt,
+      super.deletedAt, this.name, super.client)
+      : super._internal();
+
+  ProviderType.fromJson(super.json, super.client)
       : name = json['name'],
         super.fromJson();
 
   @override
-  Model copyWith({String? name}) {
-    return ProviderType(
-      name ?? this.name,
-    );
+  ProviderType copyWith({String? name}) {
+    return ProviderType._internal(
+        id, createdAt, updatedAt, deletedAt, name ?? this.name, _client);
   }
 
   @override
   String toJson() {
     return jsonEncode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+      ...jsonDecode(super.toJson()),
       'name': name,
     });
   }
@@ -31,14 +33,10 @@ final class ProviderType extends Model {
     return identical(this, other) ||
         other is ProviderType &&
             runtimeType == other.runtimeType &&
-            id == other.id &&
-            createdAt == other.createdAt &&
-            updatedAt == other.updatedAt &&
+            super == (other) &&
             name == other.name;
   }
 
   @override
-  // TODO: implement hashCode
-  int get hashCode =>
-      id.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode ^ name.hashCode;
+  int get hashCode => super.hashCode ^ name.hashCode;
 }

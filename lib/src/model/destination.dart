@@ -1,6 +1,7 @@
 part of '../model.dart';
 
 /// A file created after a search.
+@immutable
 final class Destination extends Model {
   /// The name of the file.
   final String filename;
@@ -12,26 +13,28 @@ final class Destination extends Model {
   /// The searches associated with this destination.
   const Destination(this.filename) : super();
 
+  @override
+  const Destination._internal(super.id, super.createdAt, super.updatedAt,
+      super.deletedAt, this.filename, super.client)
+      : super._internal();
+
   /// Creates a destination from a JSON object.
-  Destination.fromJson(super.json, {super.client})
+  Destination.fromJson(super.json, super.client)
       : filename = json['filename'],
         super.fromJson();
 
   @override
   String toJson() {
     return jsonEncode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
       'filename': filename,
+      ...jsonDecode(super.toJson()),
     });
   }
 
   @override
-  Model copyWith({String? filename}) {
-    return Destination(
-      filename ?? this.filename,
-    );
+  Destination copyWith({String? filename}) {
+    return Destination._internal(id, createdAt, updatedAt, deletedAt,
+        filename ?? this.filename, _client);
   }
 
   @override
@@ -39,13 +42,16 @@ final class Destination extends Model {
     return identical(this, other) ||
         other is Destination &&
             runtimeType == other.runtimeType &&
-            id == other.id &&
-            createdAt == other.createdAt &&
-            updatedAt == other.updatedAt &&
-            filename == other.filename;
+            filename == other.filename &&
+            super == (other);
   }
 
   @override
   int get hashCode =>
-      id.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode ^ filename.hashCode;
+      id.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
+      filename.hashCode ^
+      deletedAt.hashCode ^
+      super.hashCode;
 }

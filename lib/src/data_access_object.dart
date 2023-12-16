@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:bel_adn/src/magnifique_cache.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
@@ -20,12 +19,16 @@ part 'dao/search_data_access_object.dart';
 
 @immutable
 abstract base class DataAccessObject<T extends Model> {
+  /// The endpoint of the DAO
   final String endpoint;
 
+  /// The client used to make requests
   final MagnifiqueCoupleClient _client;
 
+  /// The constructor
   const DataAccessObject(this.endpoint, this._client);
 
+  /// Get all the models
   Future<List<T>> index() async {
     final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint');
 
@@ -55,6 +58,7 @@ abstract base class DataAccessObject<T extends Model> {
     return models;
   }
 
+  /// Get a model by its id
   Future<T> show(int id) async {
     T model;
 
@@ -81,6 +85,7 @@ abstract base class DataAccessObject<T extends Model> {
     return model;
   }
 
+  /// Store a model
   Future<T> store(T model) async {
     final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint');
 
@@ -104,14 +109,16 @@ abstract base class DataAccessObject<T extends Model> {
     return model;
   }
 
-  Future<T> update(T model) async {
+  /// Update a model
+  Future<T> update(int id, T updatedModel) async {
     final Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/${model.id}');
+        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/$id');
 
     Response response;
+    T model;
 
     try {
-      response = await _client.put(uri, body: model.toJson());
+      response = await _client.put(uri, body: updatedModel.toJson());
     } on ClientException {
       rethrow;
     } on Exception {
@@ -128,7 +135,8 @@ abstract base class DataAccessObject<T extends Model> {
     return model;
   }
 
-  Future<void> delete(int id) async {
+  /// Delete a model
+  Future<bool> delete(int id) async {
     final Uri uri =
         Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/$id');
 
@@ -142,11 +150,14 @@ abstract base class DataAccessObject<T extends Model> {
       rethrow;
     }
 
-    if (response.statusCode != 204) {
+    if (response.statusCode != 204 && response.statusCode != 404) {
       throw MagnifiqueException(response);
     }
+
+    return true;
   }
 
+  /// Convert a json to a model
   @internal
   @mustBeOverridden
   T fromJson(Map<String, dynamic> json);

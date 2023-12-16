@@ -3,12 +3,12 @@ part of '../data_access_object.dart';
 /// The [DataAccessObject] for the [Topic] class
 @immutable
 final class TopicDataAccessObject extends DataAccessObject<Topic> {
-  TopicDataAccessObject(MagnifiqueCoupleClient client)
+  const TopicDataAccessObject(MagnifiqueCoupleClient client)
       : super('topics', client);
 
   @override
   Topic fromJson(Map<String, dynamic> json) {
-    return Topic.fromJson(json);
+    return Topic.fromJson(json, _client);
   }
 
   Future<List<Search>> searches(Topic topic) async {
@@ -29,9 +29,8 @@ final class TopicDataAccessObject extends DataAccessObject<Topic> {
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json
-          .map((dynamic model) => Search.fromJson(model, client: _client))
-          .toList();
+      models =
+          json.map((dynamic model) => Search.fromJson(model, _client)).toList();
     } else {
       throw MagnifiqueException(response);
     }

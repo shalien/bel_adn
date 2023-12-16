@@ -1,15 +1,17 @@
 import 'package:http/http.dart';
+import 'package:meta/meta.dart';
 
-class MagnifiqueException implements Exception {
+@immutable
+final class MagnifiqueException implements Exception {
   final Response response;
 
   String get message => response.body;
-  int get code => response.statusCode;
+  int get statusCode => response.statusCode;
 
-  MagnifiqueException(this.response);
+  const MagnifiqueException(this.response);
 
   @override
   String toString() {
-    return 'MagnifiqueException{message: $message, code: $code}';
+    return 'MagnifiqueException : {code: $statusCode,  message: $message}';
   }
 }

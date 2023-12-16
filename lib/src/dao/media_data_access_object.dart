@@ -5,7 +5,8 @@ part of '../data_access_object.dart';
 final class MediaDataAccessObject extends DataAccessObject<Media> {
   /// The singleton instance for the factory
 
-  MediaDataAccessObject(MagnifiqueCoupleClient client)
+  @override
+  const MediaDataAccessObject(MagnifiqueCoupleClient client)
       : super('medias', client);
 
   Future<List<Media>> showByDestinationId(Destination destination) async {
@@ -29,7 +30,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
         List<Media> medias = <Media>[];
 
         for (var source in json['data']) {
-          medias.add(Media.fromJson(source, client: _client));
+          medias.add(Media.fromJson(source, _client));
         }
 
         return Future.value(medias);
@@ -101,6 +102,6 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
 
   @override
   Media fromJson(Map<String, dynamic> json) {
-    return Media.fromJson(json, client: _client);
+    return Media.fromJson(json, _client);
   }
 }

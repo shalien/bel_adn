@@ -1,5 +1,6 @@
 part of '../model.dart';
 
+@immutable
 final class Supplier extends Model {
   final String host;
 
@@ -13,23 +14,27 @@ final class Supplier extends Model {
 
   const Supplier(this.host, this.providerTypeId) : super();
 
-  Supplier.fromJson(super.json, {super.client})
+  const Supplier._internal(super.id, super.createdAt, super.updatedAt,
+      super.deletedAt, this.host, this.providerTypeId, super.client)
+      : super._internal();
+
+  Supplier.fromJson(super.json, super.client)
       : host = json['host'],
         providerTypeId = json['provider_type_id'],
         super.fromJson();
 
   @override
   Supplier copyWith({String? host, int? providerTypeId}) {
-    return Supplier(host ?? this.host, providerTypeId ?? this.providerTypeId);
+    return Supplier._internal(id, createdAt, updatedAt, deletedAt,
+        host ?? this.host, providerTypeId ?? this.providerTypeId, _client);
   }
 
   @override
   String toJson() {
     return jsonEncode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+      ...jsonDecode(super.toJson()),
       'host': host,
+      'provider_type_id': providerTypeId
     });
   }
 
@@ -38,13 +43,10 @@ final class Supplier extends Model {
     return identical(this, other) ||
         other is Supplier &&
             runtimeType == other.runtimeType &&
-            id == other.id &&
-            createdAt == other.createdAt &&
-            updatedAt == other.updatedAt &&
+            super == (other) &&
             host == other.host;
   }
 
   @override
-  int get hashCode =>
-      id.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode ^ host.hashCode;
+  int get hashCode => super.hashCode ^ host.hashCode ^ providerTypeId.hashCode;
 }

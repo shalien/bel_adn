@@ -1,11 +1,13 @@
 part of '../data_access_object.dart';
 
+@immutable
 final class PathDataAccessObject extends DataAccessObject<Path> {
-  PathDataAccessObject(MagnifiqueCoupleClient client) : super('paths', client);
+  const PathDataAccessObject(MagnifiqueCoupleClient client)
+      : super('paths', client);
 
   @override
   Path fromJson(Map<String, dynamic> json) {
-    return Path.fromJson(json, client: _client);
+    return Path.fromJson(json, _client);
   }
 
   Future<List<Search>> searches(Path path) async {
@@ -26,9 +28,8 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json
-          .map((dynamic model) => Search.fromJson(model, client: _client))
-          .toList();
+      models =
+          json.map((dynamic model) => Search.fromJson(model, _client)).toList();
     } else {
       throw MagnifiqueException(response);
     }

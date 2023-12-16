@@ -1,12 +1,13 @@
 part of '../data_access_object.dart';
 
+@immutable
 final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
-  SupplierDataAccessObject(MagnifiqueCoupleClient client)
+  const SupplierDataAccessObject(MagnifiqueCoupleClient client)
       : super('suppliers', client);
 
   @override
   Supplier fromJson(Map<String, dynamic> json) {
-    return Supplier.fromJson(json, client: _client);
+    return Supplier.fromJson(json, _client);
   }
 
   Future<ProviderType> providerType(Supplier supplier) async {
@@ -34,9 +35,8 @@ final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json
-          .map((dynamic model) => Search.fromJson(model, client: _client))
-          .toList();
+      models =
+          json.map((dynamic model) => Search.fromJson(model, _client)).toList();
     } else {
       throw MagnifiqueException(response);
     }

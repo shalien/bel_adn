@@ -1,5 +1,6 @@
 part of '../model.dart';
 
+@immutable
 final class Topic extends Model {
   final String name;
 
@@ -10,25 +11,25 @@ final class Topic extends Model {
 
   const Topic(this.name, this.order) : super();
 
-  Topic.fromJson(super.json, {super.client})
+  const Topic._internal(super.id, super.createdAt, super.updatedAt,
+      super.deletedAt, this.name, this.order, super.client)
+      : super._internal();
+
+  Topic.fromJson(super.json, super.client)
       : name = json['name'],
         order = json['order'],
         super.fromJson();
 
   @override
-  Model copyWith({String? name, int? order}) {
-    return Topic(
-      name ?? this.name,
-      order ?? this.order,
-    );
+  Topic copyWith({String? name, int? order}) {
+    return Topic._internal(id, createdAt, updatedAt, deletedAt,
+        name ?? this.name, order ?? this.order, _client);
   }
 
   @override
   String toJson() {
     return jsonEncode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+      ...jsonDecode(super.toJson()),
       'name': name,
       'order': order,
     });
@@ -39,18 +40,11 @@ final class Topic extends Model {
     return identical(this, other) ||
         other is Topic &&
             runtimeType == other.runtimeType &&
-            id == other.id &&
-            createdAt == other.createdAt &&
-            updatedAt == other.updatedAt &&
             name == other.name &&
-            order == other.order;
+            order == other.order &&
+            super == (other);
   }
 
   @override
-  int get hashCode =>
-      id.hashCode ^
-      createdAt.hashCode ^
-      updatedAt.hashCode ^
-      name.hashCode ^
-      order.hashCode;
+  int get hashCode => super.hashCode ^ name.hashCode ^ order.hashCode;
 }

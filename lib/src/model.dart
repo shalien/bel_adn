@@ -13,6 +13,7 @@ part 'model/path.dart';
 part 'model/supplier.dart';
 part 'model/search.dart';
 
+@immutable
 abstract base class Model {
   final int? id;
 
@@ -20,13 +21,18 @@ abstract base class Model {
 
   final DateTime? updatedAt;
 
+  final DateTime? deletedAt;
+
   final MagnifiqueCoupleClient? _client;
 
-  const Model._internal(this.id, this.createdAt, this.updatedAt, this._client);
+  const Model._internal(this.id, this.createdAt, this.updatedAt, this.deletedAt,
+      [MagnifiqueCoupleClient? client])
+      : _client = client;
 
-  const Model() : this._internal(null, null, null, null);
+  const Model() : this._internal(null, null, null, null, null);
 
-  Model.fromJson(Map<String, dynamic> json, {MagnifiqueCoupleClient? client})
+  Model.fromJson(final Map<String, dynamic> json,
+      [MagnifiqueCoupleClient? client])
       : id = json['id'],
         createdAt = json['created_at'] != null
             ? DateTime.parse(json['created_at'])
@@ -34,9 +40,21 @@ abstract base class Model {
         updatedAt = json['updated_at'] != null
             ? DateTime.parse(json['updated_at'])
             : null,
+        deletedAt = json['deleted_at'] != null
+            ? DateTime.parse(json['deleted_at'])
+            : null,
         _client = client;
 
-  String toJson();
+  @mustBeOverridden
+  @mustCallSuper
+  String toJson() {
+    return jsonEncode({
+      ...?id != null ? {'id': id} : null,
+      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
+      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+      ...?deletedAt != null ? {'deleted_at': deletedAt.toString()} : null,
+    });
+  }
 
   @override
   String toString() {
@@ -51,11 +69,17 @@ abstract base class Model {
           runtimeType == other.runtimeType &&
           id == other.id &&
           createdAt == other.createdAt &&
-          updatedAt == other.updatedAt;
+          updatedAt == other.updatedAt &&
+          deletedAt == other.deletedAt;
 
   @override
   @mustBeOverridden
-  int get hashCode => id.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode;
+  int get hashCode =>
+      id.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
+      deletedAt.hashCode ^
+      _client.hashCode;
 
   Model copyWith();
 }
