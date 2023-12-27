@@ -1,7 +1,6 @@
-import 'dart:convert';
+part of '../model.dart';
 
-import '../model.dart';
-
+@immutable
 final class User extends Model {
   final int? snowflake;
 
@@ -19,43 +18,70 @@ final class User extends Model {
       (index) =>
           DateTime.now().microsecondsSinceEpoch.toString().codeUnitAt(index)));
 
-  User({
-    required this.snowflake,
-    required this.name,
-    required this.email,
-    this.password,
-    int? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
+  const User(this.name, this.snowflake, this.email, this.password) : super();
 
-  factory User.fromJson(Map json) {
-    return User(
-      snowflake: json['snowflake'],
-      name: json['name'],
-      email: json['email'],
-      id: json['id'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-    );
+  const User._internal(
+      super.id,
+      super.createdAt,
+      super.updatedAt,
+      super.deletedAt,
+      this.snowflake,
+      this.name,
+      this.email,
+      this.password,
+      super.client)
+      : super._internal();
+
+  User.fromJson(super.json, super.client)
+      : snowflake = json['snowflake'],
+        name = json['name'],
+        email = json['email'],
+        password = json['password'],
+        super.fromJson();
+
+  @override
+  User copyWith(
+      {int? snowflake, String? name, String? email, String? password}) {
+    return User._internal(
+        id,
+        createdAt,
+        updatedAt,
+        deletedAt,
+        snowflake ?? this.snowflake,
+        name ?? this.name,
+        email ?? this.email,
+        password ?? this.password,
+        _client);
   }
 
   @override
   String toJson() {
-    return jsonEncode(
-      {
-        ...?id != null ? {'id': id} : null,
-        ...?email != null ? {'email': email} : null,
-        ...?password != null ? {'password': password} : null,
-        ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-        ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
-        'snowflake': snowflake,
-        'name': name,
-      },
-    );
+    return jsonEncode({
+      ...jsonDecode(super.toJson()),
+      'snowflake': snowflake,
+      'name': name,
+      'email': email,
+      'password': password,
+    });
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is User &&
+            runtimeType == other.runtimeType &&
+            super == (other) &&
+            snowflake == other.snowflake &&
+            name == other.name &&
+            email == other.email &&
+            password == other.password;
+  }
+
+  @override
+  int get hashCode =>
+      super.hashCode ^
+      snowflake.hashCode ^
+      name.hashCode ^
+      email.hashCode ^
+      password.hashCode;
 }

@@ -1,19 +1,18 @@
 part of '../data_access_object.dart';
 
-/// The [DataAccessObject] for the [Topic] class
 @immutable
-final class TopicDataAccessObject extends DataAccessObject<Topic> {
-  const TopicDataAccessObject(MagnifiqueCoupleClient client)
-      : super('topics', client);
+final class PathDataAccessObject extends DataAccessObject<Path> {
+  const PathDataAccessObject(MagnifiqueCoupleClient client)
+      : super('paths', client);
 
   @override
-  Topic fromJson(Map<String, dynamic> json) {
-    return Topic.fromJson(json, _client);
+  Path fromJson(Map<String, dynamic> json) {
+    return Path.fromJson(json, _client);
   }
 
-  Future<List<Search>> searches(Topic topic) async {
+  Future<List<Search>> searches(Path path) async {
     final Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/$endpoint/${topic.id}/searches');
+        MagnifiqueCoupleClient.host, '/api/$endpoint/${path.id}/searches');
 
     Response response;
 

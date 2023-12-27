@@ -21,11 +21,8 @@ void main() async {
       accessToken: await File('.env').readAsString(),
     );
 
-    User newUser = User(
-        name: 'Demo',
-        snowflake: 1234567890,
-        email: User.generateEmail(),
-        password: User.generatePassword());
+    User newUser = User('Demo', DateTime.now().microsecondsSinceEpoch,
+        User.generateEmail(), User.generatePassword());
 
     User user = await client.users.store(newUser);
 
@@ -40,5 +37,15 @@ void main() async {
     User snowflaked = await client.users.findBySnowflake('1234567890');
 
     print('${snowflaked.id} ${snowflaked.name} ${snowflaked.snowflake}');
+  });
+
+  test('Get token', () async {
+    var client = MagnifiqueCoupleClient();
+
+    String token = await client.getAccessToken(
+        'shalien@projetretro.io', 'Sombre0sang@',
+        deviceName: 'testbla');
+
+    print(token);
   });
 }

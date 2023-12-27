@@ -1,25 +1,18 @@
-import 'dart:convert';
+part of '../data_access_object.dart';
 
-import 'package:bel_adn/bel_adn.dart';
-import 'package:http/http.dart';
-
+@immutable
 final class SourceDataAccessObject extends DataAccessObject<Source> {
-  static SourceDataAccessObject? _sourceAccessObject;
-
-  SourceDataAccessObject._(String host, Client client)
-      : super(resource: "sources", client: client, host: host);
-
-  factory SourceDataAccessObject(String host, Client client) {
-    return _sourceAccessObject ??= SourceDataAccessObject._(host, client);
-  }
+  const SourceDataAccessObject(MagnifiqueCoupleClient client)
+      : super('sources', client);
 
   Future<Set<Media>> showWithMedia(Source source) async {
-    Uri uri = Uri.parse('$resourceUrl/${source.id}/medias');
+    Uri uri = Uri.https(
+        MagnifiqueCoupleClient.host, '/api/$endpoint/${source.id}/medias');
 
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
 
     if (response.statusCode != 200) {
-      throw response;
+      throw MagnifiqueException(response);
     }
 
     Set<Media> medias = {};
@@ -31,30 +24,10 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
     }
 
     for (var media in decodedResponse['data']) {
-      medias.add(Media.fromJson(media));
+      medias.add(Media.fromJson(media, _client));
     }
 
     return medias;
-  }
-
-  Future<Set<Source>> showByProvider(Provider provider) {
-    Uri uri = Uri.parse('$resourceUrl/provider/${provider.id}');
-
-    return client.get(uri).then((response) {
-      if (response.statusCode != 200) {
-        throw response;
-      }
-
-      var decodedResponse = jsonDecode(response.body);
-
-      var sources = <Source>{};
-
-      for (var element in decodedResponse['data']) {
-        sources.add(Source.fromJson(element));
-      }
-
-      return sources;
-    });
   }
 
   Future<Source?> showByLink(Uri link) async {
@@ -62,14 +35,10 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    if (cache.find((source) => source.link == link).isNotEmpty) {
-      return Future.value(cache.find((source) => source.link == link).first);
-    }
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host,
+        '/api/$endpoint/link/${base64Encode(link.toString().codeUnits)}');
 
-    Uri uri = Uri.parse(
-        '$resourceUrl/link/${base64Encode(link.toString().codeUnits)}');
-
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -79,13 +48,13 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
           throw ArgumentError("data cannot be null");
         }
 
-        Source source = Source.fromJson(json['data']);
-        cache.add(source);
+        Source source = fromJson(json['data']);
+
         return Future.value(source);
       case 404:
-        return Future.value(null);
+        return null;
       default:
-        throw response;
+        throw MagnifiqueException(response);
     }
   }
 
@@ -94,9 +63,10 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
       throw ArgumentError("Filename cannot be empty");
     }
 
-    Uri uri = Uri.parse('$resourceUrl/destination/$filename');
+    Uri uri = Uri.https(
+        MagnifiqueCoupleClient.host, '/api/destinations/filename/$filename');
 
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -106,13 +76,16 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
           throw ArgumentError("data cannot be null");
         }
 
-        Source source = Source.fromJson(json['data']);
-        cache.add(source);
+        Source source = fromJson(json['data']);
+
         return Future.value(source);
-      case 404:
-        return Future.value(null);
       default:
-        throw response;
+        throw MagnifiqueException(response);
     }
+  }
+
+  @override
+  Source fromJson(Map<String, dynamic> json) {
+    return Source.fromJson(json, _client);
   }
 }

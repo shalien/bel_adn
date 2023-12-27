@@ -1,43 +1,47 @@
-import 'dart:convert';
+part of '../model.dart';
 
-import '../model.dart';
-
+@immutable
 final class Source extends Model {
   final Uri link;
 
-  final int? providerId;
+  final int? searchId;
 
-  Source(
-      {required this.link,
-      required this.providerId,
-      int? id,
-      DateTime? createdAt,
-      DateTime? updatedAt})
-      : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
+  const Source(this.link, this.searchId) : super();
+
+  const Source._internal(super.id, super.createdAt, super.updatedAt,
+      super.deletedAt, this.link, this.searchId, super.client)
+      : super._internal();
+
+  Source.fromJson(super.json, super.client)
+      : link = Uri.parse(json['link']),
+        searchId = json['search_id'],
+        super.fromJson();
 
   @override
-  factory Source.fromJson(Map json) {
-    return Source(
-      link: Uri.parse(json['link']),
-      providerId: json['provider_id'],
-      id: json['id'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-    );
+  Source copyWith({Uri? link, int? searchId}) {
+    return Source._internal(id, createdAt, updatedAt, deletedAt,
+        link ?? this.link, searchId ?? this.searchId, _client);
   }
 
   @override
   String toJson() {
     return jsonEncode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
-      'provider_id': providerId,
+      ...jsonDecode(super.toJson()),
       'link': link.toString(),
+      'search_id': searchId
     });
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Source &&
+            runtimeType == other.runtimeType &&
+            super == (other) &&
+            link == other.link &&
+            searchId == other.searchId;
+  }
+
+  @override
+  int get hashCode => super.hashCode ^ link.hashCode ^ searchId.hashCode;
 }

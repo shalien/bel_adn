@@ -1,35 +1,49 @@
-import 'dart:convert';
+part of '../data_access_object.dart';
 
-import 'package:http/http.dart';
-
-import '../data_access_object.dart';
-import '../model/user.dart';
-
+@immutable
 final class UserDataAccessObject extends DataAccessObject<User> {
-  static UserDataAccessObject? _userDataAccessObject;
-
-  factory UserDataAccessObject(String host, Client client) {
-    return _userDataAccessObject ??= UserDataAccessObject._(host, client);
-  }
-
-  UserDataAccessObject._(String host, Client client)
-      : super(resource: 'users', host: host, client: client);
+  const UserDataAccessObject(MagnifiqueCoupleClient client)
+      : super('users', client);
 
   Future<User> findBySnowflake(String snowflake) async {
     if (snowflake.isEmpty) {
       throw Exception("Snowflake cannot be empty");
     }
 
-    Uri uri = Uri.parse("$resourceUrl/snowflake/$snowflake");
+    Uri uri = Uri.https(
+        MagnifiqueCoupleClient.host, '/api/$endpoint/snowflake/$snowflake');
 
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
 
     if (response.statusCode == 200) {
-      User user = User.fromJson(jsonDecode(response.body)['data']);
+      User user = User.fromJson(jsonDecode(response.body)['data'], _client);
 
       return user;
     } else {
       throw Exception("Failed to find user $snowflake");
     }
+  }
+
+  Future<String> getAccessToken(String username, String password,
+      {String? deviceName}) async {
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/token');
+
+    var response = await _client.post(uri,
+        body: jsonEncode({
+          'email': username,
+          'password': password,
+          ...deviceName != null ? {'device_name': deviceName} : {},
+        }));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['token'];
+    } else {
+      throw MagnifiqueException(response);
+    }
+  }
+
+  @override
+  User fromJson(Map<String, dynamic> json) {
+    return User.fromJson(json, _client);
   }
 }

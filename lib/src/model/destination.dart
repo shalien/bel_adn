@@ -1,38 +1,57 @@
-import 'dart:convert';
+part of '../model.dart';
 
-import '../model.dart';
-
+/// A file created after a search.
+@immutable
 final class Destination extends Model {
+  /// The name of the file.
   final String filename;
 
-  Destination(
-      {required this.filename,
-      int? id,
-      DateTime? createdAt,
-      DateTime? updatedAt})
-      : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
+  /// The medias associated with this destination.
+  Future<List<Media>?> get medias async =>
+      await _client?.medias.showByDestinationId(this);
+
+  /// The searches associated with this destination.
+  const Destination(this.filename) : super();
 
   @override
-  factory Destination.fromJson(Map json) {
-    return Destination(
-      filename: json['filename'],
-      id: json['id'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-    );
-  }
+  const Destination._internal(super.id, super.createdAt, super.updatedAt,
+      super.deletedAt, this.filename, super.client)
+      : super._internal();
+
+  /// Creates a destination from a JSON object.
+  Destination.fromJson(super.json, super.client)
+      : filename = json['filename'],
+        super.fromJson();
 
   @override
   String toJson() {
     return jsonEncode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
       'filename': filename,
+      ...jsonDecode(super.toJson()),
     });
   }
+
+  @override
+  Destination copyWith({String? filename}) {
+    return Destination._internal(id, createdAt, updatedAt, deletedAt,
+        filename ?? this.filename, _client);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Destination &&
+            runtimeType == other.runtimeType &&
+            filename == other.filename &&
+            super == (other);
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
+      filename.hashCode ^
+      deletedAt.hashCode ^
+      super.hashCode;
 }

@@ -1,19 +1,85 @@
+import 'dart:convert';
+
+import 'package:bel_adn/bel_adn.dart';
+import 'package:meta/meta.dart';
+
+part 'model/destination.dart';
+part 'model/media.dart';
+part 'model/provider_type.dart';
+part 'model/source.dart';
+part 'model/topic.dart';
+part 'model/user.dart';
+part 'model/path.dart';
+part 'model/supplier.dart';
+part 'model/search.dart';
+
+@immutable
 abstract base class Model {
-  int? id;
+  final int? id;
 
-  DateTime? createdAt;
+  final DateTime? createdAt;
 
-  DateTime? updatedAt;
+  final DateTime? updatedAt;
 
-  Model({this.id, this.createdAt, this.updatedAt});
+  final DateTime? deletedAt;
 
-  Model.fromJson(Map<String, dynamic> json);
+  final MagnifiqueCoupleClient? _client;
 
-  String toJson();
+  const Model._internal(this.id, this.createdAt, this.updatedAt, this.deletedAt,
+      [MagnifiqueCoupleClient? client])
+      : _client = client;
+
+  const Model() : this._internal(null, null, null, null, null);
+
+  Model.fromJson(final Map<String, dynamic> json,
+      [MagnifiqueCoupleClient? client])
+      : id = json['id'],
+        createdAt = json['created_at'] != null
+            ? DateTime.parse(json['created_at'])
+            : null,
+        updatedAt = json['updated_at'] != null
+            ? DateTime.parse(json['updated_at'])
+            : null,
+        deletedAt = json['deleted_at'] != null
+            ? DateTime.parse(json['deleted_at'])
+            : null,
+        _client = client;
+
+  @mustBeOverridden
+  @mustCallSuper
+  String toJson() {
+    return jsonEncode({
+      ...?id != null ? {'id': id} : null,
+      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
+      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+      ...?deletedAt != null ? {'deleted_at': deletedAt.toString()} : null,
+    });
+  }
 
   @override
-  operator ==(other) => (other is Model && other.id == id);
+  String toString() {
+    return toJson();
+  }
 
   @override
-  int get hashCode => id.hashCode;
+  @mustBeOverridden
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Model &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt &&
+          deletedAt == other.deletedAt;
+
+  @override
+  @mustBeOverridden
+  int get hashCode =>
+      id.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
+      deletedAt.hashCode ^
+      _client.hashCode;
+
+  Model copyWith();
 }

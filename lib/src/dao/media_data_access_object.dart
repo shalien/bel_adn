@@ -1,32 +1,23 @@
-import 'dart:convert';
-
-import 'package:bel_adn/bel_adn.dart';
-import 'package:http/http.dart';
-import 'package:meta/meta.dart';
+part of '../data_access_object.dart';
 
 /// The [DataAccessObject] for the [Media] class
 @immutable
 final class MediaDataAccessObject extends DataAccessObject<Media> {
   /// The singleton instance for the factory
-  static MediaDataAccessObject? _mediaDataAccessObject;
 
-  /// Private constructor
-  MediaDataAccessObject._(String host, Client client)
-      : super(resource: "medias", host: host, client: client);
+  @override
+  const MediaDataAccessObject(MagnifiqueCoupleClient client)
+      : super('medias', client);
 
-  /// Factory used to create and a single instance during the program run
-  factory MediaDataAccessObject(String host, Client client) {
-    return _mediaDataAccessObject ??= MediaDataAccessObject._(host, client);
-  }
-
-  Future<Set<Media>> showByDestinationId(Destination destination) async {
+  Future<List<Media>> showByDestinationId(Destination destination) async {
     if (destination.id == null) {
       throw ArgumentError("destination id cannot be null");
     }
 
-    Uri uri = Uri.parse('$resourceUrl/destination/${destination.id}');
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host,
+        '/api/$endpoint/destination/${destination.id}');
 
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -36,28 +27,28 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
           throw ArgumentError("data cannot be null");
         }
 
-        Set<Media> medias = <Media>{};
+        List<Media> medias = <Media>[];
 
         for (var source in json['data']) {
-          medias.add(Media.fromJson(source));
+          medias.add(Media.fromJson(source, _client));
         }
 
         return Future.value(medias);
-      case 404:
-        return Future.value(<Media>{});
+
       default:
-        throw response;
+        throw MagnifiqueException(response);
     }
   }
 
-  Future<Set<Media>> showBySourceId(Source source) async {
+  Future<List<Media>> showBySourceId(Source source) async {
     if (source.id == null) {
       throw ArgumentError("source id cannot be null");
     }
 
-    Uri uri = Uri.parse('$resourceUrl/source/${source.id}');
+    Uri uri = Uri.https(
+        MagnifiqueCoupleClient.host, '/api/$endpoint/source/${source.id}');
 
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -67,17 +58,15 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
           throw ArgumentError("data cannot be null");
         }
 
-        Set<Media> medias = <Media>{};
+        List<Media> medias = <Media>[];
 
         for (var source in json['data']) {
-          medias.add(Media.fromJson(source));
+          medias.add(fromJson(source));
         }
 
         return Future.value(medias);
-      case 404:
-        return Future.value(<Media>{});
       default:
-        throw response;
+        throw MagnifiqueException(response);
     }
   }
 
@@ -86,14 +75,10 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    if (cache.find((source) => source.link == link).isNotEmpty) {
-      return Future.value(cache.find((source) => source.link == link).first);
-    }
+    Uri uri = Uri.https(MagnifiqueCoupleClient.host,
+        '/api/$endpoint/link/${base64Encode(link.toString().codeUnits)}');
 
-    Uri uri = Uri.parse(
-        '$resourceUrl/link/${base64Encode(link.toString().codeUnits)}');
-
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -103,13 +88,20 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
           throw ArgumentError("data cannot be null");
         }
 
-        Media source = Media.fromJson(json['data']);
-        cache.add(source);
+        Media source = fromJson(json['data']);
+
         return Future.value(source);
+
       case 404:
-        return Future.value(null);
+        return null;
+
       default:
-        throw response;
+        throw MagnifiqueException(response);
     }
+  }
+
+  @override
+  Media fromJson(Map<String, dynamic> json) {
+    return Media.fromJson(json, _client);
   }
 }

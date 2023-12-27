@@ -1,42 +1,50 @@
-import 'dart:convert';
+part of '../model.dart';
 
-import '../model.dart';
-
+@immutable
 final class Topic extends Model {
   final String name;
 
-  int order;
-  Topic(
-      {required this.name,
-      required this.order,
-      int? id,
-      DateTime? createdAt,
-      DateTime? updatedAt})
-      : super(id: id, createdAt: createdAt, updatedAt: updatedAt);
+  final int order;
+
+  Future<List<Search>?> get searches async =>
+      await _client?.topics.searches(this);
+
+  const Topic(this.name, this.order) : super();
+
+  const Topic._internal(super.id, super.createdAt, super.updatedAt,
+      super.deletedAt, this.name, this.order, super.client)
+      : super._internal();
+
+  Topic.fromJson(super.json, super.client)
+      : name = json['name'],
+        order = json['order'],
+        super.fromJson();
 
   @override
-  factory Topic.fromJson(Map<String, dynamic> json) {
-    return Topic(
-      name: json['name'],
-      order: json['order'],
-      id: json['id'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
-          : null,
-    );
+  Topic copyWith({String? name, int? order}) {
+    return Topic._internal(id, createdAt, updatedAt, deletedAt,
+        name ?? this.name, order ?? this.order, _client);
   }
 
   @override
   String toJson() {
-    return json.encode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+    return jsonEncode({
+      ...jsonDecode(super.toJson()),
       'name': name,
       'order': order,
     });
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Topic &&
+            runtimeType == other.runtimeType &&
+            name == other.name &&
+            order == other.order &&
+            super == (other);
+  }
+
+  @override
+  int get hashCode => super.hashCode ^ name.hashCode ^ order.hashCode;
 }

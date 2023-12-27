@@ -1,17 +1,41 @@
-import 'package:http/http.dart';
+part of '../data_access_object.dart';
 
-import '../data_access_object.dart';
-import '../model/provider_type.dart';
-
+@immutable
 final class ProviderTypeDataAccessObject
     extends DataAccessObject<ProviderType> {
-  static ProviderTypeDataAccessObject? _providerTypeDataAccessObject;
+  const ProviderTypeDataAccessObject(MagnifiqueCoupleClient client)
+      : super('provider_types', client);
 
-  ProviderTypeDataAccessObject._(String host, Client client)
-      : super(resource: "provider_types", host: host, client: client);
+  @override
+  ProviderType fromJson(Map<String, dynamic> json) {
+    return ProviderType.fromJson(json, _client);
+  }
 
-  factory ProviderTypeDataAccessObject(String host, Client client) {
-    return _providerTypeDataAccessObject ??=
-        ProviderTypeDataAccessObject._(host, client);
+  Future<List<Supplier>> suppliers(ProviderType providerType) async {
+    final Uri uri = Uri.https(MagnifiqueCoupleClient.host,
+        '/api/$endpoint/${providerType.id}/suppliers');
+
+    Response response;
+
+    try {
+      response = await _client.get(uri);
+    } on ClientException {
+      rethrow;
+    } on Exception {
+      rethrow;
+    }
+
+    List<Supplier> models = [];
+
+    if (response.statusCode == 200) {
+      final List<dynamic> json = jsonDecode(response.body)['data'];
+      models = json
+          .map((dynamic model) => Supplier.fromJson(model, _client))
+          .toList();
+    } else {
+      throw MagnifiqueException(response);
+    }
+
+    return models;
   }
 }
