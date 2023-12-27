@@ -36,4 +36,31 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
 
     return models;
   }
+
+
+  Future<Path> showByContent(String content) async {
+    final Uri uri = Uri.https(
+        MagnifiqueCoupleClient.host, '/api/$endpoint/content/$content');
+
+    Response response;
+
+    try {
+      response = await _client.get(uri);
+    } on ClientException {
+      rethrow;
+    } on Exception {
+      rethrow;
+    }
+
+    Path model;
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      model = Path.fromJson(json, _client);
+    } else {
+      throw MagnifiqueException(response);
+    }
+
+    return model;
+  }
 }
