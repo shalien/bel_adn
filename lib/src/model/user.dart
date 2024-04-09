@@ -10,29 +10,18 @@ final class User extends Model {
 
   final String? password;
 
-  static String generateEmail() =>
-      '${String.fromCharCodes(List.generate(16, (index) => DateTime.now().microsecondsSinceEpoch.toString().codeUnitAt(index)))}@example.null';
+  const User({
+    required this.snowflake,
+    required this.name,
+    required this.email,
+    required this.password,
+    super.id,
+    super.createdAt,
+    super.updatedAt,
+    super.deletedAt,
+  });
 
-  static String generatePassword() => String.fromCharCodes(List.generate(
-      16,
-      (index) =>
-          DateTime.now().microsecondsSinceEpoch.toString().codeUnitAt(index)));
-
-  const User(this.name, this.snowflake, this.email, this.password) : super();
-
-  const User._internal(
-      super.id,
-      super.createdAt,
-      super.updatedAt,
-      super.deletedAt,
-      this.snowflake,
-      this.name,
-      this.email,
-      this.password,
-      super.client)
-      : super._internal();
-
-  User.fromJson(super.json, super.client)
+  User.fromJson(super.json)
       : snowflake = json['snowflake'],
         name = json['name'],
         email = json['email'],
@@ -42,16 +31,16 @@ final class User extends Model {
   @override
   User copyWith(
       {int? snowflake, String? name, String? email, String? password}) {
-    return User._internal(
-        id,
-        createdAt,
-        updatedAt,
-        deletedAt,
-        snowflake ?? this.snowflake,
-        name ?? this.name,
-        email ?? this.email,
-        password ?? this.password,
-        _client);
+    return User(
+      snowflake: snowflake ?? this.snowflake,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      deletedAt: deletedAt,
+    );
   }
 
   @override

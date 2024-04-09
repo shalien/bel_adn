@@ -28,7 +28,8 @@ abstract base class DataAccessObject<T extends Model> {
   final Uri baseUri;
 
   /// The constructor
-  const DataAccessObject({required this.endpoint, required this.client, required this.baseUri});
+  const DataAccessObject(
+      {required this.endpoint, required this.client, required this.baseUri});
 
   /// Get all the models
   Future<List<T>> index();

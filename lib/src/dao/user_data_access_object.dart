@@ -2,8 +2,8 @@ part of '../data_access_object.dart';
 
 @immutable
 final class UserDataAccessObject extends DataAccessObject<User> {
-  const UserDataAccessObject(MagnifiqueCoupleClient client, Uri baseUri)
-      : super(endpoint: 'users', client: client, baseUri: baseUri);
+  const UserDataAccessObject({required super.client, required super.baseUri})
+      : super(endpoint: 'users');
 
   Future<User> findBySnowflake(String snowflake) async {
     if (snowflake.isEmpty) {
@@ -15,7 +15,7 @@ final class UserDataAccessObject extends DataAccessObject<User> {
     var response = await client.get(uri);
 
     if (response.statusCode == 200) {
-      User user = User.fromJson(jsonDecode(response.body)['data'], client);
+      User user = User.fromJson(jsonDecode(response.body)['data']);
 
       return user;
     } else {
@@ -43,12 +43,11 @@ final class UserDataAccessObject extends DataAccessObject<User> {
 
   @override
   User fromJson(Map<String, dynamic> json) {
-    return User.fromJson(json, client);
+    return User.fromJson(json);
   }
 
   @override
   Future<List<User>> index() {
-    // TODO: implement index
     throw UnimplementedError();
   }
 }

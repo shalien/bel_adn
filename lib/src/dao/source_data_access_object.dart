@@ -2,8 +2,8 @@ part of '../data_access_object.dart';
 
 @immutable
 final class SourceDataAccessObject extends DataAccessObject<Source> {
-  const SourceDataAccessObject(MagnifiqueCoupleClient client, Uri baseUri)
-      : super(endpoint: 'sources', client: client, baseUri: baseUri);
+  const SourceDataAccessObject({required super.client, required super.baseUri})
+      : super(endpoint: 'sources');
 
   Future<Set<Media>> showWithMedia(Source source) async {
     Uri uri = fromParsedHost('/api/$endpoint/${source.id}/medias');
@@ -23,7 +23,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
     }
 
     for (var media in decodedResponse['data']) {
-      medias.add(Media.fromJson(media, client));
+      medias.add(Media.fromJson(media));
     }
 
     return medias;
@@ -84,12 +84,47 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
 
   @override
   Source fromJson(Map<String, dynamic> json) {
-    return Source.fromJson(json, client);
+    return Source.fromJson(json);
   }
 
   @override
-  Future<List<Source>> index() {
-    // TODO: implement index
-    throw UnimplementedError();
+  Future<List<Source>> index(
+      {String? link,
+      int? pathId,
+      int? topicId,
+      int? supplierId,
+      int? searchid}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint', {
+      if (link != null) 'link': link,
+      if (pathId != null) 'path_id': pathId.toString(),
+      if (topicId != null) 'topic_id': topicId.toString(),
+      if (supplierId != null) 'supplier_id': supplierId.toString(),
+      if (searchid != null) 'search_id': searchid.toString(),
+    });
+
+    Response response;
+
+    try {
+      response = await client.get(uri);
+    } on ClientException {
+      rethrow;
+    } on Exception {
+      rethrow;
+    }
+
+    List<Source> models = [];
+
+    if (response.statusCode == 200) {
+      final List<dynamic> json = jsonDecode(response.body)['data'];
+      models = json.map((dynamic model) {
+        Source modelised = fromJson(model);
+
+        return modelised;
+      }).toList();
+    } else {
+      throw MagnifiqueException(response);
+    }
+
+    return models;
   }
 }

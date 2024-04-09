@@ -6,39 +6,44 @@ final class Destination extends Model {
   /// The name of the file.
   final String filename;
 
-  final String? sha512;
-
-  /// The medias associated with this destination.
-  Future<List<Media>?> get medias async =>
-      await _client?.medias.showByDestinationId(this);
+  /// The SHA-256 hash of the file.
+  final String? sha256;
 
   /// The searches associated with this destination.
-  const Destination(this.filename, this.sha512) : super();
-
-  @override
-  const Destination._internal(super.id, super.createdAt, super.updatedAt,
-      super.deletedAt, this.filename, this.sha512, super.client)
-      : super._internal();
+  const Destination({
+    required this.filename,
+    required this.sha256,
+    super.id,
+    super.createdAt,
+    super.updatedAt,
+    super.deletedAt,
+  });
 
   /// Creates a destination from a JSON object.
-  Destination.fromJson(super.json, super.client)
+  Destination.fromJson(super.json)
       : filename = json['filename'],
-  sha512 = json['sha512'],
+        sha256 = json['sha256'],
         super.fromJson();
 
   @override
   String toJson() {
     return jsonEncode({
       'filename': filename,
-      'sha512': sha512,
+      'sha256': sha256,
       ...jsonDecode(super.toJson()),
     });
   }
 
   @override
-  Destination copyWith({String? filename, String? sha512}) {
-    return Destination._internal(id, createdAt, updatedAt, deletedAt,
-        filename ?? this.filename, sha512 ?? this.sha512, _client);
+  Destination copyWith({String? filename, String? sha256}) {
+    return Destination(
+      filename: filename ?? this.filename,
+      sha256: sha256 ?? this.sha256,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      deletedAt: deletedAt,
+    );
   }
 
   @override
@@ -47,7 +52,7 @@ final class Destination extends Model {
         other is Destination &&
             runtimeType == other.runtimeType &&
             filename == other.filename &&
-            sha512 == other.sha512 &&
+            sha256 == other.sha256 &&
             super == (other);
   }
 
@@ -57,7 +62,7 @@ final class Destination extends Model {
       createdAt.hashCode ^
       updatedAt.hashCode ^
       filename.hashCode ^
-      sha512.hashCode ^
+      sha256.hashCode ^
       deletedAt.hashCode ^
       super.hashCode;
 }

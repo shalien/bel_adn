@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:bel_adn/bel_adn.dart';
 import 'package:meta/meta.dart';
 
 part 'model/destination.dart';
@@ -23,16 +22,9 @@ abstract base class Model {
 
   final DateTime? deletedAt;
 
-  final MagnifiqueCoupleClient? _client;
+  const Model({this.id, this.createdAt, this.updatedAt, this.deletedAt});
 
-  const Model._internal(this.id, this.createdAt, this.updatedAt, this.deletedAt,
-      [MagnifiqueCoupleClient? client])
-      : _client = client;
-
-  const Model() : this._internal(null, null, null, null, null);
-
-  Model.fromJson(final Map<String, dynamic> json,
-      [MagnifiqueCoupleClient? client])
+  Model.fromJson(final Map<String, dynamic> json)
       : id = json['id'],
         createdAt = json['created_at'] != null
             ? DateTime.parse(json['created_at'])
@@ -42,8 +34,7 @@ abstract base class Model {
             : null,
         deletedAt = json['deleted_at'] != null
             ? DateTime.parse(json['deleted_at'])
-            : null,
-        _client = client;
+            : null;
 
   @mustBeOverridden
   @mustCallSuper
@@ -78,8 +69,7 @@ abstract base class Model {
       id.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode ^
-      deletedAt.hashCode ^
-      _client.hashCode;
+      deletedAt.hashCode;
 
-  Model copyWith();
+  copyWith();
 }

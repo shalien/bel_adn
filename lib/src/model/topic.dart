@@ -6,24 +6,30 @@ final class Topic extends Model {
 
   final int order;
 
-  Future<List<Search>?> get searches async =>
-      await _client?.topics.searches(this);
+  const Topic({
+    required this.name,
+    required this.order,
+    super.id,
+    super.createdAt,
+    super.updatedAt,
+    super.deletedAt,
+  });
 
-  const Topic(this.name, this.order) : super();
-
-  const Topic._internal(super.id, super.createdAt, super.updatedAt,
-      super.deletedAt, this.name, this.order, super.client)
-      : super._internal();
-
-  Topic.fromJson(super.json, super.client)
+  Topic.fromJson(super.json)
       : name = json['name'],
         order = json['order'],
         super.fromJson();
 
   @override
   Topic copyWith({String? name, int? order}) {
-    return Topic._internal(id, createdAt, updatedAt, deletedAt,
-        name ?? this.name, order ?? this.order, _client);
+    return Topic(
+      name: name ?? this.name,
+      order: order ?? this.order,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      deletedAt: deletedAt,
+    );
   }
 
   @override
