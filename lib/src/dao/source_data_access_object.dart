@@ -2,14 +2,13 @@ part of '../data_access_object.dart';
 
 @immutable
 final class SourceDataAccessObject extends DataAccessObject<Source> {
-  const SourceDataAccessObject(MagnifiqueCoupleClient client)
-      : super('sources', client);
+  const SourceDataAccessObject(MagnifiqueCoupleClient client, Uri baseUri)
+      : super(endpoint: 'sources', client: client, baseUri: baseUri);
 
   Future<Set<Media>> showWithMedia(Source source) async {
-    Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/$endpoint/${source.id}/medias');
+    Uri uri = fromParsedHost('/api/$endpoint/${source.id}/medias');
 
-    var response = await _client.get(uri);
+    var response = await client.get(uri);
 
     if (response.statusCode != 200) {
       throw MagnifiqueException(response);
@@ -24,7 +23,7 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
     }
 
     for (var media in decodedResponse['data']) {
-      medias.add(Media.fromJson(media, _client));
+      medias.add(Media.fromJson(media, client));
     }
 
     return medias;
@@ -35,10 +34,10 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    Uri uri = Uri.https(MagnifiqueCoupleClient.host,
+    Uri uri = fromParsedHost(
         '/api/$endpoint/link/${base64Encode(link.toString().codeUnits)}');
 
-    var response = await _client.get(uri);
+    var response = await client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -63,10 +62,9 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
       throw ArgumentError("Filename cannot be empty");
     }
 
-    Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/destinations/filename/$filename');
+    Uri uri = fromParsedHost('/api/destinations/filename/$filename');
 
-    var response = await _client.get(uri);
+    var response = await client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -86,6 +84,12 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
 
   @override
   Source fromJson(Map<String, dynamic> json) {
-    return Source.fromJson(json, _client);
+    return Source.fromJson(json, client);
+  }
+
+  @override
+  Future<List<Source>> index() {
+    // TODO: implement index
+    throw UnimplementedError();
   }
 }

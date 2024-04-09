@@ -7,7 +7,9 @@ class MagnifiqueCoupleClient extends BaseClient {
 
   String? accessToken;
 
-  static String host = 'magnifiquecouple.projetretro.io';
+  final String host;
+
+  Uri _parsedUri;
 
   late final DestinationDataAccessObject destinations;
 
@@ -33,17 +35,20 @@ class MagnifiqueCoupleClient extends BaseClient {
     'user-agent': 'bel_adn:cbJKqzlZ8soXvU_tvP5KWw:3.0.1 u/Shalien93',
   };
 
-  MagnifiqueCoupleClient({this.accessToken, Client? client})
-      : _client = client ?? Client() {
-    destinations = DestinationDataAccessObject(this);
-    medias = MediaDataAccessObject(this);
-    providerTypes = ProviderTypeDataAccessObject(this);
-    sources = SourceDataAccessObject(this);
-    topics = TopicDataAccessObject(this);
-    paths = PathDataAccessObject(this);
-    suppliers = SupplierDataAccessObject(this);
-    users = UserDataAccessObject(this);
-    searches = SearchDataAccessObject(this);
+  MagnifiqueCoupleClient(
+      {required this.host,
+      required this.accessToken,
+      Client? client})
+      : _client = client ?? Client(), _parsedUri = Uri.parse(host) {
+    destinations = DestinationDataAccessObject(this, _parsedUri);
+    medias = MediaDataAccessObject(this, _parsedUri);
+    providerTypes = ProviderTypeDataAccessObject(this, _parsedUri);
+    sources = SourceDataAccessObject(this, _parsedUri);
+    topics = TopicDataAccessObject(this, _parsedUri);
+    paths = PathDataAccessObject(this, _parsedUri);
+    suppliers = SupplierDataAccessObject(this, _parsedUri);
+    users = UserDataAccessObject(this, _parsedUri);
+    searches = SearchDataAccessObject(this, _parsedUri);
   }
 
   Future<String> getAccessToken(String username, String password,

@@ -6,18 +6,17 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
   /// The singleton instance for the factory
 
   @override
-  const MediaDataAccessObject(MagnifiqueCoupleClient client)
-      : super('medias', client);
+  const MediaDataAccessObject(MagnifiqueCoupleClient client, Uri baseUri)
+      : super(endpoint: 'medias', client: client, baseUri: baseUri);
 
   Future<List<Media>> showByDestinationId(Destination destination) async {
     if (destination.id == null) {
       throw ArgumentError("destination id cannot be null");
     }
 
-    Uri uri = Uri.https(MagnifiqueCoupleClient.host,
-        '/api/$endpoint/destination/${destination.id}');
+    Uri uri = fromParsedHost('/api/$endpoint/destination/${destination.id}');
 
-    var response = await _client.get(uri);
+    var response = await client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -30,7 +29,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
         List<Media> medias = <Media>[];
 
         for (var source in json['data']) {
-          medias.add(Media.fromJson(source, _client));
+          medias.add(Media.fromJson(source, client));
         }
 
         return Future.value(medias);
@@ -45,10 +44,9 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("source id cannot be null");
     }
 
-    Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/$endpoint/source/${source.id}');
+    Uri uri = fromParsedHost('/api/$endpoint/source/${source.id}');
 
-    var response = await _client.get(uri);
+    var response = await client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -75,10 +73,10 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
       throw ArgumentError("uri cannot be empty");
     }
 
-    Uri uri = Uri.https(MagnifiqueCoupleClient.host,
+    Uri uri = fromParsedHost(
         '/api/$endpoint/link/${base64Encode(link.toString().codeUnits)}');
 
-    var response = await _client.get(uri);
+    var response = await client.get(uri);
 
     switch (response.statusCode) {
       case 200:
@@ -102,6 +100,12 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
 
   @override
   Media fromJson(Map<String, dynamic> json) {
-    return Media.fromJson(json, _client);
+    return Media.fromJson(json, client);
+  }
+
+  @override
+  Future<List<Media>> index() {
+    // TODO: implement index
+    throw UnimplementedError();
   }
 }

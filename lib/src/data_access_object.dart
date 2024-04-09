@@ -23,52 +23,26 @@ abstract base class DataAccessObject<T extends Model> {
   final String endpoint;
 
   /// The client used to make requests
-  final MagnifiqueCoupleClient _client;
+  final MagnifiqueCoupleClient client;
+
+  final Uri baseUri;
 
   /// The constructor
-  const DataAccessObject(this.endpoint, this._client);
+  const DataAccessObject({required this.endpoint, required this.client, required this.baseUri});
 
   /// Get all the models
-  Future<List<T>> index() async {
-    final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint');
-
-    Response response;
-
-    try {
-      response = await _client.get(uri);
-    } on ClientException {
-      rethrow;
-    } on Exception {
-      rethrow;
-    }
-
-    List<T> models = [];
-
-    if (response.statusCode == 200) {
-      final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json.map((dynamic model) {
-        T modelised = fromJson(model);
-
-        return modelised;
-      }).toList();
-    } else {
-      throw MagnifiqueException(response);
-    }
-
-    return models;
-  }
+  Future<List<T>> index();
 
   /// Get a model by its id
   Future<T> show(int id) async {
     T model;
 
-    final Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/$id');
+    final Uri uri = fromParsedHost('/api/$endpoint/$id');
 
     Response response;
 
     try {
-      response = await _client.get(uri);
+      response = await client.get(uri);
     } on ClientException {
       rethrow;
     } on Exception {
@@ -87,12 +61,12 @@ abstract base class DataAccessObject<T extends Model> {
 
   /// Store a model
   Future<T> store(T model) async {
-    final Uri uri = Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint');
+    final Uri uri = fromParsedHost('/api/$endpoint');
 
     Response response;
 
     try {
-      response = await _client.post(uri, body: model.toJson());
+      response = await client.post(uri, body: model.toJson());
     } on ClientException {
       rethrow;
     } on Exception {
@@ -111,14 +85,13 @@ abstract base class DataAccessObject<T extends Model> {
 
   /// Update a model
   Future<T> update(int id, T updatedModel) async {
-    final Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/$id');
+    final Uri uri = fromParsedHost('/api/$endpoint/$id');
 
     Response response;
     T model;
 
     try {
-      response = await _client.put(uri, body: updatedModel.toJson());
+      response = await client.put(uri, body: updatedModel.toJson());
     } on ClientException {
       rethrow;
     } on Exception {
@@ -137,13 +110,12 @@ abstract base class DataAccessObject<T extends Model> {
 
   /// Delete a model
   Future<bool> delete(int id) async {
-    final Uri uri =
-        Uri.https(MagnifiqueCoupleClient.host, '/api/$endpoint/$id');
+    final Uri uri = fromParsedHost('/api/$endpoint/$id');
 
     Response response;
 
     try {
-      response = await _client.delete(uri);
+      response = await client.delete(uri);
     } on ClientException {
       rethrow;
     } on Exception {
@@ -161,4 +133,14 @@ abstract base class DataAccessObject<T extends Model> {
   @internal
   @mustBeOverridden
   T fromJson(Map<String, dynamic> json);
+
+  @internal
+  Uri fromParsedHost([unencodedPath, Map<String, dynamic>? queryParameters]) =>
+      Uri(
+        scheme: baseUri.scheme,
+        host: baseUri.host,
+        port: baseUri.port,
+        path: unencodedPath,
+        queryParameters: queryParameters,
+      );
 }

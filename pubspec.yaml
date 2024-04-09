@@ -1,6 +1,6 @@
 name: bel_adn
 description: bel_adn is the common library for the frontend of the "magnifique couple" project. 
-version: 4.0.2
+version: 4.0.0
 homepage: https://github.com/shalien/bel_adn
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -15,5 +15,5 @@ dev_dependencies:
     git: https://github.com/shalien/sha_env.git
 
 dependencies:
-  http: ^1.0.0
-  meta: ^1.8.0
+  http: any
+  meta: any

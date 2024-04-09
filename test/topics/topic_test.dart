@@ -12,6 +12,7 @@ void main() {
 
   setUpAll(() async {
     client = MagnifiqueCoupleClient(
+      host: 'http://localhost:8000',
       accessToken: await File('.env').readAsString(),
     );
   });
@@ -22,6 +23,14 @@ void main() {
 
       expect(topics, isA<List<Topic>>());
       expect(topics.length, greaterThan(0));
+    });
+
+    test('Topics - Index - Anal', () async {
+      var topics = await client.topics.index(name: 'anal');
+
+      expect(topics, isA<List<Topic>>());
+      expect(topics.length, 1);
+      expect(topics.first.name.toLowerCase(), 'anal');
     });
 
     test('Topics - Store', () async {

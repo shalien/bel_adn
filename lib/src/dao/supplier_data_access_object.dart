@@ -2,29 +2,28 @@ part of '../data_access_object.dart';
 
 @immutable
 final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
-  const SupplierDataAccessObject(MagnifiqueCoupleClient client)
-      : super('suppliers', client);
+  const SupplierDataAccessObject(MagnifiqueCoupleClient client, Uri baseUri)
+      : super(endpoint: 'suppliers', client: client, baseUri: baseUri);
 
   @override
   Supplier fromJson(Map<String, dynamic> json) {
-    return Supplier.fromJson(json, _client);
+    return Supplier.fromJson(json, client);
   }
 
   Future<ProviderType> providerType(Supplier supplier) async {
     var providerType =
-        await _client.providerTypes.show(supplier.providerTypeId);
+        await client.providerTypes.show(supplier.providerTypeId);
 
     return providerType;
   }
 
   Future<List<Search>> searches(Supplier supplier) async {
-    final Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/$endpoint/${supplier.id}/searches');
+    final Uri uri = fromParsedHost('/api/$endpoint/${supplier.id}/searches');
 
     Response response;
 
     try {
-      response = await _client.get(uri);
+      response = await client.get(uri);
     } on ClientException {
       rethrow;
     } on Exception {
@@ -36,11 +35,17 @@ final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
       models =
-          json.map((dynamic model) => Search.fromJson(model, _client)).toList();
+          json.map((dynamic model) => Search.fromJson(model, client)).toList();
     } else {
       throw MagnifiqueException(response);
     }
 
     return models;
+  }
+
+  @override
+  Future<List<Supplier>> index() {
+    // TODO: implement index
+    throw UnimplementedError();
   }
 }
