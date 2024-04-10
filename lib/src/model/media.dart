@@ -9,10 +9,10 @@ final class Media extends Model {
   final Uri link;
 
   /// The source of the media
-  final int sourceId;
+  final int? sourceId;
 
   /// The destination of the media
-  final int destinationId;
+  final int? destinationId;
 
   /// The sha256 of the media
   final String? sha256;

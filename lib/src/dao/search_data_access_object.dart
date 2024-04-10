@@ -12,7 +12,7 @@ final class SearchDataAccessObject extends DataAccessObject<Search> {
 
   @override
   Future<List<Search>> index(
-      {int? topicId, int? pathId, int? supplierId}) async {
+      {int? topicId, int? pathId, int? supplierId, int? page = 1}) async {
     final Uri uri = fromParsedHost('/api/$endpoint', {
       if (topicId != null) 'topic_id': topicId.toString(),
       if (pathId != null) 'path_id': pathId.toString(),

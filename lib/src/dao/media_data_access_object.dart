@@ -16,12 +16,13 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
 
   @override
   Future<List<Media>> index(
-      {String? link, int? sourceId, String? sha256, int? destinationId}) async {
+      {Uri? link, int? sourceId, String? sha256, int? destinationId, int? page = 1}) async {
     final Uri uri = fromParsedHost('/api/$endpoint', {
-      if (link != null) 'link': link,
+      if (link != null) 'link': link.toString(),
       if (sourceId != null) 'source_id': sourceId.toString(),
       if (sha256 != null) 'sha256': sha256,
       if (destinationId != null) 'destination_id': destinationId.toString(),
+      if (page != null) 'page': page.toString(),
     });
 
     Response response;

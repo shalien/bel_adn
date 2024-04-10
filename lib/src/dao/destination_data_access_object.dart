@@ -13,10 +13,11 @@ final class DestinationDataAccessObject extends DataAccessObject<Destination> {
   }
 
   @override
-  Future<List<Destination>> index({String? filename, String? sha256}) async {
+  Future<List<Destination>> index({String? filename, String? sha256, int? page = 1}) async {
     final Uri uri = fromParsedHost('/api/$endpoint', {
       if (filename != null) 'filename': filename,
       if (sha256 != null) 'sha256': sha256,
+      if (page != null) 'page': page.toString(),
     });
 
     Response response;

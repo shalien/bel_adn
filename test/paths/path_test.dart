@@ -13,7 +13,30 @@ void main() {
     );
   });
 
-  group('Path CRUD', () {});
+  group('Path CRUD', () {
+
+    test('Path - Index', () async {
+      final paths = await client.paths.index();
+
+      expect(paths, isA<List<Path>>());
+      expect(paths, isNotEmpty);
+    });
+
+    test('Path - Index - Content', () async {
+      final paths = await client.paths.index();
+
+      final Path testPath = paths.first;
+
+      final retrievedPaths = await client.paths.index(content: testPath.content);
+
+      final retrievedPath = retrievedPaths.first;
+
+      expect(retrievedPath, isA<Path>());
+      expect(retrievedPath.content, testPath.content);
+      expect(retrievedPath.id, testPath.id);
+    });
+
+  });
 
   tearDownAll(() async {});
 }

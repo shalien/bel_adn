@@ -110,7 +110,7 @@ abstract base class DataAccessObject<T extends Model> {
   }
 
   /// Delete a model
-  Future<bool> delete(int id) async {
+  Future<bool> destroy(int id) async {
     final Uri uri = fromParsedHost('/api/$endpoint/$id');
 
     Response response;

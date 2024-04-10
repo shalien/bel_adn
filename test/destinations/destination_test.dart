@@ -7,12 +7,6 @@ import 'package:test/test.dart';
 void main() async {
   late MagnifiqueCoupleClient client;
 
-  Destination? createdDestination;
-  Destination? updatedDestination;
-  Destination? copiedWithNewNameDestination;
-
-  String testDestinationName = String.fromCharCodes(
-      List.generate(10, (index) => Random().nextInt(33) + 89));
 
   setUpAll(() async {
     client = MagnifiqueCoupleClient(
@@ -21,11 +15,71 @@ void main() async {
     );
   });
 
-  group('Destinations', () {});
+  group('Destinations', () {
+    test('Destinations - Index', () async {
+      final destinations = await client.destinations.index();
+      expect(destinations, isA<List<Destination>>());
+      expect(destinations, isNotEmpty);
+    });
+
+    test('Destinations - Index - Filename', () async {
+
+      final destinations = await client.destinations.index();
+
+      final Destination testDestination = destinations.first;
+
+      final retrievedDestinations = await client.destinations.index(filename: testDestination.filename);
+
+      final retrievedDestination = retrievedDestinations.first;
+
+      expect(retrievedDestination, isA<Destination>());
+      expect(retrievedDestination.filename, testDestination.filename);
+      expect(retrievedDestination.id, testDestination.id);
+      expect(retrievedDestination.sha256, testDestination.sha256);
+    });
+
+    test('Destinations - Store - CopyWith', () async {
+      final destinations = await client.destinations.index();
+
+      final Destination testDestination = destinations.first;
+
+      final newDestination = testDestination.copyWith(filename: 'new-${testDestination.filename}-${DateTime.now().microsecondsSinceEpoch}', sha256: 'new-test-test');
+
+      final createdDestination = await client.destinations.store(newDestination);
+
+      expect(createdDestination, isA<Destination>());
+      expect(createdDestination.filename, newDestination.filename);
+      expect(createdDestination.sha256, newDestination.sha256);
+    });
+
+    test('Destinations - Update', () async {
+      final destinations = await client.destinations.index();
+
+      final Destination testDestination = destinations.first;
+
+      final newDestination = testDestination.copyWith(filename: 'new-${testDestination.filename}-${DateTime.now().microsecondsSinceEpoch}', sha256: 'new-test-test-${DateTime.now().microsecondsSinceEpoch}');
+
+      final updateDestination = await client.destinations.update(testDestination.id!, newDestination);
+
+      expect(updateDestination, isA<Destination>());
+      expect(updateDestination.filename, newDestination.filename);
+      expect(updateDestination.sha256, newDestination.sha256);
+    });
+
+    test('Destinations - Destroy', () async {
+      final destinations = await client.destinations.index();
+
+      final Destination testDestination = destinations.first;
+
+      final hasBeenDestroyed = await client.destinations.destroy(testDestination.id!);
+
+      expect(hasBeenDestroyed, true);
+
+    });
+
+  });
 
   tearDownAll(() async {
-    if (createdDestination != null && createdDestination.id != null) {
-      await client.destinations.delete(createdDestination.id!);
-    }
+
   });
 }

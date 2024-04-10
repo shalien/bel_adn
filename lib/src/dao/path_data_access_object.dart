@@ -35,35 +35,11 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
     return models;
   }
 
-  Future<Path> showByContent(String content) async {
-    final Uri uri = fromParsedHost('/api/$endpoint/content/$content');
-
-    Response response;
-
-    try {
-      response = await client.get(uri);
-    } on ClientException {
-      rethrow;
-    } on Exception {
-      rethrow;
-    }
-
-    Path model;
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
-      model = Path.fromJson(json);
-    } else {
-      throw MagnifiqueException(response);
-    }
-
-    return model;
-  }
-
   @override
-  Future<List<Path>> index({String? content}) async {
+  Future<List<Path>> index({String? content, int? page = 1}) async {
     final Uri uri = fromParsedHost('/api/$endpoint', {
       if (content != null) 'content': content,
+      if (page != null) 'page': page.toString(),
     });
 
     Response response;
