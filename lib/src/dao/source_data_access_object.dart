@@ -89,17 +89,17 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
 
   @override
   Future<List<Source>> index(
-      {String? link,
+      {Uri? link,
       int? pathId,
       int? topicId,
       int? supplierId,
-      int? searchid}) async {
+      int? searchId}) async {
     final Uri uri = fromParsedHost('/api/$endpoint', {
-      if (link != null) 'link': link,
+      if (link != null) 'link': link.toString(),
       if (pathId != null) 'path_id': pathId.toString(),
       if (topicId != null) 'topic_id': topicId.toString(),
       if (supplierId != null) 'supplier_id': supplierId.toString(),
-      if (searchid != null) 'search_id': searchid.toString(),
+      if (searchId != null) 'search_id': searchId.toString(),
     });
 
     Response response;

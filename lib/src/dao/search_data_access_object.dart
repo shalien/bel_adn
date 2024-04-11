@@ -17,6 +17,7 @@ final class SearchDataAccessObject extends DataAccessObject<Search> {
       if (topicId != null) 'topic_id': topicId.toString(),
       if (pathId != null) 'path_id': pathId.toString(),
       if (supplierId != null) 'supplier_id': supplierId.toString(),
+      if(page != null) 'page': page.toString(),
     });
 
     Response response;
