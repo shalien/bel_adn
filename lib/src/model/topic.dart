@@ -9,9 +9,9 @@ final class Topic extends Model {
   const Topic({
     required this.name,
     required this.order,
-    super.id,
-    super.createdAt,
-    super.updatedAt,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
     super.deletedAt,
   });
 

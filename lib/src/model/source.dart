@@ -18,9 +18,9 @@ final class Source extends Model {
     required this.topicId,
     required this.supplierId,
     required this.searchId,
-    super.id,
-    super.createdAt,
-    super.updatedAt,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
     super.deletedAt,
   });
 
@@ -33,7 +33,8 @@ final class Source extends Model {
         super.fromJson();
 
   @override
-  Source copyWith({Uri? link, int? pathId, int? topicId, int? supplierId, int? searchId}) {
+  Source copyWith(
+      {Uri? link, int? pathId, int? topicId, int? supplierId, int? searchId}) {
     return Source(
       link: link ?? this.link,
       pathId: pathId ?? this.pathId,
@@ -73,5 +74,11 @@ final class Source extends Model {
   }
 
   @override
-  int get hashCode => super.hashCode ^ link.hashCode ^ searchId.hashCode ^ supplierId.hashCode ^ topicId.hashCode ^ pathId.hashCode;
+  int get hashCode =>
+      super.hashCode ^
+      link.hashCode ^
+      searchId.hashCode ^
+      supplierId.hashCode ^
+      topicId.hashCode ^
+      pathId.hashCode;
 }

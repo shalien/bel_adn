@@ -15,9 +15,9 @@ final class User extends Model {
     required this.name,
     required this.email,
     required this.password,
-    super.id,
-    super.createdAt,
-    super.updatedAt,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
     super.deletedAt,
   });
 

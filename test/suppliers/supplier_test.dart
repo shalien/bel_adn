@@ -13,7 +13,11 @@ void main() {
     );
   });
 
-  group('Supplier - CRUD', () {});
+  group('Supplier - CRUD', () {
+    test('Create', () {
+      client.suppliers.store(host: 'http://localhost:8000', providerTypeId: 1);
+    });
+  });
 
   tearDownAll(() async {});
 }

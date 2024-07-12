@@ -6,9 +6,9 @@ final class ProviderType extends Model {
 
   const ProviderType(
       {required this.name,
-      super.id,
-      super.createdAt,
-      super.updatedAt,
+      required super.id,
+      required super.createdAt,
+      required super.updatedAt,
       super.deletedAt});
 
   @override

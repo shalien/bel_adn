@@ -10,31 +10,6 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
     return Path.fromJson(json);
   }
 
-  Future<List<Search>> searches(Path path) async {
-    final Uri uri = fromParsedHost('/api/$endpoint/${path.id}/searches');
-
-    Response response;
-
-    try {
-      response = await client.get(uri);
-    } on ClientException {
-      rethrow;
-    } on Exception {
-      rethrow;
-    }
-
-    List<Search> models = [];
-
-    if (response.statusCode == 200) {
-      final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json.map((dynamic model) => Search.fromJson(model)).toList();
-    } else {
-      throw MagnifiqueException(response);
-    }
-
-    return models;
-  }
-
   @override
   Future<List<Path>> index({String? content, int? page = 1}) async {
     final Uri uri = fromParsedHost('/api/$endpoint', {
@@ -66,5 +41,65 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
     }
 
     return models;
+  }
+
+  @override
+  Future<Path> update(int id, {String? content}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint/$id');
+
+    Response response;
+
+    try {
+      response = await client.put(uri,
+          body: jsonEncode({
+            if (content != null) 'content': content,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          });
+    } on ClientException {
+      rethrow;
+    } on Exception {
+      rethrow;
+    }
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      final Path model = fromJson(json);
+
+      return model;
+    } else {
+      throw MagnifiqueException(response);
+    }
+  }
+
+  @override
+  Future<Path> store({content}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint');
+
+    Response response;
+
+    try {
+      response = await client.post(uri,
+          body: jsonEncode({
+            'content': content,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          });
+    } on ClientException {
+      rethrow;
+    } on Exception {
+      rethrow;
+    }
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      final Path model = fromJson(json);
+
+      return model;
+    } else {
+      throw MagnifiqueException(response);
+    }
   }
 }

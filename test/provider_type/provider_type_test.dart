@@ -17,7 +17,6 @@ void main() {
   });
 
   group('ProviderType - CRUD', () {
-
     test('ProviderType - Index', () async {
       final providerTypes = await client.providerTypes.index();
 
@@ -30,7 +29,8 @@ void main() {
 
       final ProviderType testProviderType = providerTypes.first;
 
-      final retrievedProviderTypes = await client.providerTypes.index(name: testProviderType.name);
+      final retrievedProviderTypes =
+          await client.providerTypes.index(name: testProviderType.name);
 
       final retrievedProviderType = retrievedProviderTypes.first;
 
@@ -38,8 +38,6 @@ void main() {
       expect(retrievedProviderType.name, testProviderType.name);
       expect(retrievedProviderType.id, testProviderType.id);
     });
-
-
   });
 
   tearDownAll(() {});

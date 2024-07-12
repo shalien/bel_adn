@@ -14,24 +14,24 @@ part 'model/search.dart';
 
 @immutable
 abstract base class Model {
-  final int? id;
+  final int id;
 
-  final DateTime? createdAt;
+  final DateTime createdAt;
 
-  final DateTime? updatedAt;
+  final DateTime updatedAt;
 
   final DateTime? deletedAt;
 
-  const Model({this.id, this.createdAt, this.updatedAt, this.deletedAt});
+  const Model(
+      {required this.id,
+      required this.createdAt,
+      required this.updatedAt,
+      this.deletedAt});
 
   Model.fromJson(final Map<String, dynamic> json)
       : id = json['id'],
-        createdAt = json['created_at'] != null
-            ? DateTime.parse(json['created_at'])
-            : null,
-        updatedAt = json['updated_at'] != null
-            ? DateTime.parse(json['updated_at'])
-            : null,
+        createdAt = DateTime.parse(json['created_at']),
+        updatedAt = DateTime.parse(json['updated_at']),
         deletedAt = json['deleted_at'] != null
             ? DateTime.parse(json['deleted_at'])
             : null;
@@ -40,9 +40,9 @@ abstract base class Model {
   @mustCallSuper
   String toJson() {
     return jsonEncode({
-      ...?id != null ? {'id': id} : null,
-      ...?createdAt != null ? {'created_at': createdAt.toString()} : null,
-      ...?updatedAt != null ? {'updated_at': updatedAt.toString()} : null,
+      'id': id,
+      'created_at': createdAt.toString(),
+      'updated_at': updatedAt.toString(),
       ...?deletedAt != null ? {'deleted_at': deletedAt.toString()} : null,
     });
   }

@@ -23,9 +23,9 @@ final class Media extends Model {
       required this.sourceId,
       required this.sha256,
       required this.destinationId,
-      super.id,
-      super.createdAt,
-      super.updatedAt,
+      required super.id,
+      required super.createdAt,
+      required super.updatedAt,
       super.deletedAt});
 
   /// Create a [Media] from a json

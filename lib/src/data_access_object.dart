@@ -60,54 +60,11 @@ abstract base class DataAccessObject<T extends Model> {
     return model;
   }
 
-  /// Store a model
-  Future<T> store(T model) async {
-    final Uri uri = fromParsedHost('/api/$endpoint');
-
-    Response response;
-
-    try {
-      response = await client.post(uri, body: model.toJson());
-    } on ClientException {
-      rethrow;
-    } on Exception {
-      rethrow;
-    }
-
-    if (response.statusCode == 201) {
-      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
-      model = fromJson(json);
-    } else {
-      throw MagnifiqueException(response);
-    }
-
-    return model;
-  }
-
   /// Update a model
-  Future<T> update(int id, T updatedModel) async {
-    final Uri uri = fromParsedHost('/api/$endpoint/$id');
+  Future<T> update(int id);
 
-    Response response;
-    T model;
-
-    try {
-      response = await client.put(uri, body: updatedModel.toJson());
-    } on ClientException {
-      rethrow;
-    } on Exception {
-      rethrow;
-    }
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
-      model = fromJson(json);
-    } else {
-      throw MagnifiqueException(response);
-    }
-
-    return model;
-  }
+  /// store a fuckin model
+  Future<T> store();
 
   /// Delete a model
   Future<bool> destroy(int id) async {

@@ -43,28 +43,63 @@ final class TopicDataAccessObject extends DataAccessObject<Topic> {
     return models;
   }
 
-  Future<List<Search>> searches(Topic topic) async {
-    final Uri uri = fromParsedHost('/api/$endpoint/${topic.id}/searches');
+  @override
+  Future<Topic> update(int id, {String? name}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint/$id');
 
     Response response;
 
     try {
-      response = await client.get(uri);
+      response = await client.put(uri,
+          body: jsonEncode({
+            if (name != null) 'name': name,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          });
     } on ClientException {
       rethrow;
     } on Exception {
       rethrow;
     }
 
-    List<Search> models = [];
-
     if (response.statusCode == 200) {
-      final List<dynamic> json = jsonDecode(response.body)['data'];
-      models = json.map((dynamic model) => Search.fromJson(model)).toList();
+      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      final Topic model = fromJson(json);
+
+      return model;
     } else {
       throw MagnifiqueException(response);
     }
+  }
 
-    return models;
+  @override
+  Future<Topic> store({name}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint');
+
+    Response response;
+
+    try {
+      response = await client.post(uri,
+          body: jsonEncode({
+            'name': name,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          });
+    } on ClientException {
+      rethrow;
+    } on Exception {
+      rethrow;
+    }
+
+    if (response.statusCode == 201) {
+      final dynamic json = jsonDecode(response.body)['data'];
+      final Topic model = fromJson(json);
+
+      return model;
+    } else {
+      throw MagnifiqueException(response);
+    }
   }
 }

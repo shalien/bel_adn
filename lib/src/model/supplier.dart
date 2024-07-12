@@ -9,9 +9,9 @@ final class Supplier extends Model {
   const Supplier({
     required this.host,
     required this.providerTypeId,
-    super.id,
-    super.createdAt,
-    super.updatedAt,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
     super.deletedAt,
   });
 

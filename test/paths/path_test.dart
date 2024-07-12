@@ -14,7 +14,6 @@ void main() {
   });
 
   group('Path CRUD', () {
-
     test('Path - Index', () async {
       final paths = await client.paths.index();
 
@@ -27,7 +26,8 @@ void main() {
 
       final Path testPath = paths.first;
 
-      final retrievedPaths = await client.paths.index(content: testPath.content);
+      final retrievedPaths =
+          await client.paths.index(content: testPath.content);
 
       final retrievedPath = retrievedPaths.first;
 
@@ -35,7 +35,6 @@ void main() {
       expect(retrievedPath.content, testPath.content);
       expect(retrievedPath.id, testPath.id);
     });
-
   });
 
   tearDownAll(() async {});

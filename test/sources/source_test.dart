@@ -14,7 +14,6 @@ void main() async {
   });
 
   group('Source CRUD', () {
-
     test('Source - Index', () async {
       final sources = await client.sources.index();
 
@@ -23,24 +22,23 @@ void main() async {
     });
 
     test('Source - Index - Link', () async {
+      final sources = await client.sources.index();
 
-        final sources = await client.sources.index();
+      final Source testSource = sources.first;
 
-        final Source testSource = sources.first;
+      final retrievedSources =
+          await client.sources.index(link: testSource.link);
 
-        final retrievedSources = await client.sources.index(link: testSource.link);
+      final retrievedSource = retrievedSources.first;
 
-        final retrievedSource = retrievedSources.first;
-
-        expect(retrievedSource, isA<Source>());
-        expect(retrievedSource.link, testSource.link);
-        expect(retrievedSource.id, testSource.id);
-        expect(retrievedSource.searchId, testSource.searchId);
-        expect(retrievedSource.pathId, testSource.pathId);
-        expect(retrievedSource.topicId, testSource.topicId);
-        expect(retrievedSource.supplierId, testSource.supplierId);
+      expect(retrievedSource, isA<Source>());
+      expect(retrievedSource.link, testSource.link);
+      expect(retrievedSource.id, testSource.id);
+      expect(retrievedSource.searchId, testSource.searchId);
+      expect(retrievedSource.pathId, testSource.pathId);
+      expect(retrievedSource.topicId, testSource.topicId);
+      expect(retrievedSource.supplierId, testSource.supplierId);
     });
-
   });
 
   tearDownAll(() async {});

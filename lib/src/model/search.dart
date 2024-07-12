@@ -12,9 +12,9 @@ final class Search extends Model {
     required this.topicId,
     required this.pathId,
     required this.supplierId,
-    super.id,
-    super.createdAt,
-    super.updatedAt,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
     super.deletedAt,
   });
 

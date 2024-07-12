@@ -13,9 +13,9 @@ final class Destination extends Model {
   const Destination({
     required this.filename,
     required this.sha256,
-    super.id,
-    super.createdAt,
-    super.updatedAt,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
     super.deletedAt,
   });
 

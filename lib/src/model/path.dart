@@ -8,10 +8,10 @@ final class Path extends Model {
 
   const Path(
       {required this.content,
-      super.id,
-      super.createdAt,
+      required super.id,
+      required super.createdAt,
       super.deletedAt,
-      super.updatedAt});
+      required super.updatedAt});
 
   @override
   Path.fromJson(super.json)
