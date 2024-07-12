@@ -6,27 +6,30 @@ final class Supplier extends Model {
 
   final int providerTypeId;
 
-  Future<ProviderType?> get providerType async =>
-      await _client?.providerTypes.show(providerTypeId);
+  const Supplier({
+    required this.host,
+    required this.providerTypeId,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
+    super.deletedAt,
+  });
 
-  Future<List<Search>?> get searches async =>
-      await _client?.suppliers.searches(this);
-
-  const Supplier(this.host, this.providerTypeId) : super();
-
-  const Supplier._internal(super.id, super.createdAt, super.updatedAt,
-      super.deletedAt, this.host, this.providerTypeId, super.client)
-      : super._internal();
-
-  Supplier.fromJson(super.json, super.client)
+  Supplier.fromJson(super.json)
       : host = json['host'],
         providerTypeId = json['provider_type_id'],
         super.fromJson();
 
   @override
   Supplier copyWith({String? host, int? providerTypeId}) {
-    return Supplier._internal(id, createdAt, updatedAt, deletedAt,
-        host ?? this.host, providerTypeId ?? this.providerTypeId, _client);
+    return Supplier(
+      host: host ?? this.host,
+      providerTypeId: providerTypeId ?? this.providerTypeId,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      deletedAt: deletedAt,
+    );
   }
 
   @override

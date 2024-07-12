@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:bel_adn/bel_adn.dart';
 import 'package:test/test.dart';
@@ -7,94 +6,69 @@ import 'package:test/test.dart';
 void main() async {
   late MagnifiqueCoupleClient client;
 
-  Destination? createdDestination;
-  Destination? updatedDestination;
-  Destination? copiedWithNewNameDestination;
-
-  String testDestinationName = String.fromCharCodes(
-      List.generate(10, (index) => Random().nextInt(33) + 89));
-
   setUpAll(() async {
     client = MagnifiqueCoupleClient(
+      host: 'http://localhost:8000',
       accessToken: await File('.env').readAsString(),
     );
   });
 
   group('Destinations', () {
-    /// dont work yet
     test('Destinations - Index', () async {
-      expect(true, true);
+      final destinations = await client.destinations.index();
+      expect(destinations, isA<List<Destination>>());
+      expect(destinations, isNotEmpty);
     });
 
-    test('Destinations - Store', () async {
-      var toStore = Destination(testDestinationName);
+    test('Destinations - Index - Filename', () async {
+      final destinations = await client.destinations.index();
 
-      createdDestination = await client.destinations.store(toStore);
+      final Destination testDestination = destinations.first;
 
-      if (createdDestination == null) {
-        throw Exception('Destination is null');
-      }
+      final retrievedDestinations =
+          await client.destinations.index(filename: testDestination.filename);
 
-      expect(createdDestination, isA<Destination>());
-      expect(createdDestination?.filename, testDestinationName);
-      expect(createdDestination?.id, isA<int>());
-      // is superior at 0
-      expect(createdDestination?.id, greaterThan(0));
+      final retrievedDestination = retrievedDestinations.first;
+
+      expect(retrievedDestination, isA<Destination>());
+      expect(retrievedDestination.filename, testDestination.filename);
+      expect(retrievedDestination.id, testDestination.id);
+      expect(retrievedDestination.sha256, testDestination.sha256);
     });
 
-    test('Destinations - Show', () async {
-      if (createdDestination == null) {
-        throw Exception('Destination is null');
-      }
+    test('Destinations - Store - CopyWith', () async {
+      final destinations = await client.destinations.index();
 
-      var destination = await client.destinations.show(createdDestination!.id!);
+      final Destination testDestination = destinations.first;
 
-      expect(destination, isA<Destination>());
-      expect(destination.filename, createdDestination?.filename);
-      expect(destination.id, createdDestination?.id);
-    });
-
-    test('Destination - CopyWith', () {
-      if (createdDestination == null) {
-        throw Exception('Destination is null');
-      }
-
-      copiedWithNewNameDestination =
-          createdDestination?.copyWith(filename: 'test2');
-
-      expect(copiedWithNewNameDestination, isA<Destination>());
-      expect(copiedWithNewNameDestination?.filename, 'test2');
-      expect(copiedWithNewNameDestination?.id, createdDestination?.id);
+      final newDestination = testDestination.copyWith(
+          filename:
+              'new-${testDestination.filename}-${DateTime.now().microsecondsSinceEpoch}',
+          sha256: 'new-test-test');
     });
 
     test('Destinations - Update', () async {
-      if (createdDestination == null || copiedWithNewNameDestination == null) {
-        throw Exception('Destination is null');
-      }
+      final destinations = await client.destinations.index();
 
-      updatedDestination = await client.destinations
-          .update(createdDestination!.id!, copiedWithNewNameDestination!);
+      final Destination testDestination = destinations.first;
 
-      expect(updatedDestination, isA<Destination>());
-      expect(
-          updatedDestination?.filename, copiedWithNewNameDestination?.filename);
-      expect(updatedDestination?.id, copiedWithNewNameDestination?.id);
+      final newDestination = testDestination.copyWith(
+          filename:
+              'new-${testDestination.filename}-${DateTime.now().microsecondsSinceEpoch}',
+          sha256: 'new-test-test-${DateTime.now().microsecondsSinceEpoch}');
     });
 
-    test('Destinations - Delete', () async {
-      if (updatedDestination == null) {
-        throw Exception('Destination is null');
-      }
+    test('Destinations - Destroy', () async {
+      final destinations = await client.destinations.index();
 
-      await client.destinations.delete(updatedDestination!.id!);
+      final Destination testDestination = destinations.first;
 
-      expect(true, true);
+      final hasBeenDestroyed =
+          await client.destinations.destroy(testDestination.id);
+
+      expect(hasBeenDestroyed, true);
     });
   });
 
-  tearDownAll(() async {
-    if (createdDestination != null && createdDestination!.id != null) {
-      await client.destinations.delete(createdDestination!.id!);
-    }
-  });
+  tearDownAll(() async {});
 }

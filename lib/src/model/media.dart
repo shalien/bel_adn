@@ -9,29 +9,30 @@ final class Media extends Model {
   final Uri link;
 
   /// The source of the media
-  final int sourceId;
+  final int? sourceId;
 
   /// The destination of the media
-  Future<Source?> get source async => await _client?.sources.show(sourceId);
+  final int? destinationId;
 
-  /// The destination of the media
-  final int destinationId;
-
-  /// The destination of the media
-  Future<Destination?> get destination async =>
-      await _client?.destinations.show(destinationId);
+  /// The sha256 of the media
+  final String? sha256;
 
   /// A [Media] will be composed during all the resolving process
-  const Media(this.link, this.sourceId, this.destinationId) : super();
-
-  const Media._internal(this.link, this.sourceId, this.destinationId, super.id,
-      super.createdAt, super.updatedAt, super.deletedAt, super.client)
-      : super._internal();
+  const Media(
+      {required this.link,
+      required this.sourceId,
+      required this.sha256,
+      required this.destinationId,
+      required super.id,
+      required super.createdAt,
+      required super.updatedAt,
+      super.deletedAt});
 
   /// Create a [Media] from a json
-  Media.fromJson(super.json, super.client)
+  Media.fromJson(super.json)
       : link = Uri.parse(json['link']),
         sourceId = json['source_id'],
+        sha256 = json['sha256'],
         destinationId = json['destination_id'],
         super.fromJson();
 
@@ -41,6 +42,7 @@ final class Media extends Model {
     return jsonEncode({
       ...jsonDecode(super.toJson()),
       'source_id': sourceId,
+      'sha256': sha256,
       'destination_id': destinationId,
       'link': link.toString(),
     });
@@ -50,17 +52,19 @@ final class Media extends Model {
   Media copyWith({
     Uri? link,
     int? sourceId,
+    String? sha256,
     int? destinationId,
   }) {
-    return Media._internal(
-        link ?? this.link,
-        sourceId ?? this.sourceId,
-        destinationId ?? this.destinationId,
-        id,
-        createdAt,
-        updatedAt,
-        deletedAt,
-        _client);
+    return Media(
+      link: link ?? this.link,
+      sourceId: sourceId ?? this.sourceId,
+      sha256: sha256 ?? this.sha256,
+      destinationId: destinationId ?? this.destinationId,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      deletedAt: deletedAt,
+    );
   }
 
   @override
@@ -71,6 +75,7 @@ final class Media extends Model {
             super == (other) &&
             link == other.link &&
             sourceId == other.sourceId &&
+            sha256 == other.sha256 &&
             destinationId == other.destinationId;
   }
 
@@ -79,5 +84,6 @@ final class Media extends Model {
       super.hashCode ^
       link.hashCode ^
       sourceId.hashCode ^
+      sha256.hashCode ^
       destinationId.hashCode;
 }

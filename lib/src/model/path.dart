@@ -6,18 +6,15 @@ final class Path extends Model {
   /// The content of the path.
   final String content;
 
-  /// The searches associated with this path.
-  Future<List<Search>?> get searches async =>
-      await _client?.paths.searches(this);
-
-  const Path(this.content) : super();
+  const Path(
+      {required this.content,
+      required super.id,
+      required super.createdAt,
+      super.deletedAt,
+      required super.updatedAt});
 
   @override
-  const Path._internal(super.id, super.createdAt, super.updatedAt,
-      super.deletedAt, this.content, super.client)
-      : super._internal();
-
-  Path.fromJson(super.json, super.client)
+  Path.fromJson(super.json)
       : content = json['content'],
         super.fromJson();
 
@@ -31,8 +28,13 @@ final class Path extends Model {
 
   @override
   Path copyWith({String? content}) {
-    return Path._internal(
-        id, createdAt, updatedAt, deletedAt, content ?? this.content, _client);
+    return Path(
+      content: content ?? this.content,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      deletedAt: deletedAt,
+    );
   }
 
   @override

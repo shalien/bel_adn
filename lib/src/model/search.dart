@@ -4,24 +4,22 @@ part of '../model.dart';
 final class Search extends Model {
   final int? topicId;
 
-  Future<Topic?> get topic async => await _client?.topics.show(topicId!);
-
   final int? pathId;
-
-  Future<Path?> get path async => await _client?.paths.show(pathId!);
 
   final int? supplierId;
 
-  Future<Supplier?> get supplier async =>
-      await _client?.suppliers.show(supplierId!);
+  const Search({
+    required this.topicId,
+    required this.pathId,
+    required this.supplierId,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
+    super.deletedAt,
+  });
 
-  const Search(this.topicId, this.pathId, this.supplierId) : super();
-
-  const Search._internal(this.topicId, this.pathId, this.supplierId, super.id,
-      super.createdAt, super.updatedAt, super.deletedAt, super.client)
-      : super._internal();
-
-  Search.fromJson(super.json, super.client)
+  @override
+  Search.fromJson(super.json)
       : topicId = json['topic_id'],
         pathId = json['path_id'],
         supplierId = json['supplier_id'],
@@ -29,15 +27,15 @@ final class Search extends Model {
 
   @override
   Search copyWith({int? topicId, int? pathId, int? supplierId}) {
-    return Search._internal(
-        topicId ?? this.topicId,
-        pathId ?? this.pathId,
-        supplierId ?? this.supplierId,
-        id,
-        createdAt,
-        updatedAt,
-        deletedAt,
-        _client);
+    return Search(
+      topicId: topicId ?? this.topicId,
+      pathId: pathId ?? this.pathId,
+      supplierId: supplierId ?? this.supplierId,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      deletedAt: deletedAt,
+    );
   }
 
   @override

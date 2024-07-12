@@ -2,34 +2,40 @@ part of '../data_access_object.dart';
 
 @immutable
 final class PathDataAccessObject extends DataAccessObject<Path> {
-  const PathDataAccessObject(MagnifiqueCoupleClient client)
-      : super('paths', client);
+  const PathDataAccessObject({required super.client, required super.baseUri})
+      : super(endpoint: 'paths');
 
   @override
   Path fromJson(Map<String, dynamic> json) {
-    return Path.fromJson(json, _client);
+    return Path.fromJson(json);
   }
 
-  Future<List<Search>> searches(Path path) async {
-    final Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/$endpoint/${path.id}/searches');
+  @override
+  Future<List<Path>> index({String? content, int? page = 1}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint', {
+      if (content != null) 'content': content,
+      if (page != null) 'page': page.toString(),
+    });
 
     Response response;
 
     try {
-      response = await _client.get(uri);
+      response = await client.get(uri);
     } on ClientException {
       rethrow;
     } on Exception {
       rethrow;
     }
 
-    List<Search> models = [];
+    List<Path> models = [];
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
-      models =
-          json.map((dynamic model) => Search.fromJson(model, _client)).toList();
+      models = json.map((dynamic model) {
+        Path modelised = fromJson(model);
+
+        return modelised;
+      }).toList();
     } else {
       throw MagnifiqueException(response);
     }
@@ -37,30 +43,63 @@ final class PathDataAccessObject extends DataAccessObject<Path> {
     return models;
   }
 
-
-  Future<Path> showByContent(String content) async {
-    final Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/$endpoint/content/$content');
+  @override
+  Future<Path> update(int id, {String? content}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint/$id');
 
     Response response;
 
     try {
-      response = await _client.get(uri);
+      response = await client.put(uri,
+          body: jsonEncode({
+            if (content != null) 'content': content,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          });
     } on ClientException {
       rethrow;
     } on Exception {
       rethrow;
     }
 
-    Path model;
-
     if (response.statusCode == 200) {
       final Map<String, dynamic> json = jsonDecode(response.body)['data'];
-      model = Path.fromJson(json, _client);
+      final Path model = fromJson(json);
+
+      return model;
     } else {
       throw MagnifiqueException(response);
     }
+  }
 
-    return model;
+  @override
+  Future<Path> store({content}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint');
+
+    Response response;
+
+    try {
+      response = await client.post(uri,
+          body: jsonEncode({
+            'content': content,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          });
+    } on ClientException {
+      rethrow;
+    } on Exception {
+      rethrow;
+    }
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      final Path model = fromJson(json);
+
+      return model;
+    } else {
+      throw MagnifiqueException(response);
+    }
   }
 }

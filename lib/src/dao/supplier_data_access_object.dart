@@ -2,45 +2,108 @@ part of '../data_access_object.dart';
 
 @immutable
 final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
-  const SupplierDataAccessObject(MagnifiqueCoupleClient client)
-      : super('suppliers', client);
+  const SupplierDataAccessObject(
+      {required super.client, required super.baseUri})
+      : super(endpoint: 'suppliers');
 
   @override
   Supplier fromJson(Map<String, dynamic> json) {
-    return Supplier.fromJson(json, _client);
+    return Supplier.fromJson(json);
   }
 
-  Future<ProviderType> providerType(Supplier supplier) async {
-    var providerType =
-        await _client.providerTypes.show(supplier.providerTypeId);
-
-    return providerType;
-  }
-
-  Future<List<Search>> searches(Supplier supplier) async {
-    final Uri uri = Uri.https(
-        MagnifiqueCoupleClient.host, '/api/$endpoint/${supplier.id}/searches');
+  @override
+  Future<List<Supplier>> index({String? host, int? providerTypeId}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint', {
+      if (host != null) 'host': host,
+      if (providerTypeId != null) 'provider_type_id': providerTypeId.toString(),
+    });
 
     Response response;
 
     try {
-      response = await _client.get(uri);
+      response = await client.get(uri);
     } on ClientException {
       rethrow;
     } on Exception {
       rethrow;
     }
 
-    List<Search> models = [];
+    List<Supplier> models = [];
 
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body)['data'];
-      models =
-          json.map((dynamic model) => Search.fromJson(model, _client)).toList();
+      models = json.map((dynamic model) {
+        Supplier modelised = fromJson(model);
+
+        return modelised;
+      }).toList();
     } else {
       throw MagnifiqueException(response);
     }
 
     return models;
+  }
+
+  @override
+  Future<Supplier> update(int id, {String? host, int? providerTypeId}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint/$id');
+
+    Response response;
+
+    try {
+      response = await client.put(uri,
+          body: jsonEncode({
+            if (host != null) 'host': host,
+            if (providerTypeId != null)
+              'provider_type_id': providerTypeId.toString(),
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          });
+    } on ClientException {
+      rethrow;
+    } on Exception {
+      rethrow;
+    }
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      final Supplier model = fromJson(json);
+
+      return model;
+    } else {
+      throw MagnifiqueException(response);
+    }
+  }
+
+  @override
+  Future<Supplier> store({host, providerTypeId}) async {
+    final Uri uri = fromParsedHost('/api/$endpoint');
+
+    Response response;
+
+    try {
+      response = await client.post(uri,
+          body: jsonEncode({
+            'host': host,
+            'provider_type_id': providerTypeId.toString(),
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          });
+    } on ClientException {
+      rethrow;
+    } on Exception {
+      rethrow;
+    }
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> json = jsonDecode(response.body)['data'];
+      final Supplier model = fromJson(json);
+
+      return model;
+    } else {
+      throw MagnifiqueException(response);
+    }
   }
 }

@@ -4,20 +4,27 @@ part of '../model.dart';
 final class ProviderType extends Model {
   final String name;
 
-  const ProviderType(this.name) : super();
+  const ProviderType(
+      {required this.name,
+      required super.id,
+      required super.createdAt,
+      required super.updatedAt,
+      super.deletedAt});
 
-  const ProviderType._internal(super.id, super.createdAt, super.updatedAt,
-      super.deletedAt, this.name, super.client)
-      : super._internal();
-
-  ProviderType.fromJson(super.json, super.client)
+  @override
+  ProviderType.fromJson(super.json)
       : name = json['name'],
         super.fromJson();
 
   @override
   ProviderType copyWith({String? name}) {
-    return ProviderType._internal(
-        id, createdAt, updatedAt, deletedAt, name ?? this.name, _client);
+    return ProviderType(
+      name: name ?? this.name,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      deletedAt: deletedAt,
+    );
   }
 
   @override

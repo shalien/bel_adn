@@ -4,23 +4,48 @@ part of '../model.dart';
 final class Source extends Model {
   final Uri link;
 
+  final int? pathId;
+
+  final int? topicId;
+
+  final int? supplierId;
+
   final int? searchId;
 
-  const Source(this.link, this.searchId) : super();
+  const Source({
+    required this.link,
+    required this.pathId,
+    required this.topicId,
+    required this.supplierId,
+    required this.searchId,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
+    super.deletedAt,
+  });
 
-  const Source._internal(super.id, super.createdAt, super.updatedAt,
-      super.deletedAt, this.link, this.searchId, super.client)
-      : super._internal();
-
-  Source.fromJson(super.json, super.client)
+  Source.fromJson(super.json)
       : link = Uri.parse(json['link']),
+        pathId = json['path_id'],
+        topicId = json['topic_id'],
+        supplierId = json['supplier_id'],
         searchId = json['search_id'],
         super.fromJson();
 
   @override
-  Source copyWith({Uri? link, int? searchId}) {
-    return Source._internal(id, createdAt, updatedAt, deletedAt,
-        link ?? this.link, searchId ?? this.searchId, _client);
+  Source copyWith(
+      {Uri? link, int? pathId, int? topicId, int? supplierId, int? searchId}) {
+    return Source(
+      link: link ?? this.link,
+      pathId: pathId ?? this.pathId,
+      topicId: topicId ?? this.topicId,
+      supplierId: supplierId ?? this.supplierId,
+      searchId: searchId ?? this.searchId,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      deletedAt: deletedAt,
+    );
   }
 
   @override
@@ -28,6 +53,9 @@ final class Source extends Model {
     return jsonEncode({
       ...jsonDecode(super.toJson()),
       'link': link.toString(),
+      'path_id': pathId,
+      'topic_id': topicId,
+      'supplier_id': supplierId,
       'search_id': searchId
     });
   }
@@ -39,9 +67,18 @@ final class Source extends Model {
             runtimeType == other.runtimeType &&
             super == (other) &&
             link == other.link &&
+            pathId == other.pathId &&
+            topicId == other.topicId &&
+            supplierId == other.supplierId &&
             searchId == other.searchId;
   }
 
   @override
-  int get hashCode => super.hashCode ^ link.hashCode ^ searchId.hashCode;
+  int get hashCode =>
+      super.hashCode ^
+      link.hashCode ^
+      searchId.hashCode ^
+      supplierId.hashCode ^
+      topicId.hashCode ^
+      pathId.hashCode;
 }

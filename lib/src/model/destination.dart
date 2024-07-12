@@ -6,35 +6,44 @@ final class Destination extends Model {
   /// The name of the file.
   final String filename;
 
-  /// The medias associated with this destination.
-  Future<List<Media>?> get medias async =>
-      await _client?.medias.showByDestinationId(this);
+  /// The SHA-256 hash of the file.
+  final String? sha256;
 
   /// The searches associated with this destination.
-  const Destination(this.filename) : super();
-
-  @override
-  const Destination._internal(super.id, super.createdAt, super.updatedAt,
-      super.deletedAt, this.filename, super.client)
-      : super._internal();
+  const Destination({
+    required this.filename,
+    required this.sha256,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
+    super.deletedAt,
+  });
 
   /// Creates a destination from a JSON object.
-  Destination.fromJson(super.json, super.client)
+  Destination.fromJson(super.json)
       : filename = json['filename'],
+        sha256 = json['sha256'],
         super.fromJson();
 
   @override
   String toJson() {
     return jsonEncode({
       'filename': filename,
+      'sha256': sha256,
       ...jsonDecode(super.toJson()),
     });
   }
 
   @override
-  Destination copyWith({String? filename}) {
-    return Destination._internal(id, createdAt, updatedAt, deletedAt,
-        filename ?? this.filename, _client);
+  Destination copyWith({String? filename, String? sha256}) {
+    return Destination(
+      filename: filename ?? this.filename,
+      sha256: sha256 ?? this.sha256,
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      deletedAt: deletedAt,
+    );
   }
 
   @override
@@ -43,6 +52,7 @@ final class Destination extends Model {
         other is Destination &&
             runtimeType == other.runtimeType &&
             filename == other.filename &&
+            sha256 == other.sha256 &&
             super == (other);
   }
 
@@ -52,6 +62,7 @@ final class Destination extends Model {
       createdAt.hashCode ^
       updatedAt.hashCode ^
       filename.hashCode ^
+      sha256.hashCode ^
       deletedAt.hashCode ^
       super.hashCode;
 }

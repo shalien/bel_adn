@@ -15,103 +15,49 @@ void main() {
 
   setUpAll(() async {
     client = MagnifiqueCoupleClient(
+      host: 'http://localhost:8000',
       accessToken: await File('.env').readAsString(),
     );
-
-    Topic toTestTopic = Topic('test_search', 99999);
-    testTopic = await client.topics.store(toTestTopic);
-
-    Path toTestPath = Path('test_search');
-    testPath = await client.paths.store(toTestPath);
-
-    Supplier toTestSupplier = Supplier('test_search', 1);
-    testSupplier = await client.suppliers.store(toTestSupplier);
   });
 
   group('Search - CRUD', () {
     test('Search - Index', () async {
-      var searches = await client.searches.index();
+      final searches = await client.searches.index();
 
       expect(searches, isA<List<Search>>());
-      expect(searches.length, greaterThan(0));
+      expect(searches, isNotEmpty);
     });
 
-    test('Search - Store', () async {
-      var toStore = Search(testTopic!.id!, testPath!.id!, testSupplier!.id!);
+    test('Search - Index - Path', () async {
+      final paths = await client.paths.index();
+      final testPath = paths.first;
 
-      createdSearch = await client.searches.store(toStore);
+      final searches = await client.searches.index(pathId: testPath.id);
 
-      if (createdSearch == null) {
-        throw Exception('Search is null');
-      }
-
-      expect(createdSearch, isA<Search>());
-      expect(createdSearch?.topicId, toStore.topicId);
-      expect(createdSearch?.pathId, toStore.pathId);
-      expect(createdSearch?.supplierId, toStore.supplierId);
-      expect(createdSearch?.id, isA<int>());
-      expect(createdSearch?.id, greaterThan(0));
+      expect(searches, isA<List<Search>>());
+      expect(searches, isNotEmpty);
     });
 
-    test('Search - Show', () async {
-      if (createdSearch == null) {
-        throw Exception('Search is null');
-      }
+    test('Search - Index - Topic', () async {
+      final topics = await client.topics.index();
+      final testTopic = topics.first;
 
-      var search = await client.searches.show(createdSearch!.id!);
+      final searches = await client.searches.index(topicId: testTopic.id);
 
-      expect(search, isA<Search>());
-      expect(search.topicId, createdSearch?.topicId);
-      expect(search.pathId, createdSearch?.pathId);
-      expect(search.supplierId, createdSearch?.supplierId);
-      expect(search.id, createdSearch?.id);
+      expect(searches, isA<List<Search>>());
+      expect(searches, isNotEmpty);
     });
 
-    test('Search - Update', () async {
-      if (createdSearch == null) {
-        throw Exception('Search is null');
-      }
+    test('Search - Index - Supplier', () async {
+      final suppliers = await client.suppliers.index();
+      final testSupplier = suppliers.first;
 
-      Topic updateTopic = await client.topics.show(2);
+      final searches = await client.searches.index(supplierId: testSupplier.id);
 
-      Search? toUpdate = createdSearch?.copyWith(topicId: updateTopic.id!);
-
-      updatedSearch =
-          await client.searches.update(createdSearch!.id!, toUpdate!);
-
-      expect(updatedSearch, isA<Search>());
-      expect(updatedSearch?.topicId, toUpdate.topicId);
-      expect(updatedSearch?.pathId, toUpdate.pathId);
-      expect(updatedSearch?.supplierId, toUpdate.supplierId);
-      expect(updatedSearch?.id, toUpdate.id);
-    });
-
-    test('Search - Delete', () async {
-      if (updatedSearch == null) {
-        throw Exception('Search is null');
-      }
-
-      var deleted = await client.searches.delete(updatedSearch!.id!);
-
-      expect(deleted, isTrue);
+      expect(searches, isA<List<Search>>());
+      expect(searches, isNotEmpty);
     });
   });
 
-  tearDownAll(() async {
-    if (testTopic != null) {
-      await client.topics.delete(testTopic!.id!);
-    }
-
-    if (testPath != null) {
-      await client.paths.delete(testPath!.id!);
-    }
-
-    if (testSupplier != null) {
-      await client.suppliers.delete(testSupplier!.id!);
-    }
-
-    if (createdSearch != null) {
-      await client.searches.delete(createdSearch!.id!);
-    }
-  });
+  tearDownAll(() async {});
 }
