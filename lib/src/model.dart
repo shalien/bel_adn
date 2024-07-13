@@ -27,8 +27,12 @@ abstract base class Model {
 
   Model.fromJson(final Map<String, dynamic> json)
       : id = json['id'],
-        createdAt = DateTime.parse(json['created_at']),
-        updatedAt = DateTime.parse(json['updated_at']),
+        createdAt = json['created_at'] != null
+            ? DateTime.parse(json['created_at'])
+            : null,
+        updatedAt = json['updated_at'] != null
+            ? DateTime.parse(json['updated_at'])
+            : null,
         deletedAt = json['deleted_at'] != null
             ? DateTime.parse(json['deleted_at'])
             : null;
