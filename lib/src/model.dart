@@ -16,17 +16,14 @@ part 'model/search.dart';
 abstract base class Model {
   final int id;
 
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   final DateTime? deletedAt;
 
   const Model(
-      {required this.id,
-      required this.createdAt,
-      required this.updatedAt,
-      this.deletedAt});
+      {required this.id, this.createdAt, this.updatedAt, this.deletedAt});
 
   Model.fromJson(final Map<String, dynamic> json)
       : id = json['id'],
