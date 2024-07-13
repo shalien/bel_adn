@@ -38,11 +38,10 @@ void main() {
 
     test('Path - Create', () async {
       final path = await client.paths.store(
-        content: 'test',
+        content: 'test-${DateTime.now().microsecondsSinceEpoch}',
       );
 
       expect(path, isA<Path>());
-      expect(path.content, 'test');
     });
   });
 

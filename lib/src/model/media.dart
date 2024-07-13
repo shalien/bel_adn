@@ -20,9 +20,9 @@ final class Media extends Model {
   /// A [Media] will be composed during all the resolving process
   const Media(
       {required this.link,
-      required this.sourceId,
+      this.sourceId,
       required this.sha256,
-      required this.destinationId,
+        this.destinationId,
       required super.id,
       required super.createdAt,
       required super.updatedAt,
@@ -31,9 +31,9 @@ final class Media extends Model {
   /// Create a [Media] from a json
   Media.fromJson(super.json)
       : link = Uri.parse(json['link']),
-        sourceId = json['source_id'],
+        sourceId = int.tryParse(json['source_id'].toString()),
         sha256 = json['sha256'],
-        destinationId = json['destination_id'],
+        destinationId = int.tryParse(json['destination_id'].toString()),
         super.fromJson();
 
   /// Convert a media to a json string

@@ -84,5 +84,25 @@ void main() async {
           destinationId: destination.id,
           sha256: 'new-test-test');
     });
+
+
+    test('Media - Store', () async {
+      final source = (await client.sources.index()).first;
+      final destination = (await client.destinations.index()).first;
+
+      final media = await client.medias.store(
+        link: Uri.parse('https://test.test/${DateTime.now().millisecondsSinceEpoch}'),
+        sourceId: source.id,
+        destinationId: destination.id,
+        sha256: 'test-test-${DateTime.now().microsecondsSinceEpoch}',
+      );
+
+      expect(media, isA<Media>());
+      expect(media.link, isA<Uri>());
+      expect(media.sourceId, isA<int>());
+      expect(media.destinationId, isA<int>());
+      expect(media.id, isA<int>());
+    });
+
   });
 }
