@@ -89,7 +89,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
   }
 
   @override
-  Future<Media> store({link, sourceId, sha256}) async {
+  Future<Media> store({link, sourceId, destinationId, sha256}) async {
     final Uri uri = fromParsedHost('/api/$endpoint');
 
     Response response;
@@ -99,6 +99,7 @@ final class MediaDataAccessObject extends DataAccessObject<Media> {
           body: jsonEncode({
             'link': link.toString(),
             'source_id': sourceId.toString(),
+            'destination_id': destinationId.toString(),
             'sha256': sha256,
           }),
           headers: {
