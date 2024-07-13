@@ -15,10 +15,10 @@ void main() async {
 
   group('Source CRUD', () {
     test('Source - Index', () async {
-      final sources = await client.sources.index();
+      final sources = await client.sources.index(link: Uri.parse('https://www.reddit.com/r/FreckledRedheads/comments/1e1lmer/feeling_cute_today_irtr/'));
 
       expect(sources, isA<List<Source>>());
-      expect(sources, isNotEmpty);
+      expect(sources, isEmpty);
     });
 
     test('Source - Index - Link', () async {
@@ -39,6 +39,23 @@ void main() async {
       expect(retrievedSource.topicId, testSource.topicId);
       expect(retrievedSource.supplierId, testSource.supplierId);
     });
+
+    test('Create a source', () async {
+
+      var search = await client.searches.index();
+
+      final source = await client.sources.store(
+        link: Uri.parse('https://jddgdflgdjlgjldgjlddsfkjfdgfgjf.fooee/oday_irtr/${DateTime.now()}'),
+        pathId: search.first.pathId,
+        topicId: search.first.topicId,
+        supplierId: search.first.supplierId,
+        searchId: search.first.id,
+      );
+
+      print(source);
+
+    });
+
   });
 
   tearDownAll(() async {});
