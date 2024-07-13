@@ -57,6 +57,25 @@ void main() {
       expect(searches, isA<List<Search>>());
       expect(searches, isNotEmpty);
     });
+
+    test('Search - Create', () async {
+      var topic = (await client.topics.index(name: 'test')).first;
+      var path = (await client.paths.index(content: 'test')).first;
+      var providerType = (await client.providerTypes.index(name: 'test')).first;
+      var supplier = (await client.suppliers.index(providerTypeId: providerType.id)).first;
+
+      final search = await client.searches.store(
+        topicId: topic.id,
+        pathId: path.id,
+        supplierId: supplier.id,
+      );
+
+      expect(search, isA<Search>());
+      expect(search.topicId, topic.id);
+      expect(search.pathId, path.id);
+      expect(search.supplierId, supplier.id);
+    });
+
   });
 
   tearDownAll(() async {});

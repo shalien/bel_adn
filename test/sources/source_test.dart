@@ -15,7 +15,9 @@ void main() async {
 
   group('Source CRUD', () {
     test('Source - Index', () async {
-      final sources = await client.sources.index(link: Uri.parse('https://www.reddit.com/r/FreckledRedheads/comments/1e1lmer/feeling_cute_today_irtr/'));
+      final sources = await client.sources.index(
+          link: Uri.parse(
+              'https://www.reddit.com/r/FreckledRedheads/comments/1e1lmer/feeling_cute_today_irtr/'));
 
       expect(sources, isA<List<Source>>());
       expect(sources, isEmpty);
@@ -40,22 +42,34 @@ void main() async {
       expect(retrievedSource.supplierId, testSource.supplierId);
     });
 
-    test('Create a source', () async {
+    test('Source - Create', () async {
+      var topic = (await client.topics.index(name: 'test')).first;
+      var path = (await client.paths.index(content: 'test')).first;
+      var providerType = (await client.providerTypes.index(name: 'test')).first;
+      var supplier = (await client.suppliers.index(providerTypeId: providerType.id)).first;
 
-      var search = await client.searches.index();
-
-      final source = await client.sources.store(
-        link: Uri.parse('https://jddgdflgdjlgjldgjlddsfkjfdgfgjf.fooee/oday_irtr/${DateTime.now()}'),
-        pathId: search.first.pathId,
-        topicId: search.first.topicId,
-        supplierId: search.first.supplierId,
-        searchId: search.first.id,
+      final search = await client.searches.index(
+        topicId: topic.id,
+        pathId: path.id,
+        supplierId: supplier.id,
       );
 
-      print(source);
+      var source = await client.sources.store(
+          link: Uri.parse('https://test.test/${DateTime.now().millisecondsSinceEpoch}'),
+          searchId: search.first.id,
+      pathId: search.first.pathId,
+      topicId: search.first.topicId,
+      supplierId: search.first.supplierId);
+
+      expect(source, isA<Source>());
+      expect(source.link, isA<Uri>());
+      expect(source.searchId, isA<int>());
+      expect(source.pathId, isA<int>());
+      expect(source.topicId, isA<int>());
+      expect(source.supplierId, isA<int>());
+      expect(source.id, isA<int>());
 
     });
-
   });
 
   tearDownAll(() async {});

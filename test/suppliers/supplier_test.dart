@@ -14,8 +14,11 @@ void main() {
   });
 
   group('Supplier - CRUD', () {
-    test('Create', () {
-      client.suppliers.store(host: 'http://localhost:8000', providerTypeId: 1);
+    test('Create', () async {
+      var prodiderType = (await client.providerTypes.index(name: 'test')).first;
+
+      client.suppliers.store(
+          host: 'http://localhost:8000', providerTypeId: prodiderType.id);
     });
   });
 

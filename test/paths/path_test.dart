@@ -35,6 +35,15 @@ void main() {
       expect(retrievedPath.content, testPath.content);
       expect(retrievedPath.id, testPath.id);
     });
+
+    test('Path - Create', () async {
+      final path = await client.paths.store(
+        content: 'test',
+      );
+
+      expect(path, isA<Path>());
+      expect(path.content, 'test');
+    });
   });
 
   tearDownAll(() async {});

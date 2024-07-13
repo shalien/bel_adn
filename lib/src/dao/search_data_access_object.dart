@@ -47,7 +47,7 @@ final class SearchDataAccessObject extends DataAccessObject<Search> {
   }
 
   @override
-  Future<Search> update(int id, {String? content, String? sha256}) async {
+  Future<Search> update(int id, {int? topicId, int? pathId, int? supplierId}) async {
     final Uri uri = fromParsedHost('/api/$endpoint/$id');
 
     Response response;
@@ -55,8 +55,9 @@ final class SearchDataAccessObject extends DataAccessObject<Search> {
     try {
       response = await client.put(uri,
           body: jsonEncode({
-            if (content != null) 'content': content,
-            if (sha256 != null) 'sha256': sha256,
+            if (topicId != null) 'topic_id': topicId.toString(),
+            if (pathId != null) 'path_id': pathId.toString(),
+            if (supplierId != null) 'supplier_id': supplierId.toString(),
           }),
           headers: {
             'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ final class SearchDataAccessObject extends DataAccessObject<Search> {
   }
 
   @override
-  Future<Search> store({content, sha256}) async {
+  Future<Search> store({topicId, pathId, supplierId}) async {
     final Uri uri = fromParsedHost('/api/$endpoint');
 
     Response response;
@@ -86,8 +87,9 @@ final class SearchDataAccessObject extends DataAccessObject<Search> {
     try {
       response = await client.post(uri,
           body: jsonEncode({
-            'content': content,
-            'sha256': sha256,
+            'topic_id': topicId,
+            'path_id': pathId,
+            'supplier_id': supplierId,
           }),
           headers: {
             'Content-Type': 'application/json',

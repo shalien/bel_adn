@@ -6,9 +6,6 @@ import 'package:test/test.dart';
 void main() {
   late MagnifiqueCoupleClient client;
 
-  ProviderType? createdProviderType;
-  ProviderType? updatedProviderType;
-
   setUpAll(() async {
     client = MagnifiqueCoupleClient(
       host: 'http://localhost:8000',
@@ -24,19 +21,13 @@ void main() {
       expect(providerTypes, isNotEmpty);
     });
 
-    test('ProviderType - Index - Name', () async {
-      final providerTypes = await client.providerTypes.index();
+    test('ProviderType - Create', () async {
+      final providerType = await client.providerTypes.store(
+        name: 'test',
+      );
 
-      final ProviderType testProviderType = providerTypes.first;
-
-      final retrievedProviderTypes =
-          await client.providerTypes.index(name: testProviderType.name);
-
-      final retrievedProviderType = retrievedProviderTypes.first;
-
-      expect(retrievedProviderType, isA<ProviderType>());
-      expect(retrievedProviderType.name, testProviderType.name);
-      expect(retrievedProviderType.id, testProviderType.id);
+      expect(providerType, isA<ProviderType>());
+      expect(providerType.name, 'test');
     });
   });
 
