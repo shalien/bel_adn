@@ -26,10 +26,10 @@ final class Source extends Model {
 
   Source.fromJson(super.json)
       : link = Uri.parse(json['link']),
-  pathId = json['path_id'],
-  topicId = json['topic_id'],
-  supplierId = json['supplier_id'],
-  searchId = json['search_id'],
+        pathId = int.tryParse(json['path_id'].toString()),
+        topicId = int.tryParse(json['topic_id'].toString()),
+        supplierId = int.tryParse(json['supplier_id'].toString()),
+        searchId = int.tryParse(json['search_id'].toString()),
         super.fromJson();
 
   @override
