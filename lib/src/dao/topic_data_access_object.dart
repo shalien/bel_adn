@@ -12,9 +12,10 @@ final class TopicDataAccessObject extends DataAccessObject<Topic> {
   }
 
   @override
-  Future<List<Topic>> index({String? name}) async {
+  Future<List<Topic>> index({String? name, int? page = 1}) async {
     final Uri uri = fromParsedHost('/api/$endpoint', {
       if (name != null) 'name': name,
+      if (page != null) 'page': page.toString(),
     });
 
     Response response;
