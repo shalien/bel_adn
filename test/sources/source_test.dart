@@ -15,12 +15,10 @@ void main() async {
 
   group('Source CRUD', () {
     test('Source - Index', () async {
-      final sources = await client.sources.index(
-          link: Uri.parse(
-              'https://www.reddit.com/r/FreckledRedheads/comments/1e1lmer/feeling_cute_today_irtr/'));
+      final sources = await client.sources.index();
 
       expect(sources, isA<List<Source>>());
-      expect(sources, isEmpty);
+      expect(sources, isNotEmpty);
     });
 
     test('Source - Index - Link', () async {

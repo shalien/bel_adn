@@ -4,20 +4,20 @@ part of '../model.dart';
 final class Source extends Model {
   final Uri link;
 
-  final int pathId;
+  final int? pathId;
 
-  final int topicId;
+  final int? topicId;
 
-  final int supplierId;
+  final int? supplierId;
 
-  final int searchId;
+  final int? searchId;
 
   const Source({
     required this.link,
-    required this.pathId,
-    required this.topicId,
-    required this.supplierId,
-    required this.searchId,
+    this.pathId,
+    this.topicId,
+    this.supplierId,
+    this.searchId,
     required super.id,
     required super.createdAt,
     required super.updatedAt,
@@ -26,10 +26,10 @@ final class Source extends Model {
 
   Source.fromJson(super.json)
       : link = Uri.parse(json['link']),
-        pathId = int.parse(json['path_id']),
-        topicId = int.parse(json['topic_id']),
-        supplierId = int.parse(json['supplier_id']),
-        searchId = int.parse(json['search_id']),
+  pathId = json['path_id'],
+  topicId = json['topic_id'],
+  supplierId = json['supplier_id'],
+  searchId = json['search_id'],
         super.fromJson();
 
   @override
