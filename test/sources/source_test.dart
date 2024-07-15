@@ -44,7 +44,8 @@ void main() async {
       var topic = (await client.topics.index(name: 'test')).first;
       var path = (await client.paths.index(content: 'test')).first;
       var providerType = (await client.providerTypes.index(name: 'test')).first;
-      var supplier = (await client.suppliers.index(providerTypeId: providerType.id)).first;
+      var supplier =
+          (await client.suppliers.index(providerTypeId: providerType.id)).first;
 
       final search = await client.searches.index(
         topicId: topic.id,
@@ -53,11 +54,12 @@ void main() async {
       );
 
       var source = await client.sources.store(
-          link: Uri.parse('https://test.test/${DateTime.now().millisecondsSinceEpoch}'),
+          link: Uri.parse(
+              'https://test.test/${DateTime.now().millisecondsSinceEpoch}'),
           searchId: search.first.id,
-      pathId: search.first.pathId,
-      topicId: search.first.topicId,
-      supplierId: search.first.supplierId);
+          pathId: search.first.pathId,
+          topicId: search.first.topicId,
+          supplierId: search.first.supplierId);
 
       expect(source, isA<Source>());
       expect(source.link, isA<Uri>());
@@ -66,7 +68,6 @@ void main() async {
       expect(source.topicId, isA<int>());
       expect(source.supplierId, isA<int>());
       expect(source.id, isA<int>());
-
     });
   });
 

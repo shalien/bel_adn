@@ -47,7 +47,8 @@ final class SearchDataAccessObject extends DataAccessObject<Search> {
   }
 
   @override
-  Future<Search> update(int id, {int? topicId, int? pathId, int? supplierId}) async {
+  Future<Search> update(int id,
+      {int? topicId, int? pathId, int? supplierId}) async {
     final Uri uri = fromParsedHost('/api/$endpoint/$id');
 
     Response response;

@@ -17,7 +17,6 @@ void main() {
   });
 
   group('Topics CRUD', () {
-
     test('Topics - Index - Name', () async {
       final topics = await client.topics.index(name: 'test');
 

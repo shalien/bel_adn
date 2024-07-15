@@ -22,7 +22,7 @@ final class Media extends Model {
       {required this.link,
       this.sourceId,
       required this.sha256,
-        this.destinationId,
+      this.destinationId,
       required super.id,
       required super.createdAt,
       required super.updatedAt,

@@ -62,7 +62,8 @@ void main() {
       var topic = (await client.topics.index(name: 'test')).first;
       var path = (await client.paths.index(content: 'test')).first;
       var providerType = (await client.providerTypes.index(name: 'test')).first;
-      var supplier = (await client.suppliers.index(providerTypeId: providerType.id)).first;
+      var supplier =
+          (await client.suppliers.index(providerTypeId: providerType.id)).first;
 
       final search = await client.searches.store(
         topicId: topic.id,
@@ -75,7 +76,6 @@ void main() {
       expect(search.pathId, path.id);
       expect(search.supplierId, supplier.id);
     });
-
   });
 
   tearDownAll(() async {});
