@@ -2,11 +2,11 @@ part of '../model.dart';
 
 @immutable
 final class Search extends Model {
-  final int? topicId;
+  final int topicId;
 
-  final int? pathId;
+  final int pathId;
 
-  final int? supplierId;
+  final int supplierId;
 
   const Search({
     required this.topicId,
