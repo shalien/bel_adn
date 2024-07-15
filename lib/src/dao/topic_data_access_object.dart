@@ -45,7 +45,7 @@ final class TopicDataAccessObject extends DataAccessObject<Topic> {
   }
 
   @override
-  Future<Topic> update(int id, {String? name}) async {
+  Future<Topic> update(int id, {String? name, int? order}) async {
     final Uri uri = fromParsedHost('/api/$endpoint/$id');
 
     Response response;
@@ -54,6 +54,7 @@ final class TopicDataAccessObject extends DataAccessObject<Topic> {
       response = await client.put(uri,
           body: jsonEncode({
             if (name != null) 'name': name,
+            if (order != null) 'order': order,
           }),
           headers: {
             'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ final class TopicDataAccessObject extends DataAccessObject<Topic> {
   }
 
   @override
-  Future<Topic> store({name}) async {
+  Future<Topic> store({name, order}) async {
     final Uri uri = fromParsedHost('/api/$endpoint');
 
     Response response;
@@ -84,6 +85,7 @@ final class TopicDataAccessObject extends DataAccessObject<Topic> {
       response = await client.post(uri,
           body: jsonEncode({
             'name': name,
+            'order': order,
           }),
           headers: {
             'Content-Type': 'application/json',
