@@ -12,10 +12,12 @@ final class SupplierDataAccessObject extends DataAccessObject<Supplier> {
   }
 
   @override
-  Future<List<Supplier>> index({String? host, int? providerTypeId}) async {
+  Future<List<Supplier>> index(
+      {String? host, int? providerTypeId, int? page = 1}) async {
     final Uri uri = fromParsedHost('/api/$endpoint', {
       if (host != null) 'host': host,
       if (providerTypeId != null) 'provider_type_id': providerTypeId.toString(),
+      if (page != null) 'page': page.toString(),
     });
 
     Response response;

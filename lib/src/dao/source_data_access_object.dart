@@ -16,13 +16,15 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
       int? pathId,
       int? topicId,
       int? supplierId,
-      int? searchId}) async {
+      int? searchId,
+      int? page = 1}) async {
     final Uri uri = fromParsedHost('/api/$endpoint', {
       if (link != null) 'link': link.toString(),
       if (pathId != null) 'path_id': pathId.toString(),
       if (topicId != null) 'topic_id': topicId.toString(),
       if (supplierId != null) 'supplier_id': supplierId.toString(),
       if (searchId != null) 'search_id': searchId.toString(),
+      if (page != null) 'page': page.toString(),
     });
 
     Response response;
