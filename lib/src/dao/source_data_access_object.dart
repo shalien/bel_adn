@@ -102,10 +102,10 @@ final class SourceDataAccessObject extends DataAccessObject<Source> {
       response = await client.post(uri,
           body: jsonEncode({
             'link': link.toString(),
-            'path_id': pathId.toString(),
-            'topic_id': topicId.toString(),
-            'supplier_id': supplierId.toString(),
-            'search_id': searchId.toString(),
+            if (pathId != null) 'path_id': pathId.toString(),
+            if (topicId != null) 'topic_id': topicId.toString(),
+            if (supplierId != null) 'supplier_id': supplierId.toString(),
+            if (searchId != null) 'search_id': searchId.toString(),
           }),
           headers: {
             'Content-Type': 'application/json',
