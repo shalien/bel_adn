@@ -1,0 +1,85 @@
+# This file is a template, and might need editing before it works on your project.
+# You can copy and paste this template into a new `.gitlab-ci.yml` file.
+# You should not add this template to an existing `.gitlab-ci.yml` file by using the `include:` keyword.
+#
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Dart.gitlab-ci.yml
+
+# https://hub.docker.com/_/dart
+image: dart:latest
+
+stages:
+- test
+- build
+
+variables:
+  PUB_VARS: "--platform vm --timeout 30s --concurrency=6 --test-randomize-ordering-seed=random
+    --reporter=expanded"
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
+".use-pub-cache-bin":
+  before_script:
+  - export PUB_CACHE=".pub-cache"
+  - export PATH="$PATH:$HOME/$PUB_CACHE/bin"
+".upload-cache":
+  cache:
+    when: on_success
+    paths:
+    - ".pub-cache/bin/"
+    - ".pub-cache/global_packages/"
+    - ".pub-cache/hosted/"
+    - ".dart_tool/"
+    - ".packages"
+".download-cache":
+  cache:
+    paths:
+    - ".dart_tool/"
+    - ".packages"
+    policy: pull
+install-dependencies:
+  stage: ".pre"
+  extends:
+  - ".use-pub-cache-bin"
+  - ".upload-cache"
+  script:
+  - dart pub get --no-precompile
+build:
+  stage: build
+  needs:
+  - install-dependencies
+  extends:
+  - ".use-pub-cache-bin"
+  - ".upload-cache"
+  script:
+  - dart pub get --offline --precompile
+unit-test:
+  stage: test
+  extends:
+  - ".use-pub-cache-bin"
+  - ".download-cache"
+  script:
+  - dart test $PUB_VARS
+lint-test:
+  stage: test
+  needs:
+  - install-dependencies
+  extends:
+  - ".use-pub-cache-bin"
+  - ".download-cache"
+  script:
+  - dart analyze .
+format-test:
+  stage: test
+  needs:
+  - install-dependencies
+  extends:
+  - ".use-pub-cache-bin"
+  - ".download-cache"
+  script:
+  - dart format --set-exit-if-changed bin/ lib/ test/
+
+
